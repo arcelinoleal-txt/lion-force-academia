@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Lion Force Academia: treino de alto nível, disciplina e evolução para quem quer resultados reais.">
+    <title>Lion Force Academia</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800;900&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --ink: #09090b;
+            --paper: #111214;
+            --muted: #b7b4b3;
+            --line: #2a2a2d;
+            --red: #e3212a;
+            --red-dark: #b6111d;
+            --white: #f5f5f5;
+            --shadow: rgba(0,0,0,.38);
+            --display: 'Barlow Condensed', Impact, sans-serif;
+            --body: 'DM Sans', Arial, sans-serif;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body { background: var(--ink); color: var(--white); font-family: var(--body); line-height: 1.5; overflow-x: hidden; }
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            background: radial-gradient(circle at top right, rgba(227,33,42,.12), transparent 32%);
+        }
+        a { color: inherit; text-decoration: none; }
+        img { display: block; max-width: 100%; }
+        .wrap { width: min(1180px, calc(100% - 48px)); margin: 0 auto; }
+        .eyebrow { color: var(--red); font: 700 .82rem var(--display); letter-spacing: .14em; text-transform: uppercase; }
+        .display { font-family: var(--display); letter-spacing: -.02em; text-transform: uppercase; }
+        .section-heading { display: flex; align-items: end; justify-content: space-between; gap: 24px; margin-bottom: 42px; }
+        .section-heading h2 { max-width: 620px; font: 800 clamp(2.8rem, 6vw, 5.7rem)/.88 var(--display); text-transform: uppercase; text-shadow: 0 2px 12px rgba(0,0,0,.18); }
+        .section-heading p { max-width: 290px; color: rgba(255,255,255,.78); font-size: .95rem; }
+        .btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 50px; padding: 0 22px; border: 1px solid transparent; background: var(--red); color: var(--white); font: 700 .85rem var(--body); text-transform: uppercase; letter-spacing: .06em; transition: background .25s, transform .25s, box-shadow .25s; }
+        .btn:hover { background: var(--red-dark); transform: translateY(-2px); box-shadow: 0 12px 20px rgba(227, 33, 42, .25); }
+        .btn--outline { border-color: rgba(255,255,255,.28); background: transparent; }
+        .btn--outline:hover { border-color: var(--white); background: var(--white); color: var(--ink); }
+        .reveal {
+            opacity: 0;
+            transform: translateY(38px);
+            transition: opacity .7s ease, transform .7s ease;
+        }
+        .reveal.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .icon { width: 18px; height: 18px; }
+
+        header { position: absolute; z-index: 2; top: 0; width: 100%; border-bottom: 1px solid rgba(255,255,255,.15); }
+        .nav { display: flex; align-items: center; justify-content: space-between; min-height: 82px; }
+        .brand { display: flex; align-items: center; gap: 14px; font: 800 1.75rem var(--display); letter-spacing: .04em; }
+        .brand-logo { display: block; width: 110px; height: auto; object-fit: contain; filter: drop-shadow(0 0 12px rgba(227,33,42,.28)); }
+        .brand-text { display: grid; line-height: .8; }
+        .brand-text span { font-size: .68rem; letter-spacing: .18em; color: var(--muted); }
+        .nav-links { display: flex; align-items: center; gap: 28px; color: #d2d0cc; font-size: .78rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; }
+        .nav-links a:hover { color: var(--red); }
+        .nav-cta { display: inline-flex; align-items: center; gap: 8px; padding: 10px 14px; background: var(--red); color: var(--white); font-size: .75rem; font-weight: 700; text-transform: uppercase; }
+
+        .hero { position: relative; min-height: 760px; padding: 150px 0 60px; overflow: hidden; background: linear-gradient(180deg, rgba(10,10,10,.92), rgba(10,10,10,.82)); }
+        .hero::before { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(10,10,10,.9) 0%, rgba(10,10,10,.7) 36%, rgba(10,10,10,.2) 100%), url('https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=1800&q=80') center/cover no-repeat; opacity: .8; }
+        .hero-content { position: relative; z-index: 1; display: grid; grid-template-columns: 1.1fr .9fr; align-items: center; gap: 30px; }
+        .hero-copy-block { max-width: 660px; }
+        .hero h1 { margin: 18px 0 24px; font: 900 clamp(4.2rem, 9vw, 9.5rem)/.76 var(--display); text-transform: uppercase; letter-spacing: -.04em; text-shadow: 0 4px 16px rgba(0,0,0,.2); }
+        .hero h1 span { color: var(--red); }
+        .hero-copy { max-width: 540px; margin-bottom: 30px; color: rgba(255,255,255,.9); font-size: 1.08rem; }
+        .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+        .hero-note { display: flex; align-items: center; gap: 16px; margin-top: 58px; color: #b8b5b0; font-size: .82rem; }
+        .hero-note strong { color: var(--white); font-size: 1rem; }
+        .hero-rule { width: 42px; height: 1px; background: var(--red); }
+        .hero-visual { position: relative; min-height: 560px; display: grid; place-items: center; }
+        .hero-photo { position: relative; width: min(540px, 100%); height: 500px; overflow: hidden; border: 1px solid rgba(255,255,255,.15); background: url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=1200&q=80') center/cover no-repeat; box-shadow: 0 30px 60px rgba(0,0,0,.35); }
+        .hero-photo::before { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,0) 25%, rgba(0,0,0,.82) 100%); }
+        .hero-badge { position: absolute; left: 24px; bottom: 24px; z-index: 2; display: grid; gap: 6px; padding: 18px 20px; background: rgba(227,33,42,.96); color: var(--white); }
+        .hero-badge strong { font: 700 1.1rem var(--display); letter-spacing: .1em; text-transform: uppercase; }
+        .hero-badge span { font-size: .78rem; letter-spacing: .08em; text-transform: uppercase; color: rgba(255,255,255,.8); }
+
+        .stats { background: var(--red); }
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); }
+        .stat { display: grid; gap: 2px; padding: 26px 20px; border-right: 1px solid rgba(17,17,17,.25); }
+        .stat:last-child { border-right: 0; }
+        .stat strong { font: 800 2.8rem/.9 var(--display); }
+        .stat span { color: #ffd6d1; font-size: .76rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; }
+
+        section { padding: 112px 0; }
+        .story { background: linear-gradient(180deg, #0c0c0c 0%, #111111 100%); color: var(--white); }
+        .story-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 72px; align-items: center; }
+        .story-image { position: relative; min-height: 550px; background: url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=1000&q=85') center/cover; box-shadow: 0 26px 50px rgba(0,0,0,.28); }
+        .story-image::before { content: ''; position: absolute; inset: 18px -18px -18px 18px; border: 1px solid var(--red); z-index: 0; }
+        .story-image::after { content: '2016'; position: absolute; right: 18px; bottom: 12px; color: var(--white); font: 800 6rem/.8 var(--display); text-shadow: 0 2px 14px #000; }
+        .story-image > * { position: relative; z-index: 1; }
+        .story-copy h2 { margin: 16px 0 26px; font: 800 clamp(3.2rem, 6vw, 6rem)/.84 var(--display); text-transform: uppercase; text-shadow: 0 3px 12px rgba(0,0,0,.2); }
+        .story-copy p { max-width: 520px; margin-bottom: 18px; color: rgba(255,255,255,.88); }
+        .story-signature { display: flex; align-items: center; gap: 14px; margin-top: 34px; color: var(--white); font-size: .8rem; font-weight: 700; text-transform: uppercase; }
+        .signature-line { width: 58px; height: 1px; background: var(--red); }
+
+        .dark-section { background: #181818; }
+        .equipment-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+        .equipment { position: relative; min-height: 360px; padding: 25px; display: flex; align-items: end; overflow: hidden; }
+        .equipment::before { content: ''; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(0,0,0,.9), transparent 70%); z-index: 1; }
+        .equipment img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: grayscale(100%); transition: transform .5s, filter .5s; }
+        .equipment:hover img { transform: scale(1.05); filter: grayscale(35%); }
+        .equipment-content { position: relative; z-index: 2; }
+        .equipment h3 { font: 700 2.4rem/.9 var(--display); text-transform: uppercase; }
+        .equipment p { max-width: 230px; margin-top: 8px; color: #c6c2bd; font-size: .83rem; }
+        .equipment-number { position: absolute; z-index: 2; top: 20px; right: 22px; color: var(--red); font: 700 1rem var(--display); }
+
+        .rating { background: var(--red); color: var(--white); }
+        .rating-grid { display: grid; grid-template-columns: 1fr 1.4fr; gap: 80px; align-items: center; }
+        .rating h2 { margin: 15px 0 16px; font: 800 clamp(3rem, 6vw, 6rem)/.85 var(--display); text-transform: uppercase; }
+        .rating-copy { color: #ffd6d1; max-width: 360px; }
+        .rating-score { display: flex; align-items: center; gap: 28px; padding: 28px 0; border-top: 1px solid rgba(17,17,17,.3); border-bottom: 1px solid rgba(17,17,17,.3); }
+        .score { font: 900 6rem/.8 var(--display); }
+        .stars { color: #111; letter-spacing: 5px; font-size: 1.3rem; }
+        .score-detail strong { display: block; font-size: 1.05rem; }
+        .score-detail span { color: #ffd6d1; font-size: .8rem; }
+        .rating-bars { display: grid; gap: 13px; }
+        .rating-row { display: grid; grid-template-columns: 42px 1fr 42px; gap: 12px; align-items: center; font-size: .75rem; font-weight: 700; }
+        .bar { height: 8px; background: rgba(17,17,17,.23); }
+        .bar i { display: block; height: 100%; background: var(--ink); }
+        .rating-updated { margin-top: 24px; color: #ffd6d1; font-size: .78rem; }
+
+        .plans { background: #0a0a0a; color: var(--white); }
+        .plans .section-heading p { color: rgba(255,255,255,.7); }
+        .plans-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; align-items: stretch; }
+        .plan { position: relative; display: flex; flex-direction: column; min-height: 445px; padding: 30px; border: 1px solid rgba(255,255,255,.12); background: #0d0d0d; color: var(--white); cursor: pointer; transition: transform .22s ease, background .22s ease, border-color .22s ease, box-shadow .22s ease; }
+        .plan:hover, .plan:focus-within, .plan.is-selected { background: var(--red); border-color: var(--red); transform: translateY(-6px); box-shadow: 0 18px 28px rgba(227,59,47,.25); }
+        .plan--featured { transform: translateY(-14px); }
+        .plan--featured:hover, .plan--featured:focus-within, .plan--featured.is-selected { transform: translateY(-14px); }
+        .plan-tag { position: absolute; top: 0; right: 0; padding: 7px 12px; background: var(--red); color: var(--white); font-size: .68rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; }
+        .plan h3 { font: 700 2.3rem/.9 var(--display); text-transform: uppercase; color: inherit; }
+        .plan-description { min-height: 50px; margin: 15px 0 24px; color: rgba(255,255,255,.7); font-size: .86rem; }
+        .price { margin-bottom: 28px; font: 800 3.7rem/.8 var(--display); color: inherit; }
+        .price small { font: 500 .9rem var(--body); color: rgba(255,255,255,.78); }
+        .plan ul { display: grid; gap: 12px; padding-top: 22px; border-top: 1px solid rgba(255,255,255,.16); list-style: none; color: rgba(255,255,255,.8); font-size: .84rem; }
+        .plan li { display: flex; gap: 9px; align-items: start; }
+        .plan li i { width: 16px; color: var(--white); }
+        .plan .btn { margin-top: auto; width: 100%; background: transparent; border-color: rgba(255,255,255,.6); color: var(--white); }
+        .plan .btn:hover, .plan .btn:focus-visible { background: var(--white); color: var(--ink); border-color: var(--white); }
+        .plans-extra { display: flex; flex-wrap: wrap; gap: 10px 24px; margin-top: 28px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,.14); color: rgba(255,255,255,.74); font-size: .82rem; }
+        .plans-extra strong { color: var(--red); }
+
+        .team { background: #111; }
+        .team-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+        .person img { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; filter: grayscale(100%); }
+        .person:hover img { filter: grayscale(30%); }
+        .person--original img { aspect-ratio: auto; height: auto; object-fit: contain; background: #181818; }
+        .person h3 { margin-top: 14px; font: 700 1.75rem/.9 var(--display); text-transform: uppercase; }
+        .person p { margin-top: 5px; color: var(--muted); font-size: .78rem; text-transform: uppercase; letter-spacing: .08em; }
+        .founders { margin-bottom: 58px; }
+        .team-label { margin-bottom: 20px; color: var(--red); font: 700 .8rem var(--display); letter-spacing: .13em; text-transform: uppercase; }
+
+        .app-section { background: linear-gradient(180deg, #121214 0%, #0b0b0d 100%); }
+        .app-grid { display: grid; grid-template-columns: 1.1fr .9fr; gap: 48px; align-items: center; }
+        .app-content { display: grid; gap: 18px; }
+        .app-content h2 { font: 800 clamp(2.8rem, 5vw, 5.2rem)/.88 var(--display); text-transform: uppercase; }
+        .app-content p { color: rgba(255,255,255,.74); max-width: 640px; }
+        .feature-list { display: grid; gap: 16px; margin-top: 12px; }
+        .feature-item { display: grid; grid-template-columns: 18px 1fr; gap: 12px; align-items: start; padding: 18px 20px; border: 1px solid rgba(255,255,255,.12); background: rgba(255,255,255,.02); }
+        .feature-item .icon { color: var(--red); margin-top: 2px; }
+        .feature-item strong { display: block; margin-bottom: 4px; font-size: .9rem; text-transform: uppercase; letter-spacing: .08em; }
+        .feature-item span { color: rgba(255,255,255,.72); font-size: .9rem; }
+        .app-promo { max-width: 620px; margin-top: 4px; color: var(--white) !important; font-size: 1rem !important; font-weight: 600; }
+        .app-downloads { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 4px; }
+        .app-download { display: inline-flex; align-items: center; gap: 9px; min-height: 46px; padding: 0 15px; border: 1px solid rgba(255,255,255,.2); background: rgba(255,255,255,.06); color: var(--white); font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; transition: background .25s, border-color .25s, transform .25s; }
+        .app-download:hover { border-color: var(--red); background: var(--red); transform: translateY(-2px); }
+        .app-card { position: relative; min-height: 430px; padding: 22px; border: 1px solid rgba(255,255,255,.12); background: linear-gradient(180deg, rgba(227,33,42,.14), rgba(17,17,17,.7)); }
+        .app-card .app-downloads { position: relative; z-index: 1; justify-content: center; margin-top: 18px; }
+        .app-card::before { content: ''; position: absolute; inset: 18px 18px auto auto; width: 140px; height: 140px; border-radius: 50%; background: radial-gradient(circle, rgba(227,33,42,.7), rgba(227,33,42,0)); filter: blur(8px); }
+        .app-product-image { position: relative; z-index: 1; display: block; width: 100%; max-height: 430px; margin: 0 auto; object-fit: contain; border: 1px solid rgba(255,255,255,.2); box-shadow: 0 20px 40px rgba(0,0,0,.35); }
+
+        .visit { background: #101010; color: var(--white); }
+        .visit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 70px; align-items: stretch; }
+        .visit h2 { margin: 15px 0 24px; color: var(--red); font: 800 clamp(3.2rem, 6vw, 6rem)/.84 var(--display); text-transform: uppercase; }
+        .visit-copy > p { max-width: 410px; color: rgba(255,255,255,.82); }
+        .contact-list { display: grid; gap: 18px; margin: 32px 0; padding-top: 25px; border-top: 1px solid rgba(255,255,255,.2); }
+        .contact-item { display: flex; gap: 14px; align-items: start; }
+        .contact-item .icon { color: var(--red); margin-top: 3px; }
+        .contact-item strong { display: block; color: var(--red); font-size: .87rem; }
+        .contact-item span { display: block; margin-top: 3px; color: var(--white); font-size: .84rem; }
+        .contact-item a { color: var(--white); }
+        .map { position: relative; min-height: 480px; overflow: hidden; background: #292929; border: 1px solid rgba(255,255,255,.1); box-shadow: 0 20px 40px rgba(0,0,0,.35); }
+        .map iframe { width: 100%; height: 100%; min-height: 480px; border: 0; filter: grayscale(1) contrast(1.15); opacity: .86; }
+        .map-pin { position: absolute; top: 50%; left: 50%; display: grid; place-items: center; width: 54px; height: 54px; transform: translate(-50%, -50%); border: 5px solid var(--white); border-radius: 50%; background: var(--red); color: var(--white); box-shadow: 0 0 0 12px rgba(227,59,47,.25); pointer-events: none; }
+
+        .signup { position: relative; overflow: hidden; background: var(--red); }
+        .signup::after { content: 'COMECE'; position: absolute; right: -25px; bottom: -66px; color: rgba(17,17,17,.1); font: 900 16rem/.8 var(--display); }
+        .signup-grid { position: relative; z-index: 1; display: grid; grid-template-columns: .8fr 1.2fr; gap: 90px; align-items: center; }
+        .signup-brand-mark { width: 112px; height: 112px; margin-bottom: 24px; }
+        .signup-brand-mark img { width: 100%; height: 100%; object-fit: contain; }
+        .signup h2 { margin-top: 14px; font: 800 clamp(3.5rem, 7vw, 7rem)/.8 var(--display); text-transform: uppercase; }
+        .signup-copy p { max-width: 340px; margin-top: 20px; color: #ffd6d1; }
+        .signup-form { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .signup-form label { display: grid; gap: 7px; color: #ffd6d1; font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; }
+        .signup-form label:first-child { grid-column: 1 / -1; }
+        .signup-form input, .signup-form select { width: 100%; height: 52px; padding: 0 15px; border: 1px solid rgba(17,17,17,.35); outline: 0; background: rgba(255,255,255,.93); color: var(--ink); font: .9rem var(--body); }
+        .signup-form input:focus, .signup-form select:focus { border-color: var(--ink); }
+        .signup-form .btn { grid-column: 1 / -1; justify-self: start; margin-top: 8px; background: var(--ink); }
+        .signup-form .btn:hover { background: #303030; }
+        .form-message { grid-column: 1 / -1; min-height: 20px; color: var(--ink); font-size: .83rem; font-weight: 700; }
+
+        footer { padding: 28px 0; background: #0a0a0a; color: #88847e; font-size: .76rem; }
+        .footer-inner { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+        .footer-links { display: flex; gap: 18px; }
+        .footer-links a:hover { color: var(--red); }
+
+        @media (max-width: 820px) {
+            .wrap { width: min(100% - 32px, 600px); }
+            header { position: absolute; }
+            .nav { min-height: 70px; gap: 12px; }
+            .brand { min-width: 0; gap: 8px; font-size: 1.35rem; }
+            .brand-logo { width: 72px; }
+            .brand-text span { font-size: .52rem; }
+            .nav-links { display: none; }
+            .nav-cta { padding: 9px 10px; font-size: .64rem; white-space: nowrap; }
+            .hero { min-height: auto; padding: 126px 0 54px; }
+            .hero-content { display: grid; grid-template-columns: 1fr; gap: 38px; padding-top: 0; }
+            .hero h1 { margin-top: 14px; font-size: clamp(4rem, 18vw, 6.8rem); }
+            .hero-copy { font-size: .96rem; }
+            .hero-note { margin-top: 34px; }
+            .hero-visual { min-height: 320px; }
+            .hero-photo { height: min(420px, 92vw); }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .stat:nth-child(2) { border-right: 0; }
+            .stat:nth-child(-n+2) { border-bottom: 1px solid rgba(17,17,17,.25); }
+            section { padding: 78px 0; }
+            .section-heading { display: block; margin-bottom: 30px; }
+            .section-heading p { margin-top: 18px; }
+            .story-grid, .rating-grid, .visit-grid, .signup-grid, .app-grid { grid-template-columns: 1fr; gap: 40px; }
+            .story-image { min-height: 400px; }
+            .equipment-grid { grid-template-columns: 1fr 1fr; }
+            .equipment { min-height: 300px; }
+            .plans-grid { grid-template-columns: 1fr; gap: 22px; }
+            .plan--featured { transform: none; }
+            .team-grid { grid-template-columns: 1fr 1fr; row-gap: 30px; }
+            .signup-form { gap: 10px; }
+            .app-card { min-height: auto; padding: 14px; }
+            .app-product-image { max-height: none; width: 100%; }
+            .app-card .app-downloads { margin-bottom: 4px; }
+            .map { min-height: 360px; }
+            .map iframe { min-height: 360px; }
+            .footer-inner { align-items: start; flex-direction: column; }
+        }
+        @media (max-width: 480px) {
+            .wrap { width: calc(100% - 28px); }
+            section { padding: 64px 0; }
+            .nav { min-height: 64px; }
+            .brand-logo { width: 58px; }
+            .brand { font-size: 1.15rem; }
+            .brand-text span { font-size: .44rem; }
+            .nav-cta { padding: 8px 9px; font-size: .57rem; }
+            .hero-actions, .hero-actions .btn { width: 100%; }
+            .hero-note { margin-top: 48px; }
+            .hero h1 { font-size: clamp(3.7rem, 19vw, 5.8rem); }
+            .hero-photo { height: 300px; }
+            .equipment-grid { grid-template-columns: 1fr; }
+            .equipment { min-height: 270px; }
+            .signup-form { grid-template-columns: 1fr; }
+            .signup-form label:first-child, .signup-form .btn, .form-message { grid-column: auto; }
+            .signup-form .btn { width: 100%; }
+            .signup-grid { gap: 28px; }
+            .signup-brand-mark { width: 86px; height: 86px; margin-bottom: 18px; }
+            .app-downloads { flex-direction: column; }
+            .app-download { width: 100%; }
+            .score { font-size: 5rem; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="nav wrap" aria-label="Navegação principal">
+            <a class="brand" href="#inicio" aria-label="Lion Force Academia"><img class="brand-logo" src="Lion force academia.png" alt="Logo Lion Force Academia"><div class="brand-text">LION FORCE<span>ACADEMIA</span></div></a>
+            <div class="nav-links">
+                <a href="#historia">Nossa história</a>
+                <a href="#estrutura">Estrutura</a>
+                <a href="#planos">Planos</a>
+                <a href="#equipe">Equipe</a>
+            </div>
+            <a class="nav-cta" href="#cadastro">Faça seu cadastro <i data-lucide="arrow-up-right" class="icon"></i></a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero" id="inicio">
+            <div class="hero-content wrap">
+                <div class="hero-copy-block">
+                    <p class="eyebrow">Força. Disciplina. Resultado.</p>
+                    <h1>O próximo<br><span>nível</span> começa aqui.</h1>
+                    <p class="hero-copy">Mais do que uma academia: um ambiente pensado para transformar sua rotina, seu corpo e sua confiança. A Lion Force Academia combina treino de alto nível, acompanhamento real e tecnologia para entregar resultados de verdade.</p>
+                    <div class="hero-actions">
+                        <a class="btn" href="#cadastro">Quero começar <i data-lucide="arrow-right" class="icon"></i></a>
+                        <a class="btn btn--outline" href="#planos">Conhecer planos</a>
+                    </div>
+                    <div class="hero-note"><span class="hero-rule"></span><strong>06:00 — 23:00</strong> de segunda a sábado</div>
+                </div>
+                <div class="hero-visual" aria-label="Imagem de destaque da academia">
+                    <div class="hero-photo">
+                        <div class="hero-badge">
+                            <strong>Next Level</strong>
+                            <span>Treino com propósito</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="stats reveal" aria-label="Números da academia">
+            <div class="stats-grid wrap">
+                <div class="stat"><strong>+8</strong><span>anos de história</span></div>
+                <div class="stat"><strong>4.9</strong><span>nota no Google</span></div>
+                <div class="stat"><strong>1.200m²</strong><span>para evoluir</span></div>
+                <div class="stat"><strong>24h</strong><span>de acesso flexível</span></div>
+            </div>
+        </section>
+
+        <section class="story reveal" id="historia">
+            <div class="story-grid wrap">
+                <div class="story-image" role="img" aria-label="Pessoa treinando na academia"></div>
+                <div class="story-copy">
+                    <p class="eyebrow">De onde viemos</p>
+                    <h2>Força que transforma.</h2>
+                    <p>A Lion Force Academia nasceu para criar um espaço sério, intenso e eficiente para quem quer evoluir de verdade. Aqui, a disciplina é o ponto de partida, mas o resultado real vem do método, do cuidado e do acompanhamento correto.</p>
+                    <p>Mais do que treinar, você entra em um ambiente que combina estrutura premium, apoio próximo e foco em entregas concretas. Não é só corpo — é rotina, consistência e evolução real.</p>
+                    <div class="story-signature"><span class="signature-line"></span> Disciplina, método e evolução.</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="dark-section reveal" id="estrutura">
+            <div class="wrap">
+                <div class="section-heading">
+                    <h2>Equipamento que acompanha sua ambição.</h2>
+                    <p>Espaços pensados para força, condicionamento e mobilidade, com manutenção constante e liberdade para treinar do seu jeito.</p>
+                </div>
+                <div class="equipment-grid">
+                    <article class="equipment"><img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=900&q=80" alt="Área de musculação com pesos"><span class="equipment-number">01</span><div class="equipment-content"><h3>Força</h3><p>Rack, barras olímpicas, halteres até 40 kg e máquinas plate-loaded.</p></div></article>
+                    <article class="equipment"><img src="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?auto=format&fit=crop&w=900&q=80" alt="Área de exercícios cardiovasculares"><span class="equipment-number">02</span><div class="equipment-content"><h3>Cardio</h3><p>Esteiras, bikes, escadas e remos para elevar seu condicionamento.</p></div></article>
+                    <article class="equipment"><img src="https://images.unsplash.com/photo-1599058917212-d750089bc07e?auto=format&fit=crop&w=900&q=80" alt="Pessoa fazendo treino funcional"><span class="equipment-number">03</span><div class="equipment-content"><h3>Funcional</h3><p>Área aberta com kettlebells, cordas, trenó e tudo para seu circuito.</p></div></article>
+                </div>
+            </div>
+        </section>
+
+        <section class="rating reveal">
+            <div class="rating-grid wrap">
+                <div>
+                    <p class="eyebrow">Quem treina, recomenda</p>
+                    <h2>Nota alta.<br>Treino mais alto.</h2>
+                    <p class="rating-copy">A confiança da nossa comunidade aparece em cada avaliação. Acompanhamos o feedback todos os meses para melhorar a experiência de quem está aqui.</p>
+                </div>
+                <div>
+                    <div class="rating-score"><strong class="score">4,9</strong><div><div class="stars" aria-label="5 de 5 estrelas">★★★★★</div><div class="score-detail"><strong>Excelente no Google</strong><span>Mais de 380 avaliações verificadas</span></div></div></div>
+                    <div class="rating-bars">
+                        <div class="rating-row"><span>5 ★</span><div class="bar"><i style="width: 92%"></i></div><span>92%</span></div>
+                        <div class="rating-row"><span>4 ★</span><div class="bar"><i style="width: 6%"></i></div><span>6%</span></div>
+                        <div class="rating-row"><span>3 ★</span><div class="bar"><i style="width: 2%"></i></div><span>2%</span></div>
+                    </div>
+                    <p class="rating-updated"><i data-lucide="refresh-cw" class="icon"></i> Classificação acompanhada e atualizada mensalmente.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="plans reveal" id="planos">
+            <div class="wrap">
+                <div class="section-heading"><h2>Escolha o seu compromisso.</h2><p>Planos Lion Force com valores claros, estrutura completa e benefícios para você manter a evolução.</p></div>
+                <div class="plans-grid">
+                    <article class="plan" tabindex="0"><h3>Mensal</h3><p class="plan-description">Flexibilidade para começar agora.</p><div class="price">R$ 149<small>,99/mês</small></div><ul><li><i data-lucide="check" class="icon"></i> Acesso à estrutura completa</li><li><i data-lucide="check" class="icon"></i> Treino digital personalizado</li><li><i data-lucide="check" class="icon"></i> Matrícula: R$ 49,99</li></ul><a class="btn btn--outline" href="#cadastro">Quero esse plano</a></article>
+                    <article class="plan plan--featured is-selected" tabindex="0"><span class="plan-tag">Mais escolhido</span><h3>Trimestral</h3><p class="plan-description">Mais constância para acelerar sua evolução.</p><div class="price">3x R$ 119<small>,99/mês</small></div><ul><li><i data-lucide="check" class="icon"></i> Acesso à estrutura completa</li><li><i data-lucide="check" class="icon"></i> Treino personalizado pelo Next Fit</li><li><i data-lucide="check" class="icon"></i> Pagamento em 3x</li></ul><a class="btn" href="#cadastro">Quero esse plano</a></article>
+                    <article class="plan" tabindex="0"><h3>Semestral</h3><p class="plan-description">Compromisso para construir resultado.</p><div class="price">6x R$ 99<small>,99/mês</small></div><ul><li><i data-lucide="check" class="icon"></i> Acesso à estrutura completa</li><li><i data-lucide="check" class="icon"></i> Acompanhamento de evolução</li><li><i data-lucide="check" class="icon"></i> Pagamento em 6x</li></ul><a class="btn btn--outline" href="#cadastro">Quero esse plano</a></article>
+                    <article class="plan is-selected" tabindex="0"><span class="plan-tag">Mais escolhido</span><h3>Anual</h3><p class="plan-description">O melhor valor para sua jornada.</p><div class="price">12x R$ 79<small>,99/mês</small></div><ul><li><i data-lucide="check" class="icon"></i> Acesso à estrutura completa</li><li><i data-lucide="check" class="icon"></i> Evolução acompanhada pelo Next Fit</li><li><i data-lucide="check" class="icon"></i> Garrafinha Lion Force inclusa</li></ul><a class="btn btn--outline" href="#cadastro">Quero esse plano</a></article>
+                </div>
+                <div class="plans-extra"><span><strong>Matrícula:</strong> R$ 49,99</span><span><strong>Avaliação física:</strong> R$ 49,99</span><span><strong>Aula avulsa / musculação:</strong> R$ 19,99</span></div>
+            </div>
+        </section>
+
+        <section class="app-section reveal" aria-label="App e acompanhamento personalizado">
+            <div class="app-grid wrap">
+                <div class="app-content">
+                    <p class="eyebrow">Seu treino, no seu tempo</p>
+                    <h2>Treinos pensados para você. Acompanhamento real para evoluir.</h2>
+                    <p>Na Lion Force Academia, o treino é planejado com atenção e estratégia. Você não recebe um programa genérico: recebe acompanhamento próximo, objetivo e direcionado ao seu momento, metas e rotina.</p>
+                    <div class="feature-list">
+                        <div class="feature-item"><i data-lucide="check-circle" class="icon"></i><div><strong>Atendimento 1:1</strong><span>Você treina com acompanhamento próximo, seguro e direcionado para o que realmente importa.</span></div></div>
+                        <div class="feature-item"><i data-lucide="check-circle" class="icon"></i><div><strong>Treinos personalizados</strong><span>Planos exclusivos para o seu objetivo, com foco em evolução, performance e consistência.</span></div></div>
+                        <div class="feature-item"><i data-lucide="check-circle" class="icon"></i><div><strong>App Next Fit</strong><span>Utilizamos o melhor e mais completo app do mercado fitness, com vídeos de demonstração e treino fácil de seguir.</span></div></div>
+                        <div class="feature-item"><i data-lucide="check-circle" class="icon"></i><div><strong>Acompanhamento real</strong><span>Evolução monitorada de perto, com eficiência, segurança e o suporte certo para cada etapa.</span></div></div>
+                    </div>
+                    <p class="app-promo">É isso aí! Agora é só voltar a usar o painel e acompanhar sua evolução com total liberdade, direto pelo Next Fit. 👊🔥</p>
+                </div>
+                <div class="app-card" aria-label="Visual do app de treino">
+                    <img class="app-product-image" src="../587298132_17859881397546175_7672480555977320641_n.jpg" alt="Painel do aplicativo Next Fit com treinos, resultados e avaliação corporal">
+                    <div class="app-downloads" aria-label="Baixar o aplicativo Next Fit">
+                        <a class="app-download" href="https://apps.apple.com/br/app/next-fit/id1360859531" target="_blank" rel="noreferrer"><i data-lucide="apple" class="icon"></i> Apple Store</a>
+                        <a class="app-download" href="https://play.google.com/store/apps/details?id=br.com.fitastic.appaluno&hl=pt_BR&gl=US" target="_blank" rel="noreferrer"><i data-lucide="play" class="icon"></i> Play Store</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="team reveal" id="equipe">
+            <div class="wrap">
+                <div class="section-heading"><h2>Foco, presença e evolução.</h2><p>Uma marca em crescimento, com identidade forte e uma comunidade que valoriza disciplina e resultado.</p></div>
+                <div class="founders"><p class="team-label">Próximos passos</p><div class="team-grid"><article class="person person--original"><h3>Marca em crescimento</h3><p>Perfil e liderança serão apresentados em breve, com a identidade da academia sendo reforçada em toda a experiência.</p></article></div></div>
+            </div>
+        </section>
+
+        <section class="visit reveal" id="contato">
+            <div class="visit-grid wrap">
+                <div class="visit-copy"><p class="eyebrow">Passe para conhecer</p><h2>O treino fica perto de você</h2><p>Estamos no coração de São Paulo, com foco em desempenho, disciplina e um ambiente pensado para quem quer evoluir de verdade.</p><div class="contact-list"><div class="contact-item"><i data-lucide="map-pin" class="icon"></i><div><strong>Endereço</strong><span>Rua Fonte Nova, 34A - Jardim Das Fontes, São Paulo - SP, 04894470</span></div></div><div class="contact-item"><i data-lucide="phone" class="icon"></i><div><strong>WhatsApp</strong><span><a href="https://wa.me/5511943544884" target="_blank" rel="noreferrer">+55 (11) 94354-4884</a></span></div></div><div class="contact-item"><i data-lucide="mail" class="icon"></i><div><strong>E-mail</strong><span><a href="mailto:contatoslttiago@gmail.com">contatoslttiago@gmail.com</a></span></div></div></div><a class="btn" href="https://www.google.com/maps/search/?api=1&query=Rua+Fonte+Nova,+34A+-+Jardim+Das+Fontes,+Sao+Paulo,+SP,+04894470" target="_blank" rel="noreferrer">Abrir no Google Maps <i data-lucide="external-link" class="icon"></i></a></div>
+                <div class="map"><iframe title="Mapa da localização da academia" src="https://www.google.com/maps?q=Rua+Fonte+Nova,+34A+-+Jardim+Das+Fontes,+Sao+Paulo,+SP,+04894470&z=15&output=embed" loading="lazy" allowfullscreen></iframe><div class="map-pin"><i data-lucide="dumbbell" class="icon"></i></div></div>
+            </div>
+        </section>
+
+        <section class="signup reveal" id="cadastro">
+            <div class="signup-grid wrap"><div class="signup-copy"><div class="signup-brand-mark"><img src="Lion force academia.png" alt="Leão da logo Lion Force Academia"></div><p class="eyebrow">Seu próximo passo</p><h2>Comece<br>agora.</h2><p>Preencha seus dados e nossa equipe entra em contato para te apresentar a Lion Force Academia e o melhor caminho para sua evolução.</p></div><form class="signup-form" id="signup-form"><label>Seu nome<input type="text" name="name" placeholder="Como podemos chamar você?" required></label><label>Seu WhatsApp<input type="tel" name="phone" placeholder="(11) 94354-4884" required></label><label>Seu e-mail<input type="email" name="email" placeholder="voce@email.com" required></label><label>Plano de interesse<select name="plan" required><option value="">Selecione</option><option>Mensal</option><option>Trimestral</option><option>Semestral</option><option>Anual</option><option>Ainda não sei</option></select></label><button class="btn" type="submit">Quero conhecer a Lion Force <i data-lucide="arrow-right" class="icon"></i></button><p class="form-message" id="form-message" role="status"></p></form></div>
+        </section>
+    </main>
+
+    <footer><div class="footer-inner wrap"><span>© 2026 Lion Force Academia. Força, disciplina e evolução.</span><div class="footer-links"><a href="#inicio">Voltar ao topo</a><a href="https://www.instagram.com/lionforce_academia/" target="_blank" rel="noreferrer">Instagram</a><a href="https://wa.me/5511943544884" target="_blank" rel="noreferrer">WhatsApp</a><a href="https://apps.apple.com/br/app/next-fit/id1360859531" target="_blank" rel="noreferrer">App Store</a><a href="https://play.google.com/store/apps/details?id=br.com.fitastic.appaluno&hl=pt_BR&gl=US" target="_blank" rel="noreferrer">Play Store</a></div></div></footer>
+    <script>
+        lucide.createIcons();
+
+        const revealItems = document.querySelectorAll('.reveal');
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                }
+            });
+        }, { threshold: 0.12 });
+
+        revealItems.forEach((item) => revealObserver.observe(item));
+
+        document.querySelectorAll('.plan').forEach((card) => {
+            const selectCard = () => {
+                document.querySelectorAll('.plan').forEach((item) => item.classList.remove('is-selected'));
+                card.classList.add('is-selected');
+            };
+
+            card.addEventListener('click', selectCard);
+            card.addEventListener('keydown', (event) => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    selectCard();
+                }
+            });
+        });
+
+        document.getElementById('signup-form').addEventListener('submit', function (event) {
+            event.preventDefault();
+            const form = event.currentTarget;
+            const name = form.elements.name.value.trim().split(' ')[0];
+            const message = document.getElementById('form-message');
+            message.textContent = `Obrigado, ${name || 'atleta'}! Recebemos seu cadastro e vamos falar com você em breve.`;
+            form.reset();
+        });
+    </script>
+</body>
+</html>
