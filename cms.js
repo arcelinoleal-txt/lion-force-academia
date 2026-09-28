@@ -138,8 +138,13 @@
             prev.disabled = grid.scrollLeft <= 4;
             next.disabled = grid.scrollLeft >= over - 4;
         }
-        prev.addEventListener('click', function () { grid.scrollBy({ left: -step(), behavior: 'smooth' }); });
-        next.addEventListener('click', function () { grid.scrollBy({ left: step(), behavior: 'smooth' }); });
+        function rolar(dir) {
+            var d = dir * step();
+            try { grid.scrollBy({ left: d, behavior: 'smooth' }); }
+            catch (e) { grid.scrollLeft += d; }
+        }
+        prev.addEventListener('click', function () { rolar(-1); });
+        next.addEventListener('click', function () { rolar(1); });
         grid.addEventListener('scroll', sync, { passive: true });
         addEventListener('resize', sync, { passive: true });
         if (count) {
