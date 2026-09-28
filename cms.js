@@ -240,10 +240,20 @@
     /* ---------- NOSSA HISTÓRIA ---------- */
     function renderHistoria() {
         var box = document.getElementById('historiaBox');
-        if (!box) return;
         getJSON('conteudo/historia.json').then(function (d) {
             var h = d.historia || {};
             var f = h.fundador || {};
+
+            var eyebrow = document.querySelector('[data-hist-eyebrow]');
+            if (eyebrow) eyebrow.textContent = h.subtitulo || 'Nossa história';
+            var heroH1 = document.querySelector('[data-hist-titulo]');
+            if (heroH1) {
+                var t = (h.titulo || 'Nossa história').trim();
+                var partes = t.split(/\s+/);
+                var ult = partes.pop();
+                heroH1.innerHTML = partes.join(' ') + ' <span>' + esc(ult) + '.</span>';
+            }
+            if (!box) return;
             var temFoto = !!f.foto;
             var marca = (h.marca || []).map(function (m) {
                 return '<li><i data-lucide="check" class="icon"></i><span>' + esc(m) + '</span></li>';
