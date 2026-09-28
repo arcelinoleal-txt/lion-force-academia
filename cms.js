@@ -104,6 +104,51 @@
 
     /* ---------- EQUIPE (equipe + time da unidade) ---------- */
     var unitNames = {};
+
+    function personCard(m, uname) {
+        var foto = m.foto || '';
+        var tag = (foto ? '' : ' person--placeholder') + (m.destaque ? ' person--destaque' : '');
+        var insta = m.instagram ? '<a class="person-insta" href="' + esc(m.instagram) + '" target="_blank" rel="noreferrer"><i data-lucide="instagram" class="icon"></i> Instagram</a>' : '';
+        var media = foto
+            ? '<div class="person-media"><img src="' + esc(foto) + '" alt="' + esc(m.nome) + '" loading="lazy">' + (m.cargo ? '<span class="person-role">' + esc(m.cargo.split('\u00b7')[0].trim()) + '</span>' : '') + '</div>'
+            : '<div class="person-media"><i data-lucide="user" class="icon"></i></div>';
+        return '<article class="person' + tag + ' reveal">' + media +
+            '<h3>' + esc(m.nome) + '</h3>' +
+            (m.cargo ? '<p>' + esc(m.cargo) + (uname ? ' \u00b7 ' + esc(uname) : '') + '</p>' : (uname ? '<p>' + esc(uname) + '</p>' : '')) +
+            insta + '</article>';
+    }
+
+    function setupTeamNav(grid) {
+        var nav = grid.parentNode.querySelector('[data-team-nav]');
+        if (!nav) return;
+        var prev = nav.querySelector('[data-team-prev]');
+        var next = nav.querySelector('[data-team-next]');
+        var count = nav.querySelector('[data-team-count]');
+        function step() {
+            var card = grid.querySelector('.person');
+            if (!card) return 280;
+            var gap = parseFloat(getComputedStyle(grid).columnGap || '18') || 18;
+            return card.getBoundingClientRect().width + gap;
+        }
+        function sync() {
+            var over = grid.scrollWidth - grid.clientWidth;
+            var multi = over > 8;
+            nav.hidden = !multi;
+            if (!multi) return;
+            prev.disabled = grid.scrollLeft <= 4;
+            next.disabled = grid.scrollLeft >= over - 4;
+        }
+        prev.addEventListener('click', function () { grid.scrollBy({ left: -step(), behavior: 'smooth' }); });
+        next.addEventListener('click', function () { grid.scrollBy({ left: step(), behavior: 'smooth' }); });
+        grid.addEventListener('scroll', sync, { passive: true });
+        addEventListener('resize', sync, { passive: true });
+        if (count) {
+            var total = grid.querySelectorAll('.person').length;
+            count.textContent = total + (total === 1 ? ' profissional' : ' profissionais');
+        }
+        sync();
+    }
+
     function renderEquipe() {
         var grids = document.querySelectorAll('#equipeGrid, [data-equipe-unidade]');
         if (!grids.length) return;
@@ -122,16 +167,17 @@
                     return;
                 }
                 if (!list.length) {
+                    grid.classList.add('team-grid--empty');
                     grid.innerHTML = '<article class="person person--original reveal"><h3>Equipe em montagem</h3><p>Os perfis dos treinadores serão apresentados aqui em breve.</p></article>';
                 } else {
+                    grid.classList.remove('team-grid--empty');
                     grid.innerHTML = list.map(function (m) {
-                        var uname = !onlyUnit && m.unidade && unitNames[m.unidade] ? ' · ' + unitNames[m.unidade] : '';
-                        return '<article class="person reveal">' +
-                            (m.foto ? '<img src="' + esc(m.foto) + '" alt="' + esc(m.nome) + '" loading="lazy">' : '') +
-                            '<h3>' + esc(m.nome) + '</h3><p>' + esc(m.cargo || '') + uname + '</p></article>';
+                        var uname = !onlyUnit && m.unidade && unitNames[m.unidade] ? unitNames[m.unidade] : '';
+                        return personCard(m, uname);
                     }).join('');
                 }
                 refresh(grid);
+                setupTeamNav(grid);
             });
         }).catch(function () {});
     }
@@ -191,7 +237,50 @@
         });
     }
 
+    /* ---------- TEXTOS GLOBAIS (horários, contatos, números) ---------- */
+    function aplicarTextos(t) {
+        if (!t) return;
+        var semana = t.horarioSemana, sab = t.horarioSabado, wa = t.whatsapp;
+        var faixa = 'Seg a Sex · ' + semana + ' · Sáb · ' + sab;
+        var topo = 'Segunda a sexta · ' + semana + ' · Sábado · ' + sab;
+
+        document.querySelectorAll('.topbar span:last-child').forEach(function (el) {
+            var txt = el.textContent.replace(/Seg a Sex.*$/i, faixa);
+            el.innerHTML = txt;
+            var link = el.querySelector('a');
+            if (link && wa) link.href = 'https://wa.me/' + wa;
+        });
+        document.querySelectorAll('.foot-base .wrap span:last-child').forEach(function (el) {
+            el.textContent = faixa;
+        });
+        document.querySelectorAll('[data-txt="nota"]').forEach(function (el) { el.textContent = t.nota; });
+        document.querySelectorAll('[data-txt="avaliacoes"]').forEach(function (el) { el.textContent = t.avaliacoes; });
+        document.querySelectorAll('[data-txt="areaM2"]').forEach(function (el) { el.textContent = t.areaM2; });
+        document.querySelectorAll('[data-txt="anosHistoria"]').forEach(function (el) { el.textContent = t.anosHistoria; });
+        if (wa) {
+            document.querySelectorAll('a[href*="wa.me"]').forEach(function (a) {
+                a.href = 'https://wa.me/' + wa;
+            });
+        }
+        if (t.email) {
+            document.querySelectorAll('a[href^="mailto:"]').forEach(function (a) { a.href = 'mailto:' + t.email; });
+        }
+        if (t.instagram) {
+            document.querySelectorAll('a[href*="instagram.com/lionforce"]').forEach(function (a) { a.href = t.instagram; });
+        }
+        if (t.telefone) {
+            document.querySelectorAll('a[href^="tel:"]').forEach(function (a) { a.textContent = t.telefone; });
+        }
+    }
+
+    function renderTextos() {
+        return getJSON('conteudo/textos.json')
+            .then(function (d) { aplicarTextos(d.textos || {}); })
+            .catch(function () { });
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
+        renderTextos();
         renderPlans();
         renderQuotes();
         renderGaleria();

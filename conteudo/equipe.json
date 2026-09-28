@@ -1,1 +1,36 @@
-{"membros":[{"cargo":"Personal Trainer · Treinos Personalizados · Consultoria Online · Avaliação Física","foto":"fotos/taty-santos-personal.jpg","nome":"Taty Santos","unidade":"jardim-das-fontes"}]}
+{
+  "membros": [
+    {
+      "nome": "Taty Santos",
+      "cargo": "Personal Trainer · Treinos Personalizados · Consultoria Online · Avaliação Física",
+      "foto": "fotos/taty-santos-personal.jpg",
+      "unidade": "jardim-das-fontes",
+      "instagram": "https://www.instagram.com/_tatysantospersonal/",
+      "destaque": true
+    },
+    {
+      "nome": "Nome do Personal",
+      "cargo": "Cargo · Especialidade",
+      "foto": "",
+      "unidade": "jardim-das-fontes",
+      "instagram": "",
+      "destaque": false
+    },
+    {
+      "nome": "Nome do Personal",
+      "cargo": "Cargo · Especialidade",
+      "foto": "",
+      "unidade": "jardim-das-fontes",
+      "instagram": "",
+      "destaque": false
+    },
+    {
+      "nome": "Nome do Personal",
+      "cargo": "Cargo · Especialidade",
+      "foto": "",
+      "unidade": "jardim-das-fontes",
+      "instagram": "",
+      "destaque": false
+    }
+  ]
+}

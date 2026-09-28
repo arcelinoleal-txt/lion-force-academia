@@ -87,14 +87,23 @@
         <!-- PAINEL -->
         <section id="panel" class="hidden">
             <div class="tabs" role="tablist">
-                <button class="tab is-active" data-tab="planos" type="button">Planos</button>
+                <button class="tab is-active" data-tab="textos" type="button">Textos do site</button>
+                <button class="tab" data-tab="planos" type="button">Planos</button>
                 <button class="tab" data-tab="depoimentos" type="button">Depoimentos</button>
                 <button class="tab" data-tab="equipe" type="button">Equipe</button>
                 <button class="tab" data-tab="galeria" type="button">Galeria</button>
                 <button class="tab" data-tab="unidades" type="button">Unidades</button>
             </div>
 
-            <div class="card" data-pane="planos">
+            <div class="card" data-pane="textos">
+                <h2>Textos do site</h2>
+                <p class="hint">Horários, contatos e números que aparecem em todo o site. É só publicar aqui — o site inteiro atualiza. Não precisa mexer em código.</p>
+                <div id="txtList"></div>
+                <button class="btn" id="txtSave" type="button" style="width:100%">Publicar textos</button>
+                <p class="msg" id="txtMsg"></p>
+            </div>
+
+            <div class="card hidden" data-pane="planos">
                 <h2>Planos</h2>
                 <p class="hint">Preços e benefícios. O plano com “destaque” aparece em preto e maior.</p>
                 <div id="planosList"></div>
@@ -372,10 +381,16 @@
             var box = document.getElementById('eqList'); box.innerHTML = '';
             (eqData.membros || []).forEach(function (m, i) {
                 var d = document.createElement('div'); d.className = 'item';
-                d.innerHTML = '<div class="item-head"><strong>' + (m.nome || 'Nova pessoa') + '</strong><div class="item-actions"><button type="button" class="icon-btn danger" data-act="del">×</button></div></div>';
-                [['Nome', 'nome'], ['Cargo (ex: Musculação)', 'cargo']].forEach(function (cfg) {
+                d.innerHTML = '<div class="item-head"><strong>' + (m.nome || 'Nova pessoa') + '</strong>' +
+                    '<div class="item-actions">' +
+                    '<button type="button" class="icon-btn" data-act="up" title="Mover para cima">\u2191</button>' +
+                    '<button type="button" class="icon-btn" data-act="down" title="Mover para baixo">\u2193</button>' +
+                    '<button type="button" class="icon-btn danger" data-act="del" title="Remover">\u00d7</button>' +
+                    '</div></div>';
+                [['Nome', 'nome'], ['Cargo (ex: Personal Trainer \u00b7 Musculação)', 'cargo'], ['Instagram (link do perfil)', 'instagram']].forEach(function (cfg) {
                     var l = document.createElement('label'); l.className = 'f'; l.textContent = cfg[0];
                     var inp = document.createElement('input'); inp.type = 'text'; inp.value = m[cfg[1]] || '';
+                    inp.placeholder = cfg[1] === 'instagram' ? 'https://www.instagram.com/...' : '';
                     inp.addEventListener('input', function () { m[cfg[1]] = inp.value; });
                     l.appendChild(inp); d.appendChild(l);
                 });
@@ -384,18 +399,36 @@
                 selU.innerHTML = unitOptions(m.unidade);
                 selU.addEventListener('change', function () { m.unidade = selU.value; });
                 lu.appendChild(selU); d.appendChild(lu);
+                var ld = document.createElement('label'); ld.className = 'f'; ld.textContent = 'Destaque (fica maior e primeiro)';
+                var sel = document.createElement('select');
+                sel.innerHTML = '<option value="0">Não</option><option value="1">Sim</option>';
+                sel.value = m.destaque ? '1' : '0';
+                sel.addEventListener('change', function () { m.destaque = sel.value === '1'; });
+                ld.appendChild(sel); d.appendChild(ld);
                 var lf = document.createElement('label'); lf.className = 'f'; lf.textContent = 'Foto';
                 d.appendChild(lf);
                 d.appendChild(photoField(m.foto, function (v) { m.foto = v; }));
-                d.querySelector('[data-act]').addEventListener('click', function () {
-                    if (confirm('Remover esta pessoa?')) { eqData.membros.splice(i, 1); renderEq(); }
+                d.querySelectorAll('[data-act]').forEach(function (b) {
+                    b.addEventListener('click', function () {
+                        var a = eqData.membros;
+                        if (b.dataset.act === 'del' && confirm('Remover esta pessoa?')) a.splice(i, 1);
+                        if (b.dataset.act === 'up' && i > 0) { a.splice(i - 1, 0, a.splice(i, 1)[0]); }
+                        if (b.dataset.act === 'down' && i < a.length - 1) { a.splice(i + 1, 0, a.splice(i, 1)[0]); }
+                        renderEq();
+                    });
                 });
                 box.appendChild(d);
             });
+            if (!(eqData.membros || []).length) {
+                var vazio = document.createElement('p');
+                vazio.className = 'hint';
+                vazio.textContent = 'Nenhum profissional cadastrado. Use o botão "+ Adicionar pessoa".';
+                box.appendChild(vazio);
+            }
         }
         document.getElementById('eqAdd').addEventListener('click', function () {
             var firstUnit = (unisData.unidades[0] && unisData.unidades[0].id) || '';
-            eqData.membros.push({ nome: '', cargo: '', foto: '', unidade: firstUnit });
+            eqData.membros.push({ nome: '', cargo: '', foto: '', unidade: firstUnit, instagram: '', destaque: false });
             renderEq();
         });
         document.getElementById('eqSave').addEventListener('click', function () {
@@ -493,6 +526,43 @@
             .catch(function () { msg('uniMsg', 'Erro ao publicar. Tente de novo.', false); }).finally(function () { b.disabled = false; });
         });
 
+        /* ---------- TEXTOS DO SITE ---------- */
+        var txtData = null;
+        var TXT_CAMPOS = [
+            ['horarioSemana', 'Horário seg a sex (ex: 06:00 — 22:00)', 'text'],
+            ['horarioSabado', 'Horário sábado (ex: 09:00 — 13:00)', 'text'],
+            ['horarioFechado', 'Domingo / feriados (ex: Fechado)', 'text'],
+            ['telefone', 'Telefone com DDD (ex: (11) 94354-4884)', 'text'],
+            ['whatsapp', 'WhatsApp só números (ex: 5511943544884)', 'text'],
+            ['email', 'E-mail de contato', 'text'],
+            ['instagram', 'Instagram da academia', 'text'],
+            ['nota', 'Nota no Google (ex: 4.9)', 'text'],
+            ['avaliacoes', 'Quantidade de avaliações (ex: 380)', 'text'],
+            ['areaM2', 'Metragem da estrutura (ex: 1.200m²)', 'text'],
+            ['anosHistoria', 'Anos de história (ex: +8)', 'text']
+        ];
+        function renderTxt() {
+            var box = document.getElementById('txtList'); box.innerHTML = '';
+            TXT_CAMPOS.forEach(function (cfg) {
+                var l = document.createElement('label'); l.className = 'f'; l.textContent = cfg[1];
+                var inp = document.createElement('input'); inp.type = 'text';
+                inp.value = (txtData.textos || {})[cfg[0]] || '';
+                inp.addEventListener('input', function () {
+                    if (!txtData.textos) txtData.textos = {};
+                    txtData.textos[cfg[0]] = inp.value;
+                });
+                l.appendChild(inp); box.appendChild(l);
+            });
+        }
+        document.getElementById('txtSave').addEventListener('click', function () {
+            var b = this; b.disabled = true; msg('txtMsg', 'Publicando...', true);
+            if (!txtData.textos) txtData.textos = {};
+            saveJSON('conteudo/textos.json', txtData, 'Admin: atualiza textos do site')
+                .then(function () { msg('txtMsg', 'Publicado! O site atualiza em 1–2 min.', true); })
+                .catch(function () { msg('txtMsg', 'Erro ao publicar. Tente de novo.', false); })
+                .finally(function () { b.disabled = false; });
+        });
+
         /* ---------- BOOT ---------- */
         function boot() {
             Promise.all([
@@ -507,7 +577,12 @@
                 if (!Array.isArray(galData.fotos)) galData.fotos = [];
                 if (!Array.isArray(unisData.unidades)) unisData.unidades = [];
                 renderPlanos(); renderDep(); renderEq(); renderGal(); renderUnis();
-            }).catch(function () { msg('planosMsg', 'Falha ao carregar dados. Recarregue a página.', false); });
+                return loadJSON('conteudo/textos.json').catch(function () { return { textos: {} }; });
+            }).then(function (t) {
+                txtData = t;
+                if (!txtData.textos) txtData.textos = {};
+                renderTxt();
+            }).catch(function () { msg('txtMsg', 'Falha ao carregar dados. Recarregue a página.', false); });
         }
         /* Sempre pede usuário e senha; o token fica guardado no aparelho. */
     </script>
