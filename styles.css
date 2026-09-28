@@ -367,13 +367,9 @@ footer.site ul a:hover { color: var(--red); }
 .wa-float:hover { transform: scale(1.08); background: var(--red); }
 
 /* Balão de aviso que acompanha a bolha do WhatsApp */
-.wa-bubble { position: fixed; z-index: 61; right: 90px; bottom: calc(34px + env(safe-area-inset-bottom, 0px)); background: var(--ink); color: #fff; border: 1px solid var(--line); border-radius: 16px 16px 4px 16px; padding: 11px 16px; font: 700 .8rem var(--body); letter-spacing: .02em; white-space: nowrap; box-shadow: 0 16px 40px rgba(0,0,0,.4); display: flex; align-items: center; gap: 9px; opacity: 0; transform: translateY(8px) scale(.94); pointer-events: none; transition: opacity .35s ease, transform .35s ease; }
-.wa-bubble.show { opacity: 1; transform: translateY(0) scale(1); }
-.wa-bubble .icon { width: 17px; height: 17px; color: var(--red); flex: 0 0 17px; }
-.wa-bubble::after { content: ''; position: absolute; right: -6px; bottom: 0; width: 12px; height: 12px; background: var(--ink); border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); transform: rotate(45deg); }
+.wa-bubble { position: fixed; z-index: 61; right: 90px; bottom: calc(34px + env(safe-area-inset-bottom, 0px)); background: var(--ink); color: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 11px 16px; font: 700 .8rem var(--body); letter-spacing: .02em; white-space: nowrap; box-shadow: 0 16px 40px rgba(0,0,0,.4); display: flex; align-items: center; gap: 9px; }
 @media (max-width: 480px) {
-    .wa-bubble { right: 16px; bottom: calc(92px + env(safe-area-inset-bottom, 0px)); font-size: .74rem; padding: 9px 13px; border-radius: 14px 14px 4px 14px; }
-    .wa-bubble::after { right: 18px; }
+    .wa-bubble { right: 16px; bottom: calc(92px + env(safe-area-inset-bottom, 0px)); font-size: .74rem; padding: 9px 13px; border-radius: 14px; }
 }
 .cookie { position: fixed; z-index: 70; left: 22px; right: 22px; bottom: calc(22px + env(safe-area-inset-bottom, 0px)); max-width: 520px; background: var(--ink); color: #fff; border-radius: 16px; padding: 20px 22px; display: none; gap: 14px; box-shadow: 0 20px 50px rgba(0,0,0,.35); }
 .cookie.show { display: grid; }
