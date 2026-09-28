@@ -327,8 +327,8 @@
         }
 
         /* ---------- LOGIN ---------- */
-        var AUTH_HASH = '8a2a433eaa8a1ba423dd7be5e6bbabb214b4db91d87b597539e594b54c4c20bf';
-        var VAULT = {"data":"zymIbq7PpoI+zRS/sZ4+69kzHME6tDrOwopJxpgYMYPHKpRBbEwpFLwgwZECgNxP9C1iYMpQLWxECafmEjblBoIXO6EwtEnKGutkvBteaz2raC1+BfX9B3mo9Puab11y","mac":"/kHai7xTZMg5yh/ieYIVAogSLd9ZxqdkspUfCT9h9t4=","iv":"AMV/DMxoijdov5b20UiKRA==","salt":"Api9D8Hkm4MVA4uLMOB8SQ=="};
+        var AUTH_HASH = '04784ca0c149fad58cf07bdb19909df87b8a38bf61ad3519cf026acd7f8806b4';
+        var VAULT = {"data":"G5Q6hACz2WSCW7hpmYds9sZUbw5DZcyNpWzP7iEe+JXjVxS9YaKa1B/LjNJyFZyIpAcR/9oZ0Xt/o7oasxQnZFtpzy4mxDe3GPNNoSwCJ5aFWTUdlqevKUwEJ+AJ8JZ+","mac":"3+Y9092n9Dc2xS2X11B7UwZIWMwbW2hcnYv3noVScMU=","iv":"H3gCa+uS7bFhDM1U9ZgQuA==","salt":"j/p6Fyhe0pPFomB0G3S7YA=="};
         function sha256(str) {
             return crypto.subtle.digest('SHA-256', new TextEncoder().encode(str)).then(function (buf) {
                 return Array.prototype.map.call(new Uint8Array(buf), function (b) { return ('0' + b.toString(16)).slice(-2); }).join('');
@@ -439,17 +439,37 @@
                 iniciarMusica();
             }).catch(function () { msg('loginMsg', 'Falha de acesso. Fale com o suporte.', false); });
         }
+        /* Trava tentativas de adivinhação: espera progressiva e bloqueio por um tempo */
+        var tentativas = 0, bloqueadoAte = 0;
+        function travaMensagem() {
+            var faltam = Math.ceil((bloqueadoAte - Date.now()) / 1000);
+            if (faltam <= 0) return null;
+            return 'Muitas tentativas. Tente de novo em ' + faltam + ' segundo' + (faltam > 1 ? 's' : '') + '.';
+        }
         document.getElementById('loginBtn').addEventListener('click', function () {
             var u = document.getElementById('userInput').value.trim();
             var p = document.getElementById('passInput').value;
             if (!u || !p) { msg('loginMsg', 'Digite usuário e senha.', false); return; }
+            var espera = travaMensagem();
+            if (espera) { msg('loginMsg', espera, false); return; }
             msg('loginMsg', 'Verificando...', true);
             sha256(u + ':' + p).then(function (h) {
-                if (h !== AUTH_HASH) { msg('loginMsg', 'Usuário ou senha incorretos.', false); return; }
+                if (h !== AUTH_HASH) {
+                    tentativas++;
+                    // 3 tentativas: espera 15s. 5 ou mais: 10 minutos.
+                    bloqueadoAte = Date.now() + (tentativas >= 5 ? 600000 : tentativas * 5000);
+                    msg('loginMsg', 'Usuário ou senha incorretos. (' + tentativas + '/3 antes do bloqueio)', false);
+                    document.getElementById('passInput').value = '';
+                    return;
+                }
+                tentativas = 0; bloqueadoAte = 0;
                 msg('loginMsg', 'Abrindo...', true);
                 unlockVault(u + ':' + p).then(function (t) { usuarioAtual = u; enterWithToken(t); })
                 .catch(function () { msg('loginMsg', 'Falha ao destravar. Tente de novo.', false); });
             });
+        });
+        document.getElementById('passInput').addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') { e.preventDefault(); document.getElementById('loginBtn').click(); }
         });
         document.getElementById('logoutBtn').addEventListener('click', function () {
             token = ''; showPanel(false);
