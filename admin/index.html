@@ -94,6 +94,30 @@
                 <button class="tab" data-tab="equipe" type="button">Equipe</button>
                 <button class="tab" data-tab="galeria" type="button">Galeria</button>
                 <button class="tab" data-tab="unidades" type="button">Unidades</button>
+                <button class="tab" data-tab="seguranca" type="button">Segurança</button>
+            </div>
+
+            <div class="card hidden" data-pane="seguranca">
+                <h2>Segurança</h2>
+                <p class="hint">Troque a senha do painel quando quiser. O acesso ao GitHub continua o mesmo — só a senha do painel muda.</p>
+                <label class="f">Nova senha (mínimo 8 caracteres)<input type="text" id="newPass" placeholder="Nova senha" autocomplete="new-password"></label>
+                <label class="f">Repita a nova senha<input type="text" id="newPass2" placeholder="Repita a senha" autocomplete="new-password"></label>
+                <button class="btn" id="senhaSave" type="button" style="width:100%">Trocar senha</button>
+                <p class="msg" id="senhaMsg"></p>
+                <div class="row" style="margin-top:22px">
+                    <div>
+                        <h3 style="font:700 .8rem 'DM Sans';text-transform:uppercase;letter-spacing:.06em;color:rgba(255,255,255,.5);margin:0 0 8px">Acesso atual</h3>
+                        <p class="hint" id="userAtual" style="margin:0">—</p>
+                    </div>
+                    <div>
+                        <h3 style="font:700 .8rem 'DM Sans';text-transform:uppercase;letter-spacing:.06em;color:rgba(255,255,255,.5);margin:0 0 8px">Publicar pendente</h3>
+                        <p class="hint" id="pendencias" style="margin:0">—</p>
+                    </div>
+                </div>
+                <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px">
+                    <button class="btn" id="salvarTudo" type="button">Publicar tudo de uma vez</button>
+                    <p class="msg" id="tudoMsg" style="margin:0;align-self:center"></p>
+                </div>
             </div>
 
             <div class="card" data-pane="textos">
@@ -236,14 +260,83 @@
         }
 
         /* ---------- LOGIN ---------- */
-        var AUTH_HASH = '9c6fd5fdb70e735c5c61f51c11bcdba776c55f141978291bf7ead0903d21283d';
-        var VAULT = {"data":"B04ORSIBcrulzBIvRD2oWfCNbe84JhascdPgW+g4QhpbjgzsDPaiznOw4oeNa19yocvDZF4+4+tbvUeNeQcncEHMthAyGd7uuMEqN364gOKncrN6Xk9o7w0zdc/uawpT","mac":"SvJVnrlKMxmJLSfhKgwnfIihO/WdOS+RWeTSt/XI07k=","iv":"ANotnFsspLNtPrQE2jDSjw==","salt":"l+HwsMrGpD0GNikHENldiQ=="};
+        var AUTH_HASH = '8a2a433eaa8a1ba423dd7be5e6bbabb214b4db91d87b597539e594b54c4c20bf';
+        var VAULT = {"data":"zymIbq7PpoI+zRS/sZ4+69kzHME6tDrOwopJxpgYMYPHKpRBbEwpFLwgwZECgNxP9C1iYMpQLWxECafmEjblBoIXO6EwtEnKGutkvBteaz2raC1+BfX9B3mo9Puab11y","mac":"/kHai7xTZMg5yh/ieYIVAogSLd9ZxqdkspUfCT9h9t4=","iv":"AMV/DMxoijdov5b20UiKRA==","salt":"Api9D8Hkm4MVA4uLMOB8SQ=="};
         function sha256(str) {
             return crypto.subtle.digest('SHA-256', new TextEncoder().encode(str)).then(function (buf) {
                 return Array.prototype.map.call(new Uint8Array(buf), function (b) { return ('0' + b.toString(16)).slice(-2); }).join('');
             });
         }
         function b64ToBytes(s) { var bin = atob(s); var b = new Uint8Array(bin.length); for (var i = 0; i < bin.length; i++) b[i] = bin.charCodeAt(i); return b; }
+        function bytesToB64(u8) { var s = ''; for (var i = 0; i < u8.length; i++) s += String.fromCharCode(u8[i]); return btoa(s); }
+
+        /* Cria um cofre novo: mesmo formato do unlockVault, usado ao trocar a senha */
+        function lockVault(plainToken, chave) {
+            var salt = crypto.getRandomValues(new Uint8Array(16));
+            var iv = crypto.getRandomValues(new Uint8Array(16));
+            return crypto.subtle.importKey('raw', new TextEncoder().encode(chave), 'PBKDF2', false, ['deriveBits'])
+                .then(function (base) {
+                    return crypto.subtle.deriveBits({ name: 'PBKDF2', salt: salt, iterations: 120000, hash: 'SHA-1' }, base, 512);
+                }).then(function (bits) {
+                    var raw = new Uint8Array(bits);
+                    var aesKey = raw.slice(0, 32), hmacKey = raw.slice(32, 64);
+                    return crypto.subtle.importKey('raw', aesKey, { name: 'AES-CBC', iv: iv }, false, ['encrypt'])
+                        .then(function (ak) { return crypto.subtle.encrypt({ name: 'AES-CBC', iv: iv }, ak, new TextEncoder().encode(plainToken)); })
+                        .then(function (data) {
+                            var cat = new Uint8Array(salt.length + iv.length + data.length);
+                            cat.set(salt, 0); cat.set(iv, salt.length); cat.set(data, salt.length + iv.length);
+                            return crypto.subtle.importKey('raw', hmacKey, { name: 'HMAC', hash: 'SHA-256' }, false, ['sign'])
+                                .then(function (hk) { return crypto.subtle.sign('HMAC', hk, cat); })
+                                .then(function (mac) {
+                                    return {
+                                        data: bytesToB64(new Uint8Array(data)),
+                                        mac: bytesToB64(new Uint8Array(mac)),
+                                        iv: bytesToB64(iv),
+                                        salt: bytesToB64(salt)
+                                    };
+                                });
+                        });
+                });
+        }
+        function sha256Hex(str) {
+            return crypto.subtle.digest('SHA-256', new TextEncoder().encode(str)).then(function (buf) {
+                return Array.prototype.map.call(new Uint8Array(buf), function (b) { return ('0' + b.toString(16)).slice(-2); }).join('');
+            });
+        }
+        var usuarioAtual = '';
+        document.getElementById('senhaSave').addEventListener('click', function () {
+            var b = this;
+            var np = document.getElementById('newPass').value;
+            var np2 = document.getElementById('newPass2').value;
+            if (np.length < 8) { msg('senhaMsg', 'Use pelo menos 8 caracteres.', false); return; }
+            if (np !== np2) { msg('senhaMsg', 'As duas senhas não são iguais.', false); return; }
+            if (!usuarioAtual) { msg('senhaMsg', 'Sessão expirada. Entre de novo.', false); return; }
+            b.disabled = true; msg('senhaMsg', 'Gerando acesso...', true);
+            var novaChave = usuarioAtual + ':' + np;
+            Promise.all([lockVault(token, novaChave), sha256Hex(novaChave)]).then(function (res) {
+                var novoVault = res[0], novoHash = res[1];
+                return apiGet('admin/index.html').then(function (j) {
+                    var html = b64decode(j.content);
+                    var h2 = html.replace(/AUTH_HASH = '[^']+';/, "AUTH_HASH = '" + novoHash + "';");
+                    h2 = h2.replace(/VAULT = \{.*?\};/, 'VAULT = ' + JSON.stringify(novoVault) + ';');
+                    if (h2 === html) throw new Error('nao encontrou o cofre');
+                    return fetch(API + 'admin/index.html', {
+                        method: 'PUT', headers: Object.assign({ 'Content-Type': 'application/json' }, headers()),
+                        body: JSON.stringify({
+                            message: 'Admin: troca de senha do painel',
+                            content: b64encode(h2), sha: j.sha, branch: BRANCH
+                        })
+                    });
+                }).then(function (r) {
+                    if (!r.ok) throw new Error('HTTP ' + r.status);
+                    msg('senhaMsg', 'Senha trocada! Use a nova no próximo acesso.', true);
+                    document.getElementById('newPass').value = '';
+                    document.getElementById('newPass2').value = '';
+                });
+            }).catch(function (e) {
+                msg('senhaMsg', 'Erro ao trocar a senha (' + e.message + ').', false);
+            }).finally(function () { b.disabled = false; });
+        });
         function unlockVault(password) {
             var salt = b64ToBytes(VAULT.salt), iv = b64ToBytes(VAULT.iv),
                 data = b64ToBytes(VAULT.data), mac = b64ToBytes(VAULT.mac);
@@ -275,6 +368,7 @@
             fetch(API + 'conteudo/planos.json?ref=' + BRANCH, { headers: headers() }).then(function (r) {
                 if (!r.ok) throw new Error('HTTP ' + r.status);
                 showPanel(true); boot();
+                var u = document.getElementById('userAtual'); if (u) u.textContent = usuarioAtual ? 'Usuário: ' + usuarioAtual : '—';
             }).catch(function () { msg('loginMsg', 'Falha de acesso. Fale com o suporte.', false); });
         }
         document.getElementById('loginBtn').addEventListener('click', function () {
@@ -285,7 +379,7 @@
             sha256(u + ':' + p).then(function (h) {
                 if (h !== AUTH_HASH) { msg('loginMsg', 'Usuário ou senha incorretos.', false); return; }
                 msg('loginMsg', 'Abrindo...', true);
-                unlockVault(u + ':' + p).then(function (t) { enterWithToken(t); })
+                unlockVault(u + ':' + p).then(function (t) { usuarioAtual = u; enterWithToken(t); })
                 .catch(function () { msg('loginMsg', 'Falha ao destravar. Tente de novo.', false); });
             });
         });
@@ -622,6 +716,38 @@
                 .then(function () { msg('histMsg', 'Publicado! O site atualiza em 1–2 min.', true); })
                 .catch(function () { msg('histMsg', 'Erro ao publicar. Tente de novo.', false); })
                 .finally(function () { b.disabled = false; });
+        });
+
+        /* ---------- PUBLICAR TUDO ---------- */
+        document.getElementById('salvarTudo').addEventListener('click', function () {
+            var b = this;
+            b.disabled = true; msg('tudoMsg', 'Publicando tudo...', true);
+            var alvos = [
+                ['conteudo/textos.json', txtData, 'Admin: atualiza textos do site', 'txtMsg'],
+                ['conteudo/historia.json', histData, 'Admin: atualiza nossa história', 'histMsg'],
+                ['conteudo/planos.json', planosData, 'Admin: atualiza planos', 'planosMsg'],
+                ['conteudo/depoimentos.json', depData, 'Admin: atualiza depoimentos', 'depMsg'],
+                ['conteudo/equipe.json', eqData, 'Admin: atualiza equipe', 'eqMsg'],
+                ['conteudo/galeria.json', galData, 'Admin: atualiza galeria', 'galMsg'],
+                ['conteudo/unidades.json', unisData, 'Admin: atualiza unidades', 'uniMsg']
+            ];
+            var feitos = 0, erros = [];
+            alvos.reduce(function (p, a) {
+                return p.then(function () {
+                    return saveJSON(a[0], a[1], a[2]).then(function () {
+                        feitos++; msg(a[3], 'Publicado!', true);
+                    }).catch(function (e) {
+                        erros.push(a[0].split('/')[1]);
+                        msg(a[3], 'Erro ao publicar.', false);
+                    });
+                });
+            }, Promise.resolve()).then(function () {
+                if (erros.length) {
+                    msg('tudoMsg', 'Publicado ' + feitos + ' de ' + alvos.length + '. Falhou: ' + erros.join(', '), false);
+                } else {
+                    msg('tudoMsg', 'Tudo publicado (' + feitos + ' seções). O site atualiza em 1–2 min.', true);
+                }
+            }).finally(function () { b.disabled = false; });
         });
 
         /* ---------- BOOT ---------- */
