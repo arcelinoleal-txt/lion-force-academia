@@ -83,7 +83,9 @@
                 <li>Em <strong>Repository access</strong>, escolha <strong>Only select repositories</strong> e marque <strong>lion-force-academia</strong>.</li>
                 <li>Em <strong>Permissions → Contents</strong>, marque <strong>Read and write</strong>. Gere e cole abaixo.</li>
             </ol>
-            <label class="f">Token de acesso<input type="password" id="tokenInput" placeholder="github_pat_..." autocomplete="off"></label>
+            <label class="f">Usuário<input type="text" id="userInput" placeholder="Seu usuário" autocomplete="username"></label>
+            <label class="f">Senha<input type="password" id="passInput" placeholder="Sua senha" autocomplete="current-password"></label>
+            <label class="f hidden" id="tokenWrap">Token de acesso (só na primeira vez)<input type="password" id="tokenInput" placeholder="github_pat_..." autocomplete="off"></label>
             <button class="btn" id="loginBtn" type="button" style="width:100%">Entrar no painel</button>
             <p class="msg" id="loginMsg" role="status"></p>
         </section>
@@ -216,21 +218,40 @@
         }
 
         /* ---------- LOGIN ---------- */
+        var AUTH_HASH = '9c6fd5fdb70e735c5c61f51c11bcdba776c55f141978291bf7ead0903d21283d';
+        function sha256(str) {
+            return crypto.subtle.digest('SHA-256', new TextEncoder().encode(str)).then(function (buf) {
+                return Array.prototype.map.call(new Uint8Array(buf), function (b) { return ('0' + b.toString(16)).slice(-2); }).join('');
+            });
+        }
         function showPanel(show) {
             document.getElementById('loginCard').classList.toggle('hidden', show);
             document.getElementById('panel').classList.toggle('hidden', !show);
             document.getElementById('logoutBtn').classList.toggle('hidden', !show);
         }
-        document.getElementById('loginBtn').addEventListener('click', function () {
-            var t = document.getElementById('tokenInput').value.trim();
-            if (!t) { msg('loginMsg', 'Cole o token primeiro.', false); return; }
+        function enterWithToken(t, save) {
             token = t;
             msg('loginMsg', 'Verificando...', true);
             fetch(API + 'conteudo/planos.json?ref=' + BRANCH, { headers: headers() }).then(function (r) {
                 if (!r.ok) throw new Error('HTTP ' + r.status);
-                localStorage.setItem('lf-admin-token', token);
+                if (save) localStorage.setItem('lf-admin-token', token);
                 showPanel(true); boot();
             }).catch(function () { msg('loginMsg', 'Token inválido ou sem acesso ao repositório.', false); });
+        }
+        document.getElementById('loginBtn').addEventListener('click', function () {
+            var u = document.getElementById('userInput').value.trim();
+            var p = document.getElementById('passInput').value;
+            if (!u || !p) { msg('loginMsg', 'Digite usuário e senha.', false); return; }
+            msg('loginMsg', 'Verificando...', true);
+            sha256(u + ':' + p).then(function (h) {
+                if (h !== AUTH_HASH) { msg('loginMsg', 'Usuário ou senha incorretos.', false); return; }
+                var saved = localStorage.getItem('lf-admin-token') || '';
+                if (saved) { enterWithToken(saved, false); return; }
+                var wrap = document.getElementById('tokenWrap');
+                var t = document.getElementById('tokenInput').value.trim();
+                if (!t) { wrap.classList.remove('hidden'); msg('loginMsg', 'Primeiro acesso neste aparelho: cole o token uma vez.', true); return; }
+                enterWithToken(t, true);
+            });
         });
         document.getElementById('logoutBtn').addEventListener('click', function () {
             localStorage.removeItem('lf-admin-token'); token = ''; showPanel(false);
@@ -443,13 +464,7 @@
                 renderPlanos(); renderDep(); renderEq(); renderGal(); renderUni();
             }).catch(function () { msg('planosMsg', 'Falha ao carregar dados. Recarregue a página.', false); });
         }
-        if (token) {
-            document.getElementById('tokenInput').value = token;
-            fetch(API + 'conteudo/planos.json?ref=' + BRANCH, { headers: headers() }).then(function (r) {
-                if (!r.ok) throw new Error();
-                showPanel(true); boot();
-            }).catch(function () { showPanel(false); });
-        }
+        /* Sempre pede usuário e senha; o token fica guardado no aparelho. */
     </script>
 </body>
 </html>
