@@ -368,8 +368,21 @@ footer.site ul a:hover { color: var(--red); }
 
 /* Balão de aviso que acompanha a bolha do WhatsApp */
 .wa-bubble { position: fixed; z-index: 61; right: 90px; bottom: calc(34px + env(safe-area-inset-bottom, 0px)); background: var(--ink); color: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 11px 16px; font: 700 .8rem var(--body); letter-spacing: .02em; white-space: nowrap; box-shadow: 0 16px 40px rgba(0,0,0,.4); display: flex; align-items: center; gap: 9px; }
+.wa-bubble span { animation: wa-pisca 10s ease-in-out infinite; }
+@keyframes wa-pisca {
+    0%, 84% { opacity: 1; }
+    88% { opacity: .12; }
+    92% { opacity: 1; }
+    95% { opacity: .12; }
+    98%, 100% { opacity: 1; }
+}
 @media (max-width: 480px) {
     .wa-bubble { right: 16px; bottom: calc(92px + env(safe-area-inset-bottom, 0px)); font-size: .74rem; padding: 9px 13px; border-radius: 14px; }
+}
+
+/* Quem prefere menos movimento vê a frase sempre parada */
+@media (prefers-reduced-motion: reduce) {
+    .wa-bubble span { animation: none; }
 }
 .cookie { position: fixed; z-index: 70; left: 22px; right: 22px; bottom: calc(22px + env(safe-area-inset-bottom, 0px)); max-width: 520px; background: var(--ink); color: #fff; border-radius: 16px; padding: 20px 22px; display: none; gap: 14px; box-shadow: 0 20px 50px rgba(0,0,0,.35); }
 .cookie.show { display: grid; }
