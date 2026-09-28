@@ -114,6 +114,20 @@
                 <button class="tab" data-tab="galeria" type="button">Galeria</button>
                 <button class="tab" data-tab="unidades" type="button">Unidades</button>
                 <button class="tab" data-tab="seguranca" type="button">Segurança</button>
+                <button class="tab" data-tab="musica" type="button">Música</button>
+            </div>
+
+            <div class="card hidden" data-pane="musica">
+                <h2>Música no painel</h2>
+                <p class="hint">Cole o link de uma playlist do Spotify e ela aparece aqui, só para você.
+                Fica salva neste computador e não aparece para quem visita o site.</p>
+                <div class="musica-row">
+                    <input type="text" id="musicaInput" placeholder="Cole aqui o link da playlist do Spotify" autocomplete="off">
+                    <button class="btn" id="musicaOk" type="button">Tocar</button>
+                </div>
+                <div class="musica-frame" id="musicaFrame"></div>
+                <p class="musica-dica">O Spotify não deixa começar sozinho — precisa de um clique no play.
+                Aceita link de playlist, álbum ou música.</p>
             </div>
 
             <div class="card hidden" data-pane="seguranca">
@@ -136,17 +150,11 @@
 
                 <div class="musica">
                     <div class="musica-head">
-                        <h3>Música no painel</h3>
+                        <h3>Quer música enquanto edita?</h3>
                         <span class="sp"></span>
-                        <button class="btn btn--ghost btn--small" id="musicaLimpar" type="button">Trocar playlist</button>
+                        <button class="btn btn--ghost btn--small" data-ir-aba="musica" type="button">Abrir aba Música</button>
                     </div>
-                    <div class="musica-row">
-                        <input type="text" id="musicaInput" placeholder="Cole aqui o link da playlist do Spotify" autocomplete="off">
-                        <button class="btn" id="musicaOk" type="button">Tocar</button>
-                    </div>
-                    <div class="musica-frame" id="musicaFrame"></div>
-                    <p class="musica-dica">O Spotify não deixa começar sozinho — precisa de um clique no play.
-                    Aceita link de playlist, álbum ou música. Fica salvo só neste computador.</p>
+                    <p class="musica-dica" style="margin:0">A playlist do Spotify tem uma aba só dela, aqui do lado.</p>
                 </div>
                 <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px">
                     <button class="btn" id="salvarTudo" type="button">Publicar tudo de uma vez</button>
@@ -421,11 +429,12 @@
         document.getElementById('logoutBtn').addEventListener('click', function () {
             token = ''; showPanel(false);
         });
+        function abrirAba(nome) {
+            document.querySelectorAll('.tab').forEach(function (x) { x.classList.toggle('is-active', x.dataset.tab === nome); });
+            document.querySelectorAll('[data-pane]').forEach(function (p) { p.classList.toggle('hidden', p.dataset.pane !== nome); });
+        }
         document.querySelectorAll('.tab').forEach(function (t) {
-            t.addEventListener('click', function () {
-                document.querySelectorAll('.tab').forEach(function (x) { x.classList.toggle('is-active', x === t); });
-                document.querySelectorAll('[data-pane]').forEach(function (p) { p.classList.toggle('hidden', p.dataset.pane !== t.dataset.tab); });
-            });
+            t.addEventListener('click', function () { abrirAba(t.dataset.tab); });
         });
 
         /* ---------- PLANOS ---------- */
@@ -789,13 +798,6 @@
         document.getElementById('musicaInput').addEventListener('keydown', function (e) {
             if (e.key === 'Enter') { e.preventDefault(); tocarMusica(this.value, true); }
         });
-        document.getElementById('musicaLimpar').addEventListener('click', function () {
-            musicaSalva = '';
-            try { localStorage.removeItem('lf-musica'); } catch (e) { }
-            document.getElementById('musicaFrame').innerHTML = '';
-            document.getElementById('musicaInput').value = '';
-            document.getElementById('musicaInput').focus();
-        });
         function iniciarMusica() {
             try { musicaSalva = localStorage.getItem('lf-musica') || ''; } catch (e) { musicaSalva = ''; }
             if (musicaSalva) {
@@ -803,6 +805,10 @@
                 tocarMusica(musicaSalva, false);
             }
         }
+        /* Atalhos para pular entre abas */
+        document.querySelectorAll('[data-ir-aba]').forEach(function (b) {
+            b.addEventListener('click', function () { abrirAba(b.getAttribute('data-ir-aba')); });
+        });
 
         /* Botão de voltar ao topo */
         var topo = document.getElementById('voltarTopo');
