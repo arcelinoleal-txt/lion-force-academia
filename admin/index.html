@@ -105,7 +105,7 @@
             <div class="login-hero">
                 <img src="../Lion force academia.png" alt="Lion Force">
                 <h1>Área da <span>equipe</span></h1>
-                <p>Use seu usuário e senha. Sem token, sem complicação.</p>
+                <p>Use seu usuário e senha. A sessão fecha sozinha depois de 10 minutos sem mexer em nada.</p>
             </div>
             <label class="f">Usuário<input type="text" id="userInput" placeholder="Seu usuário" autocomplete="username"></label>
             <label class="f">Senha<input type="password" id="passInput" placeholder="Sua senha" autocomplete="current-password"></label>
@@ -437,6 +437,7 @@
                 showPanel(true); boot();
                 var u = document.getElementById('userAtual'); if (u) u.textContent = usuarioAtual ? 'Usuário: ' + usuarioAtual : '—';
                 iniciarMusica();
+                reiniciarIdle();
             }).catch(function () { msg('loginMsg', 'Falha de acesso. Fale com o suporte.', false); });
         }
         /* Trava tentativas de adivinhação: espera progressiva e bloqueio por um tempo */
@@ -471,8 +472,38 @@
         document.getElementById('passInput').addEventListener('keydown', function (e) {
             if (e.key === 'Enter') { e.preventDefault(); document.getElementById('loginBtn').click(); }
         });
+        /* ---------- FECHAMENTO AUTOMÁTICO POR INATIVIDADE ---------- */
+        var MINUTOS_INATIVO = 10;
+        var idleTimer = null, idleAviso = null;
+        function avisoInatividade() {
+            var s = MINUTOS_INATIVO * 60;
+            return Math.floor(s / 60) + ' minuto' + (s > 60 ? 's' : '');
+        }
+        function encerrarSessao(motivo) {
+            clearTimeout(idleTimer); clearTimeout(idleAviso);
+            token = '';
+            showPanel(false);
+            document.getElementById('passInput').value = '';
+            msg('loginMsg', motivo || 'Sessão encerrada por falta de uso. Entre de novo.', true);
+        }
+        function reiniciarIdle() {
+            clearTimeout(idleTimer); clearTimeout(idleAviso);
+            idleTimer = setTimeout(function () { encerrarSessao(); }, MINUTOS_INATIVO * 60 * 1000);
+            // avisa 60 segundos antes para não perder o que estava editando
+            idleAviso = setTimeout(function () {
+                msg('tudoMsg', 'A sessão fecha em 1 minuto por inatividade. Mexa em qualquer campo.', true);
+            }, (MINUTOS_INATIVO * 60 - 60) * 1000);
+        }
+        ['mousemove', 'mousedown', 'keydown', 'scroll', 'touchstart', 'wheel'].forEach(function (ev) {
+            addEventListener(ev, function () {
+                if (token) reiniciarIdle();
+            }, { passive: true });
+        });
+        document.addEventListener('visibilitychange', function () {
+            if (document.hidden && token) reiniciarIdle();
+        });
         document.getElementById('logoutBtn').addEventListener('click', function () {
-            token = ''; showPanel(false);
+            encerrarSessao('Você saiu do painel.');
         });
         function abrirAba(nome) {
             document.querySelectorAll('.tab').forEach(function (x) { x.classList.toggle('is-active', x.dataset.tab === nome); });
