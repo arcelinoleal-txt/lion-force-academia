@@ -108,7 +108,7 @@
     function personCard(m, uname) {
         var foto = m.foto || '';
         var tag = (foto ? '' : ' person--placeholder') + (m.destaque ? ' person--destaque' : '');
-        var insta = m.instagram ? '<a class="person-insta" href="' + esc(m.instagram) + '" target="_blank" rel="noreferrer"><i data-lucide="instagram" class="icon"></i> Instagram</a>' : '';
+        var insta = m.instagram ? '<a class="person-insta" href="' + esc(m.instagram) + '" target="_blank" rel="noreferrer" aria-label="Instagram de ' + esc(m.nome) + '">' + ICON_INSTAGRAM + '<span>Instagram</span></a>' : '';
         var media = foto
             ? '<div class="person-media"><img src="' + esc(foto) + '" alt="' + esc(m.nome) + '" loading="lazy">' + (m.cargo ? '<span class="person-role">' + esc(m.cargo.split('\u00b7')[0].trim()) + '</span>' : '') + '</div>'
             : '<div class="person-media"><i data-lucide="user" class="icon"></i></div>';
@@ -242,6 +242,9 @@
         });
     }
 
+    /* Ícone do Instagram em SVG (o Lucide removeu ícones de marca na v1.48) */
+    var ICON_INSTAGRAM = '<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon" aria-hidden="true"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>';
+
     /* ---------- NOSSA HISTÓRIA ---------- */
     function renderHistoria() {
         var box = document.getElementById('historiaBox');
@@ -274,7 +277,7 @@
                 '</div>' +
                 '<h3>' + esc(f.nome || 'Nome do Fundador') + '</h3>' +
                 (f.resumo ? '<p class="founder-bio">' + esc(f.resumo) + '</p>' : '') +
-                (f.instagram ? '<a class="founder-insta" href="' + esc(f.instagram) + '" target="_blank" rel="noreferrer"><i data-lucide="instagram" class="icon"></i> Instagram</a>' : '') +
+                (f.instagram ? '<a class="founder-insta" href="' + esc(f.instagram) + '" target="_blank" rel="noreferrer" aria-label="Instagram do fundador">' + ICON_INSTAGRAM + '<span>Instagram</span></a>' : '') +
                 '</div>' +
 
                 '<div class="historia-text reveal">' +

@@ -127,7 +127,7 @@
         </div>
         <div class="foot-base"><div class="wrap"><span>© 2026 Lion Force Academia · Rua Fonte Nova, 34A — Jardim Das Fontes, São Paulo/SP</span><span>Seg a Sex · 06:00 — 22:00 · Sáb · 09:00 — 13:00</span></div></div>
     </footer>
-
+    <div class="wa-bubble" id="waBubble" aria-hidden="true"><img src="Lion force academia.png" alt="" style="width:20px;height:20px;object-fit:contain;flex:0 0 20px"><span>Fale com o suporte</span></div>
     <a class="wa-float" href="https://wa.me/5511943544884?text=Quero%20conhecer%20a%20Lion%20Force!" target="_blank" rel="noreferrer" aria-label="Conversar no WhatsApp"><i data-lucide="message-circle" class="icon" style="width:26px;height:26px"></i></a>
 
     <div class="cookie" id="cookie" role="dialog" aria-label="Aviso de cookies">
@@ -205,6 +205,22 @@
             msg.style.color = '#1a7f37'; msg.textContent = `Valeu, ${name.split(' ')[0]}! Abrindo o WhatsApp para finalizar...`;
             setTimeout(() => location.href = `https://wa.me/5511943544884?text=${text}`, 900);
         });
+        // Balão do WhatsApp: mostra a frase por 30s
+        const waBubble = document.getElementById('waBubble');
+        if (waBubble) {
+            const BROCAO_MS = 30000;
+            const espera = setTimeout(() => waBubble.classList.add('show'), 1800);
+            const some = setTimeout(() => {
+                waBubble.classList.remove('show');
+                setTimeout(() => waBubble.setAttribute('aria-hidden', 'true'), 400);
+            }, BROCAO_MS + 1800);
+            waBubble.setAttribute('aria-hidden', 'false');
+            waBubble.addEventListener('click', () => {
+                clearTimeout(espera); clearTimeout(some);
+                waBubble.classList.remove('show');
+            });
+            addEventListener('pagehide', () => { clearTimeout(espera); clearTimeout(some); });
+        }
 
         // Cookie
         const cookie = document.getElementById('cookie');
