@@ -76,16 +76,10 @@
             <div class="login-hero">
                 <img src="../Lion force academia.png" alt="Lion Force">
                 <h1>Área da <span>equipe</span></h1>
-                <p>Edite fotos, preços e textos do site sem mexer em código.</p>
+                <p>Use seu usuário e senha. Sem token, sem complicação.</p>
             </div>
-            <ol class="steps">
-                <li>No GitHub: sua foto → <strong>Settings</strong> → <strong>Developer settings</strong> → <strong>Personal access tokens</strong> → <strong>Fine-grained tokens</strong> → <strong>Generate new token</strong>.</li>
-                <li>Em <strong>Repository access</strong>, escolha <strong>Only select repositories</strong> e marque <strong>lion-force-academia</strong>.</li>
-                <li>Em <strong>Permissions → Contents</strong>, marque <strong>Read and write</strong>. Gere e cole abaixo.</li>
-            </ol>
             <label class="f">Usuário<input type="text" id="userInput" placeholder="Seu usuário" autocomplete="username"></label>
             <label class="f">Senha<input type="password" id="passInput" placeholder="Sua senha" autocomplete="current-password"></label>
-            <label class="f hidden" id="tokenWrap">Token de acesso (só na primeira vez)<input type="password" id="tokenInput" placeholder="github_pat_..." autocomplete="off"></label>
             <button class="btn" id="loginBtn" type="button" style="width:100%">Entrar no painel</button>
             <p class="msg" id="loginMsg" role="status"></p>
         </section>
@@ -149,7 +143,7 @@
     <script>
         var OWNER = 'arcelinoleal-txt', REPO = 'lion-force-academia', BRANCH = 'main';
         var API = 'https://api.github.com/repos/' + OWNER + '/' + REPO + '/contents/';
-        var token = localStorage.getItem('lf-admin-token') || '';
+        var token = '';
         var cache = {};
 
         function headers() { return { 'Accept': 'application/vnd.github+json', 'Authorization': 'Bearer ' + token }; }
@@ -219,9 +213,31 @@
 
         /* ---------- LOGIN ---------- */
         var AUTH_HASH = '9c6fd5fdb70e735c5c61f51c11bcdba776c55f141978291bf7ead0903d21283d';
+        var VAULT = {"data":"B04ORSIBcrulzBIvRD2oWfCNbe84JhascdPgW+g4QhpbjgzsDPaiznOw4oeNa19yocvDZF4+4+tbvUeNeQcncEHMthAyGd7uuMEqN364gOKncrN6Xk9o7w0zdc/uawpT","mac":"SvJVnrlKMxmJLSfhKgwnfIihO/WdOS+RWeTSt/XI07k=","iv":"ANotnFsspLNtPrQE2jDSjw==","salt":"l+HwsMrGpD0GNikHENldiQ=="};
         function sha256(str) {
             return crypto.subtle.digest('SHA-256', new TextEncoder().encode(str)).then(function (buf) {
                 return Array.prototype.map.call(new Uint8Array(buf), function (b) { return ('0' + b.toString(16)).slice(-2); }).join('');
+            });
+        }
+        function b64ToBytes(s) { var bin = atob(s); var b = new Uint8Array(bin.length); for (var i = 0; i < bin.length; i++) b[i] = bin.charCodeAt(i); return b; }
+        function unlockVault(password) {
+            var salt = b64ToBytes(VAULT.salt), iv = b64ToBytes(VAULT.iv),
+                data = b64ToBytes(VAULT.data), mac = b64ToBytes(VAULT.mac);
+            return crypto.subtle.importKey('raw', new TextEncoder().encode(password), 'PBKDF2', false, ['deriveBits']).then(function (base) {
+                return crypto.subtle.deriveBits({ name: 'PBKDF2', salt: salt, iterations: 120000, hash: 'SHA-256' }, base, 512);
+            }).then(function (bits) {
+                var raw = new Uint8Array(bits);
+                var aesKey = raw.slice(0, 32), hmacKey = raw.slice(32, 64);
+                return crypto.subtle.importKey('raw', hmacKey, { name: 'HMAC', hash: 'SHA-256' }, false, ['verify']).then(function (hk) {
+                    var cat = new Uint8Array(salt.length + iv.length + data.length);
+                    cat.set(salt, 0); cat.set(iv, salt.length); cat.set(data, salt.length + iv.length);
+                    return crypto.subtle.verify('HMAC', hk, mac, cat).then(function (ok) {
+                        if (!ok) throw new Error('hmac');
+                        return crypto.subtle.importKey('raw', aesKey, { name: 'AES-CBC', iv: iv }, false, ['decrypt']);
+                    }).then(function (ak) {
+                        return crypto.subtle.decrypt({ name: 'AES-CBC', iv: iv }, ak, data);
+                    }).then(function (pt) { return new TextDecoder().decode(pt); });
+                });
             });
         }
         function showPanel(show) {
@@ -229,14 +245,13 @@
             document.getElementById('panel').classList.toggle('hidden', !show);
             document.getElementById('logoutBtn').classList.toggle('hidden', !show);
         }
-        function enterWithToken(t, save) {
+        function enterWithToken(t) {
             token = t;
             msg('loginMsg', 'Verificando...', true);
             fetch(API + 'conteudo/planos.json?ref=' + BRANCH, { headers: headers() }).then(function (r) {
                 if (!r.ok) throw new Error('HTTP ' + r.status);
-                if (save) localStorage.setItem('lf-admin-token', token);
                 showPanel(true); boot();
-            }).catch(function () { msg('loginMsg', 'Token inválido ou sem acesso ao repositório.', false); });
+            }).catch(function () { msg('loginMsg', 'Falha de acesso. Fale com o suporte.', false); });
         }
         document.getElementById('loginBtn').addEventListener('click', function () {
             var u = document.getElementById('userInput').value.trim();
@@ -245,16 +260,13 @@
             msg('loginMsg', 'Verificando...', true);
             sha256(u + ':' + p).then(function (h) {
                 if (h !== AUTH_HASH) { msg('loginMsg', 'Usuário ou senha incorretos.', false); return; }
-                var saved = localStorage.getItem('lf-admin-token') || '';
-                if (saved) { enterWithToken(saved, false); return; }
-                var wrap = document.getElementById('tokenWrap');
-                var t = document.getElementById('tokenInput').value.trim();
-                if (!t) { wrap.classList.remove('hidden'); msg('loginMsg', 'Primeiro acesso neste aparelho: cole o token uma vez.', true); return; }
-                enterWithToken(t, true);
+                msg('loginMsg', 'Abrindo...', true);
+                unlockVault(u + ':' + p).then(function (t) { enterWithToken(t); })
+                .catch(function () { msg('loginMsg', 'Falha ao destravar. Tente de novo.', false); });
             });
         });
         document.getElementById('logoutBtn').addEventListener('click', function () {
-            localStorage.removeItem('lf-admin-token'); token = ''; showPanel(false);
+            token = ''; showPanel(false);
         });
         document.querySelectorAll('.tab').forEach(function (t) {
             t.addEventListener('click', function () {
