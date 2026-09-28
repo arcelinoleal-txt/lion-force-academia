@@ -102,53 +102,82 @@
         }).catch(function () {});
     }
 
-    /* ---------- EQUIPE (equipe) ---------- */
+    /* ---------- EQUIPE (equipe + time da unidade) ---------- */
+    var unitNames = {};
     function renderEquipe() {
-        var grid = document.getElementById('equipeGrid');
-        if (!grid) return;
-        getJSON('conteudo/equipe.json').then(function (data) {
-            var membros = data.membros || [];
-            if (!membros.length) {
-                grid.innerHTML = '<article class="person person--original reveal"><h3>Equipe em montagem</h3><p>Os perfis dos treinadores serão apresentados aqui em breve.</p></article>';
-            } else {
-                grid.innerHTML = membros.map(function (m) {
-                    return '<article class="person reveal">' +
-                        (m.foto ? '<img src="' + esc(m.foto) + '" alt="' + esc(m.nome) + '" loading="lazy">' : '') +
-                        '<h3>' + esc(m.nome) + '</h3><p>' + esc(m.cargo || '') + '</p></article>';
-                }).join('');
-            }
-            refresh(grid);
+        var grids = document.querySelectorAll('#equipeGrid, [data-equipe-unidade]');
+        if (!grids.length) return;
+        Promise.all([
+            getJSON('conteudo/equipe.json').catch(function () { return null; }),
+            getJSON('conteudo/unidades.json').catch(function () { return null; })
+        ]).then(function (res) {
+            var membros = (res[0] && res[0].membros) || [];
+            ((res[1] && res[1].unidades) || []).forEach(function (u) { unitNames[u.id] = u.nome; });
+            grids.forEach(function (grid) {
+                var onlyUnit = grid.getAttribute('data-equipe-unidade');
+                var list = onlyUnit ? membros.filter(function (m) { return m.unidade === onlyUnit; }) : membros;
+                if (onlyUnit && !list.length) {
+                    var sec = grid.closest('section');
+                    if (sec) sec.style.display = 'none';
+                    return;
+                }
+                if (!list.length) {
+                    grid.innerHTML = '<article class="person person--original reveal"><h3>Equipe em montagem</h3><p>Os perfis dos treinadores serão apresentados aqui em breve.</p></article>';
+                } else {
+                    grid.innerHTML = list.map(function (m) {
+                        var uname = !onlyUnit && m.unidade && unitNames[m.unidade] ? ' · ' + unitNames[m.unidade] : '';
+                        return '<article class="person reveal">' +
+                            (m.foto ? '<img src="' + esc(m.foto) + '" alt="' + esc(m.nome) + '" loading="lazy">' : '') +
+                            '<h3>' + esc(m.nome) + '</h3><p>' + esc(m.cargo || '') + uname + '</p></article>';
+                    }).join('');
+                }
+                refresh(grid);
+            });
         }).catch(function () {});
     }
 
-    /* ---------- UNIDADE: ficha da busca + vitrine (unidade + jardim) ---------- */
+    /* ---------- UNIDADES: busca (unidade) + vitrine (jardim-*) ---------- */
     function precoPorNome(planos, nome) {
         var p = (planos || []).filter(function (x) { return (x.nome || '').toLowerCase() === nome; })[0];
         return p ? ('R$ ' + p.preco.replace(/^(\d+x\s*)/, '') + ',' + p.valor) : '';
     }
 
+    function unitCard(u, planos) {
+        var tags = (u.recursos || []).join(' ');
+        var hay = ((u.nome || '') + ' ' + (u.endereco || '') + ' Lion Force').toLowerCase();
+        return '<article class="unit-item reveal" data-name="' + esc(hay) + '" data-addr="" data-tags="' + esc(tags) + '">' +
+            '<img src="' + esc(u.fachada || '') + '" alt="Fachada ' + esc(u.nome || '') + '" loading="lazy">' +
+            '<div class="unit-item-body"><h3>' + esc(u.nome) + '</h3>' +
+            '<address>' + esc(u.endereco) + '</address>' +
+            '<a class="unit-link" href="' + esc(u.pagina || '#') + '">Ver academia <i data-lucide="arrow-right" class="icon" style="width:14px;height:14px"></i></a>' +
+            '<span class="unit-promo">' + esc(u.promo || '') + '</span>' +
+            '<div class="unit-prices">' +
+            '<div><strong>Mensal</strong><span>' + esc(precoPorNome(planos, 'mensal')) + '</span></div>' +
+            '<div><strong>Trimestral</strong><span>' + esc(precoPorNome(planos, 'trimestral')) + '</span></div>' +
+            '<div><strong>Anual</strong><span>' + esc(precoPorNome(planos, 'anual')) + '</span></div>' +
+            '</div></div></article>';
+    }
+
     function renderUnidade() {
-        var needFinder = document.getElementById('finderCard');
+        var list = document.getElementById('unitList');
         var needShow = document.getElementById('showcaseBox');
-        if (!needFinder && !needShow) return;
+        if (!list && !needShow) return;
         Promise.all([
-            getJSON('conteudo/unidade.json').catch(function () { return null; }),
+            getJSON('conteudo/unidades.json').catch(function () { return null; }),
             getJSON('conteudo/planos.json').catch(function () { return null; })
         ]).then(function (res) {
-            var u = res[0], planos = res[1] && res[1].planos;
-            if (!u) return;
-            var wa = 'https://wa.me/' + (u.whatsapp || '5511943544884') + '?text=' + encodeURIComponent('Quero conhecer a Lion Force!');
-            if (needFinder) {
-                needFinder.querySelector('[data-u="foto"]').src = u.fachada;
-                needFinder.querySelector('[data-u="nome"]').textContent = u.nome;
-                needFinder.querySelector('[data-u="endereco"]').textContent = u.endereco;
-                needFinder.querySelector('[data-u="promo"]').textContent = u.promo;
-                needFinder.querySelector('[data-u="mensal"]').textContent = precoPorNome(planos, 'mensal');
-                needFinder.querySelector('[data-u="trimestral"]').textContent = precoPorNome(planos, 'trimestral');
-                needFinder.querySelector('[data-u="anual"]').textContent = precoPorNome(planos, 'anual');
-                refresh(needFinder);
+            var unidades = (res[0] && res[0].unidades) || [];
+            var planos = res[1] && res[1].planos;
+            if (!unidades.length) return;
+            if (list) {
+                list.innerHTML = unidades.map(function (u) { return unitCard(u, planos); }).join('');
+                var count = document.getElementById('unitCount');
+                if (count) count.textContent = unidades.length === 1 ? '1 unidade encontrada' : unidades.length + ' unidades encontradas';
+                refresh(list);
             }
             if (needShow) {
+                var uid = needShow.getAttribute('data-unit');
+                var u = unidades.filter(function (x) { return x.id === uid; })[0] || unidades[0];
                 needShow.querySelector('[data-u="foto"]').src = u.fachada;
                 var h = '';
                 (u.horarioTabela || []).forEach(function (row) {
@@ -156,7 +185,7 @@
                 });
                 needShow.querySelector('[data-u="horarios"]').innerHTML = h;
                 needShow.querySelector('[data-u="endereco"]').textContent = u.endereco;
-                needShow.querySelector('[data-u="wa"]').href = wa;
+                needShow.querySelector('[data-u="wa"]').href = 'https://wa.me/' + (u.whatsapp || '5511943544884') + '?text=' + encodeURIComponent('Quero conhecer a Lion Force!');
                 refresh(needShow);
             }
         });

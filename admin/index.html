@@ -91,7 +91,7 @@
                 <button class="tab" data-tab="depoimentos" type="button">Depoimentos</button>
                 <button class="tab" data-tab="equipe" type="button">Equipe</button>
                 <button class="tab" data-tab="galeria" type="button">Galeria</button>
-                <button class="tab" data-tab="unidade" type="button">Unidade</button>
+                <button class="tab" data-tab="unidades" type="button">Unidades</button>
             </div>
 
             <div class="card" data-pane="planos">
@@ -130,11 +130,12 @@
                 <p class="msg" id="galMsg"></p>
             </div>
 
-            <div class="card hidden" data-pane="unidade">
-                <h2>Unidade</h2>
-                <p class="hint">Dados da ficha e da vitrine (endereço, horários, telefone, foto da fachada).</p>
-                <div id="uniForm"></div>
-                <button class="btn" id="uniSave" type="button" style="margin-top:12px;width:100%">Publicar unidade</button>
+            <div class="card hidden" data-pane="unidades">
+                <h2>Unidades</h2>
+                <p class="hint">Cada unidade aparece na busca. A página de detalhe (ex: jardim-das-fontes.html) usa a primeira da lista — novas unidades ganham a página depois.</p>
+                <div id="uniList"></div>
+                <button class="btn btn--ghost" id="uniAdd" type="button">+ Adicionar unidade</button>
+                <button class="btn" id="uniSave" type="button" style="margin-top:12px;width:100%">Publicar unidades</button>
                 <p class="msg" id="uniMsg"></p>
             </div>
         </section>
@@ -378,6 +379,11 @@
                     inp.addEventListener('input', function () { m[cfg[1]] = inp.value; });
                     l.appendChild(inp); d.appendChild(l);
                 });
+                var lu = document.createElement('label'); lu.className = 'f'; lu.textContent = 'Unidade';
+                var selU = document.createElement('select');
+                selU.innerHTML = unitOptions(m.unidade);
+                selU.addEventListener('change', function () { m.unidade = selU.value; });
+                lu.appendChild(selU); d.appendChild(lu);
                 var lf = document.createElement('label'); lf.className = 'f'; lf.textContent = 'Foto';
                 d.appendChild(lf);
                 d.appendChild(photoField(m.foto, function (v) { m.foto = v; }));
@@ -388,7 +394,8 @@
             });
         }
         document.getElementById('eqAdd').addEventListener('click', function () {
-            eqData.membros.push({ nome: '', cargo: '', foto: '' });
+            var firstUnit = (unisData.unidades[0] && unisData.unidades[0].id) || '';
+            eqData.membros.push({ nome: '', cargo: '', foto: '', unidade: firstUnit });
             renderEq();
         });
         document.getElementById('eqSave').addEventListener('click', function () {
@@ -431,33 +438,58 @@
             .catch(function () { msg('galMsg', 'Erro ao publicar. Tente de novo.', false); }).finally(function () { b.disabled = false; });
         });
 
-        /* ---------- UNIDADE ---------- */
-        var uniData = null;
-        function renderUni() {
-            var box = document.getElementById('uniForm'); box.innerHTML = '';
-            var u = uniData;
-            [['Nome da unidade', 'nome'], ['Endereço completo', 'endereco'], ['Horário (ex: Segunda a sábado · 06:00 — 23:00)', 'horario'], ['Telefone (ex: (11) 94354-4884)', 'telefone'], ['WhatsApp só números (ex: 5511943544884)', 'whatsapp'], ['Destaque (ex: Aula avulsa R$ 19,99)', 'promo'], ['CEP', 'cep']].forEach(function (cfg) {
-                var l = document.createElement('label'); l.className = 'f'; l.textContent = cfg[0];
-                var inp = document.createElement('input'); inp.type = 'text'; inp.value = u[cfg[1]] || '';
-                inp.addEventListener('input', function () { u[cfg[1]] = inp.value; });
-                l.appendChild(inp); box.appendChild(l);
-            });
-            var lh = document.createElement('label'); lh.className = 'f'; lh.textContent = 'Tabela de horários (uma linha por item: Dia | Hora)';
-            var ta = document.createElement('textarea');
-            ta.value = (u.horarioTabela || []).map(function (r) { return r.join(' | '); }).join('\n');
-            ta.addEventListener('input', function () {
-                u.horarioTabela = ta.value.split('\n').map(function (s) { return s.trim(); }).filter(Boolean).map(function (s) {
-                    var p = s.split('|'); return [p[0].trim(), (p[1] || '').trim()];
-                });
-            });
-            lh.appendChild(ta); box.appendChild(lh);
-            var lf = document.createElement('label'); lf.className = 'f'; lf.textContent = 'Foto da fachada';
-            box.appendChild(lf);
-            box.appendChild(photoField(u.fachada, function (v) { u.fachada = v; }));
+        /* ---------- UNIDADES ---------- */
+        var unisData = null;
+        function unitOptions(selected) {
+            return (unisData.unidades || []).map(function (u) {
+                return '<option value="' + u.id + '"' + (u.id === selected ? ' selected' : '') + '>' + u.nome + '</option>';
+            }).join('');
         }
+        function renderUnis() {
+            var box = document.getElementById('uniList'); box.innerHTML = '';
+            (unisData.unidades || []).forEach(function (u, i) {
+                var d = document.createElement('div'); d.className = 'item';
+                d.innerHTML = '<div class="item-head"><strong>' + (u.nome || 'Nova unidade') + '</strong><div class="item-actions"><button type="button" class="icon-btn" data-act="up">↑</button><button type="button" class="icon-btn" data-act="down">↓</button><button type="button" class="icon-btn danger" data-act="del">×</button></div></div>';
+                [['Nome (ex: Jardim Das Fontes)', 'nome'], ['Endereço completo', 'endereco'], ['Horário (ex: Segunda a sábado · 06:00 — 23:00)', 'horario'], ['Telefone (ex: (11) 94354-4884)', 'telefone'], ['WhatsApp só números', 'whatsapp'], ['Destaque (ex: Aula avulsa R$ 19,99)', 'promo'], ['CEP', 'cep'], ['Cidade (ex: São Paulo/SP)', 'cidade'], ['Página de detalhe (ex: jardim-das-fontes.html)', 'pagina']].forEach(function (cfg) {
+                    var l = document.createElement('label'); l.className = 'f'; l.textContent = cfg[0];
+                    var inp = document.createElement('input'); inp.type = 'text'; inp.value = u[cfg[1]] || '';
+                    inp.addEventListener('input', function () {
+                        u[cfg[1]] = inp.value;
+                        if (cfg[1] === 'nome') u.id = slug(inp.value);
+                    });
+                    l.appendChild(inp); d.appendChild(l);
+                });
+                var lh = document.createElement('label'); lh.className = 'f'; lh.textContent = 'Tabela de horários (uma linha: Dia | Hora)';
+                var ta = document.createElement('textarea');
+                ta.value = (u.horarioTabela || []).map(function (r) { return r.join(' | '); }).join('\n');
+                ta.addEventListener('input', function () {
+                    u.horarioTabela = ta.value.split('\n').map(function (s) { return s.trim(); }).filter(Boolean).map(function (s) {
+                        var p = s.split('|'); return [p[0].trim(), (p[1] || '').trim()];
+                    });
+                });
+                lh.appendChild(ta); d.appendChild(lh);
+                var lf = document.createElement('label'); lf.className = 'f'; lf.textContent = 'Foto da fachada';
+                d.appendChild(lf);
+                d.appendChild(photoField(u.fachada, function (v) { u.fachada = v; }));
+                d.querySelectorAll('[data-act]').forEach(function (b) {
+                    b.addEventListener('click', function () {
+                        var a = unisData.unidades;
+                        if (b.dataset.act === 'del' && confirm('Remover esta unidade?')) a.splice(i, 1);
+                        if (b.dataset.act === 'up' && i > 0) { a.splice(i - 1, 0, a.splice(i, 1)[0]); }
+                        if (b.dataset.act === 'down' && i < a.length - 1) { a.splice(i + 1, 0, a.splice(i, 1)[0]); }
+                        renderUnis();
+                    });
+                });
+                box.appendChild(d);
+            });
+        }
+        document.getElementById('uniAdd').addEventListener('click', function () {
+            unisData.unidades.push({ id: 'nova-unidade', nome: 'Nova unidade', endereco: '', horario: '', horarioTabela: [], telefone: '', whatsapp: '', promo: '', cep: '', cidade: '', pagina: '', fachada: '', recursos: ['musculacao', 'cardio', 'funcional', 'app', 'avaliacao'] });
+            renderUnis();
+        });
         document.getElementById('uniSave').addEventListener('click', function () {
             var b = this; b.disabled = true; msg('uniMsg', 'Publicando...', true);
-            saveJSON('conteudo/unidade.json', uniData, 'Admin: atualiza unidade').then(function () { msg('uniMsg', 'Publicado! O site atualiza em 1–2 min.', true); })
+            saveJSON('conteudo/unidades.json', unisData, 'Admin: atualiza unidades').then(function () { msg('uniMsg', 'Publicado! O site atualiza em 1–2 min.', true); })
             .catch(function () { msg('uniMsg', 'Erro ao publicar. Tente de novo.', false); }).finally(function () { b.disabled = false; });
         });
 
@@ -466,14 +498,15 @@
             Promise.all([
                 loadJSON('conteudo/planos.json'), loadJSON('conteudo/depoimentos.json'),
                 loadJSON('conteudo/equipe.json'), loadJSON('conteudo/galeria.json'),
-                loadJSON('conteudo/unidade.json')
+                loadJSON('conteudo/unidades.json')
             ]).then(function (res) {
-                planosData = res[0]; depData = res[1]; eqData = res[2]; galData = res[3]; uniData = res[4];
+                planosData = res[0]; depData = res[1]; eqData = res[2]; galData = res[3]; unisData = res[4];
                 if (!Array.isArray(planosData.planos)) planosData.planos = [];
                 if (!Array.isArray(depData.depoimentos)) depData.depoimentos = [];
                 if (!Array.isArray(eqData.membros)) eqData.membros = [];
                 if (!Array.isArray(galData.fotos)) galData.fotos = [];
-                renderPlanos(); renderDep(); renderEq(); renderGal(); renderUni();
+                if (!Array.isArray(unisData.unidades)) unisData.unidades = [];
+                renderPlanos(); renderDep(); renderEq(); renderGal(); renderUnis();
             }).catch(function () { msg('planosMsg', 'Falha ao carregar dados. Recarregue a página.', false); });
         }
         /* Sempre pede usuário e senha; o token fica guardado no aparelho. */
