@@ -63,6 +63,16 @@
         .musica-frame iframe { display: block; width: 100%; height: 232px; border: 0; }
         .musica-dica { color: var(--mut); font-size: .78rem; margin: 10px 0 0; }
         .musica-dica a { color: var(--red); }
+        .musica-lista { display: grid; gap: 8px; margin-bottom: 6px; }
+        .musica-item { display: flex; align-items: center; gap: 12px; width: 100%; text-align: left; background: #101012; border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; color: #fff; cursor: pointer; transition: border-color .2s, background .2s; }
+        .musica-item:hover { border-color: var(--red); background: rgba(227,33,42,.08); }
+        .musica-item img { width: 46px; height: 46px; border-radius: 8px; object-fit: cover; flex: 0 0 46px; background: #000; }
+        .musica-item .txt { min-width: 0; }
+        .musica-item strong { display: block; font-size: .88rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .musica-item span { display: block; color: var(--mut); font-size: .76rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .musica-item .play { margin-left: auto; color: var(--red); font: 700 1.1rem 'DM Sans', sans-serif; flex: 0 0 auto; }
+        .musica-item--tocando { border-color: var(--red); background: rgba(227,33,42,.12); }
+        .selo { display: inline-block; background: rgba(74,222,128,.14); color: #4ade80; border-radius: 99px; padding: 3px 9px; font: 700 .68rem 'DM Sans', sans-serif; text-transform: uppercase; letter-spacing: .05em; }
         .voltar-topo { position: fixed; right: 18px; bottom: 18px; z-index: 50; width: 42px; height: 42px; border-radius: 50%; border: 1px solid var(--line); background: #141416; color: #fff; display: grid; place-items: center; cursor: pointer; opacity: 0; pointer-events: none; transition: opacity .2s, background .2s; }
         .voltar-topo.show { opacity: 1; pointer-events: auto; }
         .voltar-topo:hover { background: var(--red); border-color: var(--red); }
@@ -119,15 +129,30 @@
 
             <div class="card hidden" data-pane="musica">
                 <h2>Música no painel</h2>
-                <p class="hint">Cole o link de uma playlist do Spotify e ela aparece aqui, só para você.
-                Fica salva neste computador e não aparece para quem visita o site.</p>
-                <div class="musica-row">
-                    <input type="text" id="musicaInput" placeholder="Cole aqui o link da playlist do Spotify" autocomplete="off">
-                    <button class="btn" id="musicaOk" type="button">Tocar</button>
+                <p class="hint">Grátis e legal. O Deezer tem conta gratuita e o player abaixo não pede
+                cartão nem assinatura. Só para você — quem visita o site não ouve nada.</p>
+
+                <label class="f">Procurar playlist por palavra (ex: musculação, treino, funk)
+                    <input type="text" id="musicaBusca" placeholder="musculação" autocomplete="off">
+                </label>
+                <div class="musica-row" style="margin-bottom:18px">
+                    <button class="btn" id="buscarMusica" type="button">Buscar</button>
+                    <button class="btn btn--ghost" id="surpreenderMe" type="button">Surpreenda-me</button>
                 </div>
+                <div id="musicaResultados" class="musica-lista"></div>
+                <p class="msg" id="musicaMsg"></p>
+
                 <div class="musica-frame" id="musicaFrame"></div>
-                <p class="musica-dica">O Spotify não deixa começar sozinho — precisa de um clique no play.
-                Aceita link de playlist, álbum ou música.</p>
+
+                <label class="f" style="margin-top:20px">Ou cole o link de uma playlist
+                    <input type="text" id="musicaInput" placeholder="https://www.deezer.com/br/playlist/..." autocomplete="off">
+                </label>
+                <div class="musica-row">
+                    <button class="btn" id="musicaOk" type="button">Tocar este link</button>
+                </div>
+                <p class="musica-dica">Aceita link do Deezer, Spotify, SoundCloud ou YouTube.
+                O Spotify não deixa começar sozinho — precisa de um clique no play.
+                A playlist fica salva neste computador.</p>
             </div>
 
             <div class="card hidden" data-pane="seguranca">
@@ -762,36 +787,117 @@
                 .finally(function () { b.disabled = false; });
         });
 
-        /* ---------- MÚSICA (Spotify) ---------- */
-        function spotifyId(link) {
+        /* ---------- MÚSICA (Deezer grátis + Spotify, SoundCloud, YouTube) ---------- */
+        function escTxt(s) {
+            return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+                return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+            });
+        }
+
+        /* Reconhece o link e devolve o HTML do player certo. Deezer e os outros
+           funcionam sem pagar nada. */
+        function playerDe(link) {
             var s = String(link || '').trim();
-            // formato do app de computador: spotify:playlist:ID
+            if (!s) return null;
+
+            // ---- Deezer (grátis, sem cartão) ----
+            var dz = s.match(/deezer\.com\/(?:[a-z]{2}\/)?(playlist|album|track)\/(\d+)/i)
+                 || s.match(/^deezer:(playlist|album|track):(\d+)/i);
+            if (dz) {
+                return { html: '<iframe src="https://widget.deezer.com/widget/dark/' + dz[1].toLowerCase() + '/' + dz[2] + '" width="100%" height="' + (dz[1].toLowerCase() === 'playlist' ? '300' : '200') + '" frameborder="0" allowtransparency="true" allow="encrypted-media" title="Player do Deezer"></iframe>', nome: 'Deezer' };
+            }
+
+            // ---- Spotify ----
             var app = s.match(/^spotify:(album|playlist|track|artist):([A-Za-z0-9]{10,})/i);
-            if (app) return { tipo: app[1].toLowerCase(), id: app[2] };
-            var m = s
+            var m = app || s
                 .replace(/^https?:\/\/(open\.spotify\.com\/(embed\/)?|spotify\.com\/|play\.spotify\.com\/)/i, '')
                 .replace(/[?#].*$/, '')
                 .match(/^(?:intl-[a-z]{2}\/)?(album|playlist|track|artist)\/([A-Za-z0-9]{10,})/i);
-            return m ? { tipo: m[1].toLowerCase(), id: m[2] } : null;
+            if (m) {
+                return { html: '<iframe src="https://open.spotify.com/embed/' + m[1].toLowerCase() + '/' + m[2] + '?utm_source=generator&theme=0" title="Player do Spotify" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>', nome: 'Spotify' };
+            }
+
+            // ---- SoundCloud ----
+            var sc = s.match(/soundcloud\.com\/([A-Za-z0-9_\-\/]+)/i);
+            if (sc) {
+                var scUrl = 'https://soundcloud.com/' + sc[1];
+                return { html: '<iframe width="100%" height="232" scrolling="no" frameborder="no" allow="autoplay" title="Player do SoundCloud" src="https://w.soundcloud.com/player/?url=' + encodeURIComponent(scUrl) + '&color=%23e3212a&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=false"></iframe>', nome: 'SoundCloud' };
+            }
+
+            // ---- YouTube (playlist) ----
+            var yt = s.match(/[?&]list=([A-Za-z0-9_-]{8,})/);
+            if (yt && /youtube\.com|youtu\.be/i.test(s)) {
+                return { html: '<iframe src="https://www.youtube.com/embed/videoseries?list=' + yt[1] + '" title="Player do YouTube" allow="autoplay; encrypted-media" loading="lazy"></iframe>', nome: 'YouTube' };
+            }
+
+            return null;
         }
+
         var musicaSalva = '';
         function tocarMusica(link, salvar) {
-            var alvo = spotifyId(link);
             var box = document.getElementById('musicaFrame');
-            if (!alvo) {
-                box.innerHTML = '';
-                msg('senhaMsg', 'Link do Spotify não reconhecido. Use o link de uma playlist.', false);
-                return;
+            var p = playerDe(link);
+            if (!p) {
+                msg('musicaMsg', 'Link não reconhecido. Use Deezer, Spotify, SoundCloud ou YouTube.', false);
+                return false;
             }
-            var url = 'https://open.spotify.com/embed/' + alvo.tipo + '/' + alvo.id + '?utm_source=generator&theme=0';
-            box.innerHTML = '<iframe src="' + url + '" title="Player do Spotify" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>';
+            box.innerHTML = p.html;
+            msg('musicaMsg', 'Tocando de ' + p.nome + '. Clique no play do player.', true);
             if (salvar) {
                 musicaSalva = link.trim();
                 try { localStorage.setItem('lf-musica', musicaSalva); } catch (e) { }
                 document.getElementById('musicaInput').value = musicaSalva;
-                msg('senhaMsg', 'Playlist carregada. Aperte o play.', true);
             }
+            return true;
         }
+
+        /* Busca no Deezer: API pública, sem chave, sem cadastro */
+        var termos = ['musculacao', 'treino academia', 'workout', 'power', 'treino pesado'];
+        function mostrarResultados(lista) {
+            var box = document.getElementById('musicaResultados');
+            if (!lista || !lista.length) { box.innerHTML = ''; return; }
+            box.innerHTML = lista.map(function (p) {
+                return '<button type="button" class="musica-item" data-id="' + p.id + '">' +
+                    (p.capa ? '<img src="' + escTxt(p.capa) + '" alt="" loading="lazy">' : '<img src="" alt="" style="visibility:hidden">') +
+                    '<span class="txt"><strong>' + escTxt(p.nome) + '</strong><span>' + escTxt(p.autor || '') + '</span></span>' +
+                    '<span class="play">▶</span></button>';
+            }).join('');
+            box.querySelectorAll('.musica-item').forEach(function (b) {
+                b.addEventListener('click', function () {
+                    box.querySelectorAll('.musica-item').forEach(function (x) { x.classList.remove('musica-item--tocando'); });
+                    b.classList.add('musica-item--tocando');
+                    tocarMusica('https://www.deezer.com/br/playlist/' + b.getAttribute('data-id'), true);
+                });
+            });
+        }
+
+        function buscarPlaylist(q) {
+            var box = document.getElementById('musicaResultados');
+            msg('musicaMsg', 'Procurando...', true);
+            fetch('https://api.deezer.com/search/playlist?q=' + encodeURIComponent(q) + '&limit=8')
+                .then(function (r) { return r.json(); })
+                .then(function (d) {
+                    var lista = (d.data || []).map(function (p) {
+                        return { id: p.id, nome: p.title, autor: p.creator && p.creator.name, capa: p.picture_medium };
+                    });
+                    mostrarResultados(lista);
+                    msg('musicaMsg', lista.length ? lista.length + ' playlists encontradas. Escolha uma.' : 'Nada encontrado. Tente outra palavra.', lista.length > 0);
+                })
+                .catch(function () { msg('musicaMsg', 'Sem conexão com o Deezer. Tente de novo.', false); });
+        }
+
+        document.getElementById('buscarMusica').addEventListener('click', function () {
+            var q = document.getElementById('musicaBusca').value.trim();
+            if (q) buscarPlaylist(q);
+        });
+        document.getElementById('musicaBusca').addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') { e.preventDefault(); this.blur(); buscarPlaylist(this.value.trim()); }
+        });
+        document.getElementById('surpreenderMe').addEventListener('click', function () {
+            var t = termos[Math.floor(Math.random() * termos.length)];
+            document.getElementById('musicaBusca').value = t;
+            buscarPlaylist(t);
+        });
         document.getElementById('musicaOk').addEventListener('click', function () {
             tocarMusica(document.getElementById('musicaInput').value, true);
         });
