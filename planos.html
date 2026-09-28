@@ -96,7 +96,7 @@
                     <h2>Conheça nossos planos <span>e comece hoje.</span></h2>
                     <p>Valores claros, sem letra miúda. Todos com acesso total + treino no app Next Fit.</p>
                 </div>
-                <div class="plans-grid">
+                <div class="plans-grid" id="planosGrid">
                     <article class="plan reveal" tabindex="0"><h3>Mensal</h3><p class="plan-desc">Flexibilidade total para começar agora.</p><div class="price">R$ 149<small>,99/mês</small></div><ul><li><i data-lucide="check" class="icon"></i>Acesso à estrutura completa</li><li><i data-lucide="check" class="icon"></i>Treino personalizado no app</li><li><i data-lucide="check" class="icon"></i>Sem fidelidade</li></ul><a class="btn btn--dark" href="contato.html">Escolher mensal</a></article>
                     <article class="plan plan--featured reveal" tabindex="0"><span class="plan-tag">Mais escolhido</span><h3>Trimestral</h3><p class="plan-desc">Constância para acelerar a evolução.</p><div class="price">3x R$ 119<small>,99/mês</small></div><ul><li><i data-lucide="check" class="icon"></i>Acesso à estrutura completa</li><li><i data-lucide="check" class="icon"></i>Treino personalizado no app</li><li><i data-lucide="check" class="icon"></i>Pagamento em 3x</li></ul><a class="btn" href="contato.html">Escolher trimestral</a></article>
                     <article class="plan reveal" tabindex="0"><h3>Semestral</h3><p class="plan-desc">Compromisso que constrói resultado.</p><div class="price">6x R$ 99<small>,99/mês</small></div><ul><li><i data-lucide="check" class="icon"></i>Acesso à estrutura completa</li><li><i data-lucide="check" class="icon"></i>Acompanhamento de evolução</li><li><i data-lucide="check" class="icon"></i>Pagamento em 6x</li></ul><a class="btn btn--dark" href="contato.html">Escolher semestral</a></article>
@@ -237,5 +237,6 @@
         if (!localStorage.getItem('lf-cookie')) setTimeout(() => cookie.classList.add('show'), 1800);
         document.getElementById('cookieOk').addEventListener('click', () => { localStorage.setItem('lf-cookie', '1'); cookie.classList.remove('show'); });
     </script>
+    <script src="cms.js"></script>
 </body>
 </html>

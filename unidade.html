@@ -111,17 +111,17 @@
                     </div>
                 </div>
                 <div class="unit-list" id="unitList">
-                    <article class="unit-item reveal" data-name="jardim das fontes lion force" data-addr="fonte nova sao paulo" data-tags="musculacao cardio funcional app avaliacao">
-                        <img src="Unidade jardim das fontes.webp" alt="Fachada da Lion Force Academia" loading="lazy">
+                    <article class="unit-item reveal" id="finderCard" data-name="jardim das fontes lion force" data-addr="fonte nova sao paulo" data-tags="musculacao cardio funcional app avaliacao">
+                        <img data-u="foto" src="Unidade jardim das fontes.webp" alt="Fachada da Lion Force Academia" loading="lazy">
                         <div class="unit-item-body">
-                            <h3>Jardim Das Fontes</h3>
-                            <address>Rua Fonte Nova, 34A — Jardim Das Fontes, São Paulo/SP</address>
+                            <h3 data-u="nome">Jardim Das Fontes</h3>
+                            <address data-u="endereco">Rua Fonte Nova, 34A — Jardim Das Fontes, São Paulo/SP</address>
                             <a class="unit-link" href="jardim-das-fontes.html">Ver academia <i data-lucide="arrow-right" class="icon" style="width:14px;height:14px"></i></a>
-                            <span class="unit-promo">Aula avulsa R$ 19,99</span>
+                            <span class="unit-promo" data-u="promo">Aula avulsa R$ 19,99</span>
                             <div class="unit-prices">
-                                <div><strong>Mensal</strong><span>R$ 149,99</span></div>
-                                <div><strong>Trimestral</strong><span>R$ 119,99</span></div>
-                                <div><strong>Anual</strong><span>R$ 79,99</span></div>
+                                <div><strong>Mensal</strong><span data-u="mensal">R$ 149,99</span></div>
+                                <div><strong>Trimestral</strong><span data-u="trimestral">R$ 119,99</span></div>
+                                <div><strong>Anual</strong><span data-u="anual">R$ 79,99</span></div>
                             </div>
                         </div>
                     </article>
@@ -271,5 +271,6 @@
         if (!localStorage.getItem('lf-cookie')) setTimeout(() => cookie.classList.add('show'), 1800);
         document.getElementById('cookieOk').addEventListener('click', () => { localStorage.setItem('lf-cookie', '1'); cookie.classList.remove('show'); });
     </script>
+    <script src="cms.js"></script>
 </body>
 </html>

@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Lion Force</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="icon" type="image/png" href="../Lion force academia.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --red: #e3212a; --red-dark: #b6111d; --bg: #0a0a0b; --card: #141416; --line: rgba(255,255,255,.12); --txt: #fff; --mut: rgba(255,255,255,.6); }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: var(--bg); color: var(--txt); font-family: 'DM Sans', Arial, sans-serif; min-height: 100vh; }
+        .wrap { width: min(880px, calc(100% - 32px)); margin: 0 auto; padding: 28px 0 80px; }
+        header.top { display: flex; align-items: center; gap: 12px; padding: 18px 0; }
+        header.top img { width: 52px; height: 52px; object-fit: contain; }
+        header.top h1 { font: 800 1.6rem 'Barlow Condensed', sans-serif; text-transform: uppercase; letter-spacing: .02em; }
+        header.top h1 span { color: var(--red); }
+        header.top .sp { flex: 1; }
+        .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; padding: 0 22px; border-radius: 999px; border: 0; background: var(--red); color: #fff; font: 700 .82rem 'DM Sans', sans-serif; text-transform: uppercase; letter-spacing: .05em; cursor: pointer; }
+        .btn:hover { background: var(--red-dark); }
+        .btn:disabled { opacity: .5; cursor: wait; }
+        .btn--ghost { background: transparent; border: 1.5px solid rgba(255,255,255,.3); }
+        .btn--ghost:hover { background: rgba(255,255,255,.08); }
+        .btn--small { min-height: 38px; padding: 0 16px; font-size: .72rem; }
+        .card { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 26px; margin-top: 18px; }
+        .card h2 { font: 800 1.5rem 'Barlow Condensed', sans-serif; text-transform: uppercase; margin-bottom: 6px; }
+        .card > p.hint { color: var(--mut); font-size: .85rem; margin-bottom: 18px; }
+        label.f { display: grid; gap: 6px; font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: rgba(255,255,255,.7); margin-bottom: 12px; }
+        input[type=text], input[type=password], textarea, select { background: #050506; border: 1.5px solid var(--line); border-radius: 12px; color: #fff; font: 500 .92rem 'DM Sans', sans-serif; padding: 12px 14px; width: 100%; outline: 0; }
+        input:focus, textarea:focus, select:focus { border-color: var(--red); }
+        textarea { min-height: 80px; resize: vertical; }
+        .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 20px; }
+        .tab { border: 1px solid var(--line); background: transparent; color: rgba(255,255,255,.65); border-radius: 999px; padding: 11px 22px; font: 700 .78rem 'DM Sans', sans-serif; text-transform: uppercase; letter-spacing: .05em; cursor: pointer; }
+        .tab.is-active { background: var(--red); border-color: var(--red); color: #fff; }
+        .item { border: 1px solid var(--line); border-radius: 14px; padding: 18px; margin-bottom: 14px; background: #101012; }
+        .item-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 14px; }
+        .item-head strong { font-size: .95rem; }
+        .item-actions { display: flex; gap: 8px; }
+        .icon-btn { width: 36px; height: 36px; border-radius: 10px; border: 1px solid var(--line); background: transparent; color: #fff; cursor: pointer; font-size: 1rem; line-height: 1; }
+        .icon-btn:hover { border-color: var(--red); color: var(--red); }
+        .icon-btn.danger:hover { border-color: var(--red); background: var(--red); color: #fff; }
+        .thumb { width: 100%; max-height: 180px; object-fit: cover; border-radius: 10px; margin-bottom: 12px; display: block; background: #000; }
+        .thumb.round { width: 84px; height: 84px; border-radius: 50%; object-fit: cover; }
+        .upload-row { display: flex; gap: 8px; margin-bottom: 12px; }
+        .upload-row input[type=file] { display: none; }
+        .msg { margin-top: 14px; font-size: .85rem; font-weight: 700; min-height: 22px; }
+        .msg.ok { color: #4ade80; }
+        .msg.err { color: #ff7a82; }
+        .hidden { display: none !important; }
+        .login-hero { text-align: center; padding: 40px 0 10px; }
+        .login-hero img { width: 110px; margin: 0 auto 16px; }
+        .login-hero h1 { font: 800 clamp(2.4rem, 7vw, 4rem)/1 'Barlow Condensed', sans-serif; text-transform: uppercase; }
+        .login-hero h1 span { color: var(--red); }
+        .login-hero p { color: var(--mut); margin-top: 10px; }
+        ol.steps { margin: 14px 0 14px 20px; color: var(--mut); font-size: .85rem; display: grid; gap: 6px; }
+        ol.steps a { color: var(--red); }
+        @media (max-width: 640px) { .row { grid-template-columns: 1fr; } .card { padding: 20px; } }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <header class="top">
+            <img src="../Lion force academia.png" alt="Lion Force">
+            <h1>Painel <span>Lion Force</span></h1>
+            <span class="sp"></span>
+            <a class="btn btn--ghost btn--small" href="../index.html" target="_blank" rel="noreferrer">Ver site</a>
+            <button class="btn btn--ghost btn--small hidden" id="logoutBtn" type="button">Sair</button>
+        </header>
+
+        <!-- LOGIN -->
+        <section class="card" id="loginCard">
+            <div class="login-hero">
+                <img src="../Lion force academia.png" alt="Lion Force">
+                <h1>Área da <span>equipe</span></h1>
+                <p>Edite fotos, preços e textos do site sem mexer em código.</p>
+            </div>
+            <ol class="steps">
+                <li>No GitHub: sua foto → <strong>Settings</strong> → <strong>Developer settings</strong> → <strong>Personal access tokens</strong> → <strong>Fine-grained tokens</strong> → <strong>Generate new token</strong>.</li>
+                <li>Em <strong>Repository access</strong>, escolha <strong>Only select repositories</strong> e marque <strong>lion-force-academia</strong>.</li>
+                <li>Em <strong>Permissions → Contents</strong>, marque <strong>Read and write</strong>. Gere e cole abaixo.</li>
+            </ol>
+            <label class="f">Token de acesso<input type="password" id="tokenInput" placeholder="github_pat_..." autocomplete="off"></label>
+            <button class="btn" id="loginBtn" type="button" style="width:100%">Entrar no painel</button>
+            <p class="msg" id="loginMsg" role="status"></p>
+        </section>
+
+        <!-- PAINEL -->
+        <section id="panel" class="hidden">
+            <div class="tabs" role="tablist">
+                <button class="tab is-active" data-tab="planos" type="button">Planos</button>
+                <button class="tab" data-tab="depoimentos" type="button">Depoimentos</button>
+                <button class="tab" data-tab="equipe" type="button">Equipe</button>
+                <button class="tab" data-tab="galeria" type="button">Galeria</button>
+                <button class="tab" data-tab="unidade" type="button">Unidade</button>
+            </div>
+
+            <div class="card" data-pane="planos">
+                <h2>Planos</h2>
+                <p class="hint">Preços e benefícios. O plano com “destaque” aparece em preto e maior.</p>
+                <div id="planosList"></div>
+                <button class="btn btn--ghost" id="planoAdd" type="button">+ Adicionar plano</button>
+                <button class="btn" id="planosSave" type="button" style="margin-top:12px;width:100%">Publicar planos</button>
+                <p class="msg" id="planosMsg"></p>
+            </div>
+
+            <div class="card hidden" data-pane="depoimentos">
+                <h2>Depoimentos</h2>
+                <p class="hint">Avaliações da home. Foto pode ser enviada ou link.</p>
+                <div id="depList"></div>
+                <button class="btn btn--ghost" id="depAdd" type="button">+ Adicionar depoimento</button>
+                <button class="btn" id="depSave" type="button" style="margin-top:12px;width:100%">Publicar depoimentos</button>
+                <p class="msg" id="depMsg"></p>
+            </div>
+
+            <div class="card hidden" data-pane="equipe">
+                <h2>Equipe</h2>
+                <p class="hint">Treinadores com foto. Vazio = mostra “equipe em montagem”.</p>
+                <div id="eqList"></div>
+                <button class="btn btn--ghost" id="eqAdd" type="button">+ Adicionar pessoa</button>
+                <button class="btn" id="eqSave" type="button" style="margin-top:12px;width:100%">Publicar equipe</button>
+                <p class="msg" id="eqMsg"></p>
+            </div>
+
+            <div class="card hidden" data-pane="galeria">
+                <h2>Galeria da unidade</h2>
+                <p class="hint">Fotos da página da unidade. Use ↑ ↓ para ordenar.</p>
+                <div id="galList"></div>
+                <button class="btn btn--ghost" id="galAdd" type="button">+ Adicionar foto</button>
+                <button class="btn" id="galSave" type="button" style="margin-top:12px;width:100%">Publicar galeria</button>
+                <p class="msg" id="galMsg"></p>
+            </div>
+
+            <div class="card hidden" data-pane="unidade">
+                <h2>Unidade</h2>
+                <p class="hint">Dados da ficha e da vitrine (endereço, horários, telefone, foto da fachada).</p>
+                <div id="uniForm"></div>
+                <button class="btn" id="uniSave" type="button" style="margin-top:12px;width:100%">Publicar unidade</button>
+                <p class="msg" id="uniMsg"></p>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        var OWNER = 'arcelinoleal-txt', REPO = 'lion-force-academia', BRANCH = 'main';
+        var API = 'https://api.github.com/repos/' + OWNER + '/' + REPO + '/contents/';
+        var token = localStorage.getItem('lf-admin-token') || '';
+        var cache = {};
+
+        function headers() { return { 'Accept': 'application/vnd.github+json', 'Authorization': 'Bearer ' + token }; }
+        function msg(id, text, ok) { var m = document.getElementById(id); m.textContent = text; m.className = 'msg ' + (ok ? 'ok' : 'err'); }
+        function b64decode(b64) { var bin = atob(b64.replace(/\n/g, '')); var bytes = new Uint8Array(bin.length); for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i); return new TextDecoder().decode(bytes); }
+        function b64encode(str) { var bytes = new TextEncoder().encode(str); var bin = ''; bytes.forEach(function (b) { bin += String.fromCharCode(b); }); return btoa(bin); }
+        function slug(s) { return (s || 'foto').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 40) || 'foto'; }
+
+        function apiGet(path) {
+            return fetch(API + path + '?ref=' + BRANCH, { headers: headers() }).then(function (r) {
+                if (!r.ok) throw new Error('HTTP ' + r.status);
+                return r.json();
+            });
+        }
+        function loadJSON(path) {
+            return apiGet(path).then(function (j) {
+                cache[path] = j.sha;
+                return JSON.parse(b64decode(j.content));
+            });
+        }
+        function saveJSON(path, obj, message) {
+            var body = JSON.stringify(obj, null, 2) + '\n';
+            return apiGet(path).then(function (j) {
+                return fetch(API + path, {
+                    method: 'PUT', headers: Object.assign({ 'Content-Type': 'application/json' }, headers()),
+                    body: JSON.stringify({ message: message, content: b64encode(body), sha: j.sha, branch: BRANCH })
+                });
+            }).then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); });
+        }
+        function uploadImage(file, input, previewImg) {
+            var reader = new FileReader();
+            reader.onload = function () {
+                var base64 = String(reader.result).split(',')[1];
+                var ext = (file.name.split('.').pop() || 'jpg').toLowerCase().slice(0, 4);
+                var name = 'fotos/' + slug(file.name.replace(/\.[^.]+$/, '')) + '-' + Date.now() + '.' + ext;
+                input.value = 'Carregando...';
+                fetch(API + name, {
+                    method: 'PUT', headers: Object.assign({ 'Content-Type': 'application/json' }, headers()),
+                    body: JSON.stringify({ message: 'Admin: envia ' + name, content: base64, branch: BRANCH })
+                }).then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+                .then(function () { input.value = name; if (previewImg) { previewImg.src = name.startsWith('http') ? name : '../' + name; } msg(input.dataset.msg || 'galMsg', 'Foto enviada!', true); })
+                .catch(function () { input.value = ''; msg(input.dataset.msg || 'galMsg', 'Falha no envio. Confira o token.', false); });
+            };
+            reader.readAsDataURL(file);
+        }
+        function photoField(value, onPick) {
+            var wrap = document.createElement('div');
+            var img = document.createElement('img');
+            img.className = 'thumb'; img.alt = 'Prévia';
+            var input = document.createElement('input');
+            input.type = 'text'; input.value = value || ''; input.placeholder = 'fotos/arquivo.jpg ou https://...';
+            input.style.marginBottom = '12px';
+            function sync() { img.src = input.value ? (input.value.startsWith('http') ? input.value : '../' + input.value) : ''; img.style.display = input.value ? '' : 'none'; }
+            input.addEventListener('input', function () { sync(); onPick(input.value); });
+            var row = document.createElement('div'); row.className = 'upload-row';
+            var lbl = document.createElement('label'); lbl.className = 'btn btn--ghost btn--small'; lbl.textContent = 'Enviar foto';
+            var file = document.createElement('input'); file.type = 'file'; file.accept = 'image/*';
+            file.addEventListener('change', function () { if (file.files[0]) uploadImage(file.files[0], input, img); });
+            lbl.appendChild(file); row.appendChild(lbl);
+            var urlBtn = document.createElement('button'); urlBtn.type = 'button'; urlBtn.className = 'btn btn--ghost btn--small'; urlBtn.textContent = 'Usar link';
+            urlBtn.addEventListener('click', function () { var u = prompt('Cole o link da imagem (https://...)'); if (u) { input.value = u; sync(); onPick(u); } });
+            row.appendChild(urlBtn);
+            wrap.appendChild(img); wrap.appendChild(input); wrap.appendChild(row);
+            sync();
+            return wrap;
+        }
+
+        /* ---------- LOGIN ---------- */
+        function showPanel(show) {
+            document.getElementById('loginCard').classList.toggle('hidden', show);
+            document.getElementById('panel').classList.toggle('hidden', !show);
+            document.getElementById('logoutBtn').classList.toggle('hidden', !show);
+        }
+        document.getElementById('loginBtn').addEventListener('click', function () {
+            var t = document.getElementById('tokenInput').value.trim();
+            if (!t) { msg('loginMsg', 'Cole o token primeiro.', false); return; }
+            token = t;
+            msg('loginMsg', 'Verificando...', true);
+            fetch(API + 'conteudo/planos.json?ref=' + BRANCH, { headers: headers() }).then(function (r) {
+                if (!r.ok) throw new Error('HTTP ' + r.status);
+                localStorage.setItem('lf-admin-token', token);
+                showPanel(true); boot();
+            }).catch(function () { msg('loginMsg', 'Token inválido ou sem acesso ao repositório.', false); });
+        });
+        document.getElementById('logoutBtn').addEventListener('click', function () {
+            localStorage.removeItem('lf-admin-token'); token = ''; showPanel(false);
+        });
+        document.querySelectorAll('.tab').forEach(function (t) {
+            t.addEventListener('click', function () {
+                document.querySelectorAll('.tab').forEach(function (x) { x.classList.toggle('is-active', x === t); });
+                document.querySelectorAll('[data-pane]').forEach(function (p) { p.classList.toggle('hidden', p.dataset.pane !== t.dataset.tab); });
+            });
+        });
+
+        /* ---------- PLANOS ---------- */
+        var planosData = null;
+        function renderPlanos() {
+            var box = document.getElementById('planosList'); box.innerHTML = '';
+            (planosData.planos || []).forEach(function (p, i) {
+                var d = document.createElement('div'); d.className = 'item';
+                d.innerHTML = '<div class="item-head"><strong>' + (p.nome || 'Plano') + '</strong><div class="item-actions"><button type="button" class="icon-btn" data-act="up">↑</button><button type="button" class="icon-btn" data-act="down">↓</button><button type="button" class="icon-btn danger" data-act="del">×</button></div></div>';
+                function field(label, key, ph) {
+                    var l = document.createElement('label'); l.className = 'f'; l.textContent = label;
+                    var inp = document.createElement('input'); inp.type = 'text'; inp.value = p[key] || ''; inp.placeholder = ph || '';
+                    inp.addEventListener('input', function () { p[key] = inp.value; });
+                    l.appendChild(inp); d.appendChild(l);
+                }
+                field('Nome', 'nome'); field('Descrição', 'descricao');
+                var r = document.createElement('div'); r.className = 'row';
+                [['Preço (ex: 3x R$ 119)', 'preco'], ['Centavos (ex: 119,99)', 'valor'], ['Período (ex: /mês)', 'parcelas'], ['Etiqueta (ex: Mais escolhido)', 'tag']].forEach(function (cfg) {
+                    var l = document.createElement('label'); l.className = 'f'; l.textContent = cfg[0];
+                    var inp = document.createElement('input'); inp.type = 'text'; inp.value = p[cfg[1]] || '';
+                    inp.addEventListener('input', function () { p[cfg[1]] = inp.value; });
+                    l.appendChild(inp); r.appendChild(l);
+                });
+                d.appendChild(r);
+                var lf = document.createElement('label'); lf.className = 'f'; lf.textContent = 'Benefícios (um por linha)';
+                var ta = document.createElement('textarea'); ta.value = (p.recursos || []).join('\n');
+                ta.addEventListener('input', function () { p.recursos = ta.value.split('\n').map(function (s) { return s.trim(); }).filter(Boolean); });
+                lf.appendChild(ta); d.appendChild(lf);
+                var ld = document.createElement('label'); ld.className = 'f'; ld.textContent = 'Destaque (aparece maior)';
+                var sel = document.createElement('select');
+                sel.innerHTML = '<option value="0">Não</option><option value="1">Sim</option>';
+                sel.value = p.destaque ? '1' : '0';
+                sel.addEventListener('change', function () { p.destaque = sel.value === '1'; });
+                ld.appendChild(sel); d.appendChild(ld);
+                d.querySelectorAll('[data-act]').forEach(function (b) {
+                    b.addEventListener('click', function () {
+                        var a = planosData.planos;
+                        if (b.dataset.act === 'del' && confirm('Remover este plano?')) a.splice(i, 1);
+                        if (b.dataset.act === 'up' && i > 0) { a.splice(i - 1, 0, a.splice(i, 1)[0]); }
+                        if (b.dataset.act === 'down' && i < a.length - 1) { a.splice(i + 1, 0, a.splice(i, 1)[0]); }
+                        renderPlanos();
+                    });
+                });
+                box.appendChild(d);
+            });
+        }
+        document.getElementById('planoAdd').addEventListener('click', function () {
+            planosData.planos.push({ nome: 'Novo plano', descricao: '', preco: 'R$ 99', valor: '99,99', parcelas: '/mês', tag: '', destaque: false, recursos: ['Acesso à estrutura completa'] });
+            renderPlanos();
+        });
+        document.getElementById('planosSave').addEventListener('click', function () {
+            var b = this; b.disabled = true; msg('planosMsg', 'Publicando...', true);
+            saveJSON('conteudo/planos.json', planosData, 'Admin: atualiza planos').then(function () { msg('planosMsg', 'Publicado! O site atualiza em 1–2 min.', true); })
+            .catch(function () { msg('planosMsg', 'Erro ao publicar. Tente de novo.', false); }).finally(function () { b.disabled = false; });
+        });
+
+        /* ---------- DEPOIMENTOS ---------- */
+        var depData = null;
+        function renderDep() {
+            var box = document.getElementById('depList'); box.innerHTML = '';
+            (depData.depoimentos || []).forEach(function (t, i) {
+                var d = document.createElement('div'); d.className = 'item';
+                d.innerHTML = '<div class="item-head"><strong>Depoimento ' + (i + 1) + '</strong><div class="item-actions"><button type="button" class="icon-btn danger" data-act="del">×</button></div></div>';
+                [['Nome', 'nome'], ['Unidade', 'unidade']].forEach(function (cfg) {
+                    var l = document.createElement('label'); l.className = 'f'; l.textContent = cfg[0];
+                    var inp = document.createElement('input'); inp.type = 'text'; inp.value = t[cfg[1]] || '';
+                    inp.addEventListener('input', function () { t[cfg[1]] = inp.value; });
+                    l.appendChild(inp); d.appendChild(l);
+                });
+                var lt = document.createElement('label'); lt.className = 'f'; lt.textContent = 'Texto';
+                var ta = document.createElement('textarea'); ta.value = t.texto || '';
+                ta.addEventListener('input', function () { t.texto = ta.value; });
+                lt.appendChild(ta); d.appendChild(lt);
+                var lf = document.createElement('label'); lf.className = 'f'; lf.textContent = 'Foto da pessoa';
+                d.appendChild(lf);
+                d.appendChild(photoField(t.foto, function (v) { t.foto = v; }));
+                d.querySelector('[data-act]').addEventListener('click', function () {
+                    if (confirm('Remover este depoimento?')) { depData.depoimentos.splice(i, 1); renderDep(); }
+                });
+                box.appendChild(d);
+            });
+        }
+        document.getElementById('depAdd').addEventListener('click', function () {
+            depData.depoimentos.push({ nome: '', unidade: 'Unidade Jardim Das Fontes', texto: '', foto: '' });
+            renderDep();
+        });
+        document.getElementById('depSave').addEventListener('click', function () {
+            var b = this; b.disabled = true; msg('depMsg', 'Publicando...', true);
+            saveJSON('conteudo/depoimentos.json', depData, 'Admin: atualiza depoimentos').then(function () { msg('depMsg', 'Publicado! O site atualiza em 1–2 min.', true); })
+            .catch(function () { msg('depMsg', 'Erro ao publicar. Tente de novo.', false); }).finally(function () { b.disabled = false; });
+        });
+
+        /* ---------- EQUIPE ---------- */
+        var eqData = null;
+        function renderEq() {
+            var box = document.getElementById('eqList'); box.innerHTML = '';
+            (eqData.membros || []).forEach(function (m, i) {
+                var d = document.createElement('div'); d.className = 'item';
+                d.innerHTML = '<div class="item-head"><strong>' + (m.nome || 'Nova pessoa') + '</strong><div class="item-actions"><button type="button" class="icon-btn danger" data-act="del">×</button></div></div>';
+                [['Nome', 'nome'], ['Cargo (ex: Musculação)', 'cargo']].forEach(function (cfg) {
+                    var l = document.createElement('label'); l.className = 'f'; l.textContent = cfg[0];
+                    var inp = document.createElement('input'); inp.type = 'text'; inp.value = m[cfg[1]] || '';
+                    inp.addEventListener('input', function () { m[cfg[1]] = inp.value; });
+                    l.appendChild(inp); d.appendChild(l);
+                });
+                var lf = document.createElement('label'); lf.className = 'f'; lf.textContent = 'Foto';
+                d.appendChild(lf);
+                d.appendChild(photoField(m.foto, function (v) { m.foto = v; }));
+                d.querySelector('[data-act]').addEventListener('click', function () {
+                    if (confirm('Remover esta pessoa?')) { eqData.membros.splice(i, 1); renderEq(); }
+                });
+                box.appendChild(d);
+            });
+        }
+        document.getElementById('eqAdd').addEventListener('click', function () {
+            eqData.membros.push({ nome: '', cargo: '', foto: '' });
+            renderEq();
+        });
+        document.getElementById('eqSave').addEventListener('click', function () {
+            var b = this; b.disabled = true; msg('eqMsg', 'Publicando...', true);
+            saveJSON('conteudo/equipe.json', eqData, 'Admin: atualiza equipe').then(function () { msg('eqMsg', 'Publicado! O site atualiza em 1–2 min.', true); })
+            .catch(function () { msg('eqMsg', 'Erro ao publicar. Tente de novo.', false); }).finally(function () { b.disabled = false; });
+        });
+
+        /* ---------- GALERIA ---------- */
+        var galData = null;
+        function renderGal() {
+            var box = document.getElementById('galList'); box.innerHTML = '';
+            (galData.fotos || []).forEach(function (f, i) {
+                var d = document.createElement('div'); d.className = 'item';
+                d.innerHTML = '<div class="item-head"><strong>Foto ' + (i + 1) + '</strong><div class="item-actions"><button type="button" class="icon-btn" data-act="up">↑</button><button type="button" class="icon-btn" data-act="down">↓</button><button type="button" class="icon-btn danger" data-act="del">×</button></div></div>';
+                d.appendChild(photoField(f.src, function (v) { f.src = v; }));
+                var l = document.createElement('label'); l.className = 'f'; l.textContent = 'Descrição';
+                var inp = document.createElement('input'); inp.type = 'text'; inp.value = f.alt || '';
+                inp.addEventListener('input', function () { f.alt = inp.value; });
+                l.appendChild(inp); d.appendChild(l);
+                d.querySelectorAll('[data-act]').forEach(function (b) {
+                    b.addEventListener('click', function () {
+                        var a = galData.fotos;
+                        if (b.dataset.act === 'del' && confirm('Remover esta foto?')) a.splice(i, 1);
+                        if (b.dataset.act === 'up' && i > 0) { a.splice(i - 1, 0, a.splice(i, 1)[0]); }
+                        if (b.dataset.act === 'down' && i < a.length - 1) { a.splice(i + 1, 0, a.splice(i, 1)[0]); }
+                        renderGal();
+                    });
+                });
+                box.appendChild(d);
+            });
+        }
+        document.getElementById('galAdd').addEventListener('click', function () {
+            galData.fotos.push({ src: '', alt: '' });
+            renderGal();
+        });
+        document.getElementById('galSave').addEventListener('click', function () {
+            var b = this; b.disabled = true; msg('galMsg', 'Publicando...', true);
+            saveJSON('conteudo/galeria.json', galData, 'Admin: atualiza galeria').then(function () { msg('galMsg', 'Publicado! O site atualiza em 1–2 min.', true); })
+            .catch(function () { msg('galMsg', 'Erro ao publicar. Tente de novo.', false); }).finally(function () { b.disabled = false; });
+        });
+
+        /* ---------- UNIDADE ---------- */
+        var uniData = null;
+        function renderUni() {
+            var box = document.getElementById('uniForm'); box.innerHTML = '';
+            var u = uniData;
+            [['Nome da unidade', 'nome'], ['Endereço completo', 'endereco'], ['Horário (ex: Segunda a sábado · 06:00 — 23:00)', 'horario'], ['Telefone (ex: (11) 94354-4884)', 'telefone'], ['WhatsApp só números (ex: 5511943544884)', 'whatsapp'], ['Destaque (ex: Aula avulsa R$ 19,99)', 'promo'], ['CEP', 'cep']].forEach(function (cfg) {
+                var l = document.createElement('label'); l.className = 'f'; l.textContent = cfg[0];
+                var inp = document.createElement('input'); inp.type = 'text'; inp.value = u[cfg[1]] || '';
+                inp.addEventListener('input', function () { u[cfg[1]] = inp.value; });
+                l.appendChild(inp); box.appendChild(l);
+            });
+            var lh = document.createElement('label'); lh.className = 'f'; lh.textContent = 'Tabela de horários (uma linha por item: Dia | Hora)';
+            var ta = document.createElement('textarea');
+            ta.value = (u.horarioTabela || []).map(function (r) { return r.join(' | '); }).join('\n');
+            ta.addEventListener('input', function () {
+                u.horarioTabela = ta.value.split('\n').map(function (s) { return s.trim(); }).filter(Boolean).map(function (s) {
+                    var p = s.split('|'); return [p[0].trim(), (p[1] || '').trim()];
+                });
+            });
+            lh.appendChild(ta); box.appendChild(lh);
+            var lf = document.createElement('label'); lf.className = 'f'; lf.textContent = 'Foto da fachada';
+            box.appendChild(lf);
+            box.appendChild(photoField(u.fachada, function (v) { u.fachada = v; }));
+        }
+        document.getElementById('uniSave').addEventListener('click', function () {
+            var b = this; b.disabled = true; msg('uniMsg', 'Publicando...', true);
+            saveJSON('conteudo/unidade.json', uniData, 'Admin: atualiza unidade').then(function () { msg('uniMsg', 'Publicado! O site atualiza em 1–2 min.', true); })
+            .catch(function () { msg('uniMsg', 'Erro ao publicar. Tente de novo.', false); }).finally(function () { b.disabled = false; });
+        });
+
+        /* ---------- BOOT ---------- */
+        function boot() {
+            Promise.all([
+                loadJSON('conteudo/planos.json'), loadJSON('conteudo/depoimentos.json'),
+                loadJSON('conteudo/equipe.json'), loadJSON('conteudo/galeria.json'),
+                loadJSON('conteudo/unidade.json')
+            ]).then(function (res) {
+                planosData = res[0]; depData = res[1]; eqData = res[2]; galData = res[3]; uniData = res[4];
+                if (!Array.isArray(planosData.planos)) planosData.planos = [];
+                if (!Array.isArray(depData.depoimentos)) depData.depoimentos = [];
+                if (!Array.isArray(eqData.membros)) eqData.membros = [];
+                if (!Array.isArray(galData.fotos)) galData.fotos = [];
+                renderPlanos(); renderDep(); renderEq(); renderGal(); renderUni();
+            }).catch(function () { msg('planosMsg', 'Falha ao carregar dados. Recarregue a página.', false); });
+        }
+        if (token) {
+            document.getElementById('tokenInput').value = token;
+            fetch(API + 'conteudo/planos.json?ref=' + BRANCH, { headers: headers() }).then(function (r) {
+                if (!r.ok) throw new Error();
+                showPanel(true); boot();
+            }).catch(function () { showPanel(false); });
+        }
+    </script>
+</body>
+</html>

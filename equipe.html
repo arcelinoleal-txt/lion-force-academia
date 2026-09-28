@@ -103,6 +103,10 @@
                     <article class="area reveal"><img src="https://images.unsplash.com/photo-1605296867304-46d5465a13f1?auto=format&fit=crop&w=900&q=80" alt="Treino de força com barra" loading="lazy"><div class="area-body"><h3>Funcional</h3><p>Circuitos dinâmicos para condicionamento e mobilidade.</p><div class="area-foot"><span>Em breve · perfis</span><i data-lucide="arrow-right" class="icon"></i></div></div></article>
                     <article class="area reveal"><img src="https://images.unsplash.com/photo-1550345332-09e3ac987658?auto=format&fit=crop&w=900&q=80" alt="Resultado de treino e hipertrofia" loading="lazy"><div class="area-body"><h3>Avaliação</h3><p>Ponto de partida e revisões para medir a evolução real.</p><div class="area-foot"><span>Em breve · perfis</span><i data-lucide="arrow-right" class="icon"></i></div></div></article>
                 </div>
+                <h3 class="reveal" style="font-size:2rem;margin:48px 0 20px">Nosso time</h3>
+                <div class="team-grid" id="equipeGrid">
+                    <article class="person person--original reveal"><h3>Equipe em montagem</h3><p>Os perfis dos treinadores serão apresentados aqui em breve.</p></article>
+                </div>
             </div>
         </section>
 
@@ -212,5 +216,6 @@
         if (!localStorage.getItem('lf-cookie')) setTimeout(() => cookie.classList.add('show'), 1800);
         document.getElementById('cookieOk').addEventListener('click', () => { localStorage.setItem('lf-cookie', '1'); cookie.classList.remove('show'); });
     </script>
+    <script src="cms.js"></script>
 </body>
 </html>
