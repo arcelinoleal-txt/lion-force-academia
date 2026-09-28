@@ -88,6 +88,7 @@
         <section id="panel" class="hidden">
             <div class="tabs" role="tablist">
                 <button class="tab is-active" data-tab="textos" type="button">Textos do site</button>
+                <button class="tab" data-tab="historia" type="button">Nossa história</button>
                 <button class="tab" data-tab="planos" type="button">Planos</button>
                 <button class="tab" data-tab="depoimentos" type="button">Depoimentos</button>
                 <button class="tab" data-tab="equipe" type="button">Equipe</button>
@@ -101,6 +102,19 @@
                 <div id="txtList"></div>
                 <button class="btn" id="txtSave" type="button" style="width:100%">Publicar textos</button>
                 <p class="msg" id="txtMsg"></p>
+            </div>
+
+            <div class="card hidden" data-pane="historia">
+                <h2>Nossa história</h2>
+                <p class="hint">Seção da home com o texto da academia e o card do fundador. A foto em branco mostra um espaço com borda tracejada.</p>
+                <h3 style="font:700 .8rem 'DM Sans';text-transform:uppercase;letter-spacing:.06em;color:rgba(255,255,255,.5);margin:22px 0 10px">Cabeçalho</h3>
+                <div id="histHead"></div>
+                <h3 style="font:700 .8rem 'DM Sans';text-transform:uppercase;letter-spacing:.06em;color:rgba(255,255,255,.5);margin:22px 0 10px">Fundador</h3>
+                <div id="histFund"></div>
+                <h3 style="font:700 .8rem 'DM Sans';text-transform:uppercase;letter-spacing:.06em;color:rgba(255,255,255,.5);margin:22px 0 10px">Texto da história</h3>
+                <div id="histText"></div>
+                <button class="btn" id="histSave" type="button" style="margin-top:18px;width:100%">Publicar história</button>
+                <p class="msg" id="histMsg"></p>
             </div>
 
             <div class="card hidden" data-pane="planos">
@@ -563,6 +577,53 @@
                 .finally(function () { b.disabled = false; });
         });
 
+        /* ---------- NOSSA HISTÓRIA ---------- */
+        var histData = null;
+        function histField(boxId, obj, key, label, ph, multiline) {
+            var l = document.createElement('label'); l.className = 'f'; l.textContent = label;
+            var inp = document.createElement(multiline ? 'textarea' : 'input');
+            if (!multiline) inp.type = 'text';
+            inp.value = obj[key] || ''; inp.placeholder = ph || '';
+            inp.addEventListener('input', function () { obj[key] = inp.value; });
+            l.appendChild(inp); document.getElementById(boxId).appendChild(l);
+            return inp;
+        }
+        function renderHist() {
+            var h = histData.historia;
+            if (!h.fundador) h.fundador = { nome: '', cargo: '', foto: '', instagram: '', resumo: '' };
+
+            var head = document.getElementById('histHead'); head.innerHTML = '';
+            histField('histHead', h, 'subtitulo', 'Linha em cima do título (ex: Dominadores como um leão)');
+            histField('histHead', h, 'titulo', 'Título (ex: Nossa história)');
+
+            var fund = document.getElementById('histFund'); fund.innerHTML = '';
+            histField('histFund', h.fundador, 'nome', 'Nome do fundador');
+            histField('histFund', h.fundador, 'cargo', 'Cargo (ex: Fundador e Proprietário)');
+            histField('histFund', h.fundador, 'instagram', 'Instagram do fundador');
+            var lf = document.createElement('label'); lf.className = 'f'; lf.textContent = 'Foto do fundador';
+            fund.appendChild(lf);
+            fund.appendChild(photoField(h.fundador.foto, function (v) { h.fundador.foto = v; }));
+            histField('histFund', h.fundador, 'resumo', 'Texto do fundador', '', true);
+
+            var txt = document.getElementById('histText'); txt.innerHTML = '';
+            histField('histText', h, 'texto1', 'Primeiro parágrafo', '', true);
+            histField('histText', h, 'texto2', 'Segundo parágrafo', '', true);
+            var lm = document.createElement('label'); lm.className = 'f'; lm.textContent = 'Destaques (um por linha)';
+            var ta = document.createElement('textarea');
+            ta.value = (h.marca || []).join('\n');
+            ta.addEventListener('input', function () {
+                h.marca = ta.value.split('\n').map(function (s) { return s.trim(); }).filter(Boolean);
+            });
+            lm.appendChild(ta); txt.appendChild(lm);
+        }
+        document.getElementById('histSave').addEventListener('click', function () {
+            var b = this; b.disabled = true; msg('histMsg', 'Publicando...', true);
+            saveJSON('conteudo/historia.json', histData, 'Admin: atualiza nossa história')
+                .then(function () { msg('histMsg', 'Publicado! O site atualiza em 1–2 min.', true); })
+                .catch(function () { msg('histMsg', 'Erro ao publicar. Tente de novo.', false); })
+                .finally(function () { b.disabled = false; });
+        });
+
         /* ---------- BOOT ---------- */
         function boot() {
             Promise.all([
@@ -582,6 +643,11 @@
                 txtData = t;
                 if (!txtData.textos) txtData.textos = {};
                 renderTxt();
+                return loadJSON('conteudo/historia.json').catch(function () { return { historia: {} }; });
+            }).then(function (h) {
+                histData = h;
+                if (!histData.historia) histData.historia = {};
+                renderHist();
             }).catch(function () { msg('txtMsg', 'Falha ao carregar dados. Recarregue a página.', false); });
         }
         /* Sempre pede usuário e senha; o token fica guardado no aparelho. */

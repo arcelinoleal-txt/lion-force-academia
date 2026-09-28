@@ -237,6 +237,46 @@
         });
     }
 
+    /* ---------- NOSSA HISTÓRIA ---------- */
+    function renderHistoria() {
+        var box = document.getElementById('historiaBox');
+        if (!box) return;
+        getJSON('conteudo/historia.json').then(function (d) {
+            var h = d.historia || {};
+            var f = h.fundador || {};
+            var temFoto = !!f.foto;
+            var marca = (h.marca || []).map(function (m) {
+                return '<li><i data-lucide="check" class="icon"></i><span>' + esc(m) + '</span></li>';
+            }).join('');
+
+            box.innerHTML =
+                '<div class="founder-card' + (temFoto ? '' : ' founder-card--empty') + ' reveal">' +
+                '<div class="person-media">' +
+                (temFoto
+                    ? '<img src="' + esc(f.foto) + '" alt="' + esc(f.nome) + '" loading="lazy">'
+                    : '<i data-lucide="user" class="icon"></i>') +
+                (f.cargo ? '<span class="founder-tag">' + esc(f.cargo) + '</span>' : '') +
+                '</div>' +
+                '<h3>' + esc(f.nome || 'Nome do Fundador') + '</h3>' +
+                (f.resumo ? '<p class="founder-bio">' + esc(f.resumo) + '</p>' : '') +
+                (f.instagram ? '<a class="founder-insta" href="' + esc(f.instagram) + '" target="_blank" rel="noreferrer"><i data-lucide="instagram" class="icon"></i> Instagram</a>' : '') +
+                '</div>' +
+
+                '<div class="historia-text reveal">' +
+                '<p class="eyebrow">' + esc(h.subtitulo || 'Nossa história') + '</p>' +
+                '<h3>' + esc(h.titulo || 'Nossa história') + '</h3>' +
+                (h.texto1 ? '<p>' + esc(h.texto1) + '</p>' : '') +
+                (h.texto2 ? '<p>' + esc(h.texto2) + '</p>' : '') +
+                (marca ? '<ul class="historia-marca">' + marca + '</ul>' : '') +
+                '<div class="hero-actions" style="margin-top:28px">' +
+                '<a class="btn" href="contato.html">Quero treinar <i data-lucide="arrow-right" class="icon"></i></a>' +
+                '<a class="btn btn--ghost" href="equipe.html">Ver a equipe</a>' +
+                '</div></div>';
+
+            refresh(box);
+        }).catch(function () {});
+    }
+
     /* ---------- TEXTOS GLOBAIS (horários, contatos, números) ---------- */
     function aplicarTextos(t) {
         if (!t) return;
@@ -285,6 +325,7 @@
         renderQuotes();
         renderGaleria();
         renderEquipe();
+        renderHistoria();
         renderUnidade();
         refresh(document);
     });

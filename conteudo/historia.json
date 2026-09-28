@@ -1,0 +1,21 @@
+{
+  "historia": {
+    "fundador": {
+      "nome": "Nome do Fundador",
+      "cargo": "Fundador e Proprietário",
+      "foto": "",
+      "instagram": "",
+      "resumo": "Idealizador da Lion Force Academia. Responsável por manter o padrão de atendimento, a conservação dos equipamentos e a certeza de que todo aluno seja acompanhado de perto desde o primeiro treino."
+    },
+    "titulo": "Nossa história",
+    "subtitulo": "Dominadores como um leão",
+    "texto1": "A Lion Force nasceu de uma vontade simples: oferecer um lugar de treino sério, limpo e com gente presente. Nada de coach genérico ou aparelho quebrado. Estrutura completa, equipamento cuidado e um time que corrige, motiva e acompanha cada fase do aluno.",
+    "texto2": "De uma única sala ao salão completo de 1.200m² no Jardim Das Fontes, o princípio nunca mudou: quem entra aqui é reconhecido, ouvido e acompanhado no caminho. Treino sem presença não constrói resultado — por isso o acompanhamento faz parte da estrutura tanto quanto os pesos.",
+    "marca": [
+      "Estrutura completa e manutenção constante",
+      "Acompanhamento próximo de quem treina",
+      "Treino personalizado no app Next Fit",
+      "Comodidade e segurança em toda a área"
+    ]
+  }
+}

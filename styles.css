@@ -198,6 +198,27 @@ header.site.is-scrolled { box-shadow: 0 10px 30px rgba(0,0,0,.10); }
 .person--destaque { border-color: var(--red); box-shadow: 0 0 0 1px var(--red), 0 20px 40px rgba(0,0,0,.4); }
 .person--destaque .person-role { background: var(--red); }
 
+/* Nossa história */
+.historia-grid { display: grid; grid-template-columns: 340px 1fr; gap: 48px; align-items: start; }
+.founder-card { background: #141416; border: 1px solid var(--line); border-radius: 20px; padding: 0 0 26px; overflow: hidden; position: sticky; top: 96px; }
+.founder-card .person-media { position: relative; }
+.founder-card img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; object-position: center 18%; display: block; background: #0e0e10; }
+.founder-tag { position: absolute; left: 14px; bottom: 14px; background: var(--red); color: #fff; font: 700 .68rem var(--body); text-transform: uppercase; letter-spacing: .06em; padding: 7px 14px; border-radius: 99px; }
+.founder-card h3 { font: 800 1.5rem var(--display); margin: 20px 24px 4px; }
+.founder-card .founder-role { color: var(--red); font: 700 .74rem var(--body); text-transform: uppercase; letter-spacing: .06em; margin: 0 24px; }
+.founder-card .founder-bio { color: var(--muted); font-size: .88rem; line-height: 1.6; margin: 14px 24px 0; }
+.founder-card--empty { border-style: dashed; }
+.founder-card--empty .person-media { display: grid; place-items: center; aspect-ratio: 4 / 5; background: #101012; color: var(--muted); }
+.founder-card--empty .person-media .icon { width: 46px; height: 46px; opacity: .5; }
+.founder-insta { display: inline-flex; align-items: center; gap: 6px; margin: 16px 24px 0; color: var(--red); font: 700 .74rem var(--body); text-transform: uppercase; letter-spacing: .05em; }
+.founder-insta .icon { width: 15px; height: 15px; }
+.historia-text h3 { font: 800 clamp(1.9rem, 3.4vw, 2.7rem)/1.1 var(--display); }
+.historia-text p { color: var(--muted); font-size: .98rem; line-height: 1.75; margin-top: 20px; max-width: 62ch; }
+.historia-marca { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 30px; }
+.historia-marca li { list-style: none; display: flex; gap: 11px; align-items: flex-start; background: rgba(255,255,255,.04); border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; font-size: .88rem; line-height: 1.5; }
+.historia-marca { margin: 0; padding: 0; }
+.historia-marca .icon { color: var(--red); width: 19px; height: 19px; flex: 0 0 19px; margin-top: 2px; }
+
 /* Depoimentos */
 .rating-card { display: grid; grid-template-columns: auto 1fr; gap: 26px; align-items: center; background: #141416; border: 1px solid var(--line); color: #fff; border-radius: var(--radius); padding: 30px 34px; margin-bottom: 22px; }
 .score-big { font: 900 4.6rem/1 var(--display); }
@@ -384,6 +405,9 @@ footer.site ul a:hover { color: var(--red); }
     .rating-card { grid-template-columns: 1fr; }
     .foot-grid { grid-template-columns: 1fr; gap: 28px; padding: 56px 0 36px; }
     .app-shot { max-width: 380px; }
+    .historia-grid { grid-template-columns: 1fr; gap: 32px; }
+    .founder-card { position: static; max-width: 340px; }
+    .historia-marca { grid-template-columns: 1fr; }
     .team-grid { grid-auto-columns: minmax(230px, 78vw); gap: 14px; }
     .person--original { grid-auto-columns: minmax(230px, 78vw); }
     .team-arrow { width: 40px; height: 40px; flex: 0 0 40px; }
