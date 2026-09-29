@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Painel Lion Force</title>
     <meta name="robots" content="noindex, nofollow">
     <link rel="icon" type="image/png" href="../Lion force academia.png">
@@ -29,7 +29,7 @@
         .card h2 { font: 800 1.5rem 'Barlow Condensed', sans-serif; text-transform: uppercase; margin-bottom: 6px; }
         .card > p.hint { color: var(--mut); font-size: .85rem; margin-bottom: 18px; }
         label.f { display: grid; gap: 6px; font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: rgba(255,255,255,.7); margin-bottom: 12px; }
-        input[type=text], input[type=password], textarea, select { background: #050506; border: 1.5px solid var(--line); border-radius: 12px; color: #fff; font: 500 .92rem 'DM Sans', sans-serif; padding: 12px 14px; width: 100%; outline: 0; }
+        input[type=text], input[type=password], textarea, select { background: #050506; border: 1.5px solid var(--line); border-radius: 12px; color: #fff; font: 500 16px 'DM Sans', sans-serif; padding: 12px 14px; width: 100%; outline: 0; }
         input:focus, textarea:focus, select:focus { border-color: var(--red); }
         textarea { min-height: 80px; resize: vertical; }
         .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
@@ -64,7 +64,7 @@
         .musica-dica { color: var(--mut); font-size: .78rem; margin: 10px 0 0; }
         .musica-dica a { color: var(--red); }
         .musica-lista { display: grid; gap: 8px; margin-bottom: 6px; }
-        .voltar-topo { position: fixed; right: 18px; bottom: 18px; z-index: 50; width: 42px; height: 42px; border-radius: 50%; border: 1px solid var(--line); background: #141416; color: #fff; display: grid; place-items: center; cursor: pointer; opacity: 0; pointer-events: none; transition: opacity .2s, background .2s; }
+        .voltar-topo { position: fixed; right: 18px; bottom: calc(18px + env(safe-area-inset-bottom, 0px)); z-index: 50; width: 46px; height: 46px; border-radius: 50%; border: 1px solid var(--line); background: #141416; color: #fff; display: grid; place-items: center; cursor: pointer; opacity: 0; pointer-events: none; transition: opacity .2s, background .2s; }
         .voltar-topo.show { opacity: 1; pointer-events: auto; }
         .voltar-topo:hover { background: var(--red); border-color: var(--red); }
         .login-hero { text-align: center; padding: 40px 0 10px; }
@@ -74,7 +74,66 @@
         .login-hero p { color: var(--mut); margin-top: 10px; }
         ol.steps { margin: 14px 0 14px 20px; color: var(--mut); font-size: .85rem; display: grid; gap: 6px; }
         ol.steps a { color: var(--red); }
-        @media (max-width: 640px) { .row { grid-template-columns: 1fr; } .card { padding: 20px; } }
+        /* ---------- RESPONSIVO: tablet e celular ---------- */
+        /* iPad em retrato e celulares largos: uma coluna so */
+        @media (max-width: 900px) {
+            .row { grid-template-columns: 1fr; }
+            .wrap { width: min(100% - 28px, 720px); padding: 20px 0 70px; }
+        }
+
+        @media (max-width: 640px) {
+            body { -webkit-text-size-adjust: 100%; }
+            .wrap { width: calc(100% - 20px); padding: 14px 0 80px; }
+            header.top { flex-wrap: wrap; gap: 10px; padding: 12px 0; }
+            header.top img { width: 44px; height: 44px; }
+            header.top h1 { font-size: 1.3rem; }
+            header.top .btn--small { min-height: 42px; padding: 0 14px; font-size: .7rem; }
+
+            .card { padding: 18px 16px; border-radius: 16px; }
+            .card h2 { font-size: 1.28rem; }
+
+            /* abas viram grade, todas visiveis */
+            .tabs { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 14px; }
+            .tab { padding: 13px 8px; font-size: .7rem; text-align: center; }
+
+            .btn { min-height: 50px; padding: 0 18px; font-size: .76rem; }
+            .btn--small { min-height: 44px; }
+            label.f { font-size: .68rem; margin-bottom: 14px; }
+            input, select, textarea { font-size: 16px; padding: 14px; border-radius: 12px; }
+            textarea { min-height: 110px; }
+
+            .item { padding: 15px; border-radius: 13px; }
+            .item-head { flex-wrap: wrap; row-gap: 10px; }
+            .item-head strong { font-size: .92rem; line-height: 1.35; }
+            .item-actions { flex: 0 0 auto; }
+            .icon-btn { width: 42px; height: 42px; font-size: 1.15rem; }
+
+            .upload-row { flex-wrap: wrap; }
+            .upload-row .btn { flex: 1 1 100%; }
+            .thumb { max-height: 210px; }
+
+            .musica-row { flex-wrap: wrap; }
+            .musica-row input { flex: 1 1 100%; }
+            .musica-row .btn { flex: 1 1 auto; }
+            .musica-frame iframe { height: 260px; }
+
+            .login-hero { padding: 26px 0 8px; }
+            .login-hero img { width: 84px; }
+            .voltar-topo { right: 14px; bottom: calc(14px + env(safe-area-inset-bottom, 0px)); }
+        }
+
+        /* Tela deitada no celular */
+        @media (max-height: 480px) and (orientation: landscape) {
+            .login-hero { padding: 16px 0 4px; }
+            .login-hero img { width: 56px; margin-bottom: 8px; }
+            .login-hero h1 { font-size: 1.7rem; }
+            .tabs { grid-template-columns: repeat(4, 1fr); }
+        }
+
+        /* Barra de endereço do iPhone encolhe ao rolar: nao deixa o conteudo pular */
+        @supports (-webkit-touch-callout: none) {
+            .wrap { padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)); }
+        }
     </style>
 </head>
 <body>
