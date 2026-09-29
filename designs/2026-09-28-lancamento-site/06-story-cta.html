@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Lion Force — Story 2 · CTA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800;900&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="brand.css">
+<style>
+    html, body { width: 1080px; height: 1920px; }
+    .art {
+        height: 1920px;
+        padding: 150px 90px 0;
+        background: #000;
+        background-image: url('../../Unidade jardim das fontes.webp');
+        background-size: cover;
+        background-position: 50% 34%;
+    }
+    .art::before {
+        background:
+            linear-gradient(180deg, rgba(6,6,7,.90) 0%, rgba(6,6,7,.74) 38%, rgba(6,6,7,.94) 100%),
+            radial-gradient(62% 40% at 80% 88%, rgba(227,33,42,.40) 0%, rgba(227,33,42,0) 70%);
+    }
+    .topbar { padding-bottom: 40px; }
+    .brand { gap: 22px; }
+    .brand img { height: 168px; }
+    .brand-name { font-size: 26px; padding-left: 22px; }
+    .brand-name small { font-size: 18px; }
+    .handle { font-size: 25px; padding: 16px 30px; }
+    .body { justify-content: center; gap: 46px; padding-top: 0; }
+    h1 { font-size: 158px; }
+    .lead { font-size: 38px; max-width: 900px; }
+    .btn { min-height: 108px; font-size: 36px; padding: 0 56px; }
+    .painel {
+        background: rgba(10,10,11,.66);
+        border: 1px solid var(--line);
+        border-radius: 24px;
+        padding: 38px 40px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+    .info div { font-size: 31px; }
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    .stat { padding: 40px 34px; }
+    .stat strong { font-size: 84px; }
+    .stat span { font-size: 22px; }
+    .foot { padding: 40px 0 46px; font-size: 27px; }
+</style>
+</head>
+<body>
+<div class="art">
+    <div class="topbar">
+        <div class="brand">
+            <img src="assets/logo-lion-force.png" alt="Lion Force">
+            <span class="brand-name">Academia<small>Jardim Das Fontes</small></span>
+        </div>
+        <span class="handle">@<b>lionforce</b>_academia</span>
+    </div>
+
+    <div class="body">
+        <h1>Sua vida mais<br><span class="red">forte</span><br>come&ccedil;a aqui.</h1>
+        <p class="lead">Escolhe o plano no site e aparece na unidade. <b>Primeira aula com a gente.</b></p>
+        <span class="btn">Quero treinar <span class="arrow">&rarr;</span></span>
+
+        <div class="painel">
+            <div class="info">
+                <div><i></i> Rua Fonte Nova, 34A &mdash; Jardim Das Fontes</div>
+                <div><i></i> WhatsApp (11) 94354-4884</div>
+                <div><i></i> Seg a sex 06:00 &mdash; 22:00 &middot; S&aacute;b 09:00 &mdash; 13:00</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="stats">
+        <div class="stat"><strong>4.9</strong><span>nota no Google</span></div>
+        <div class="stat"><strong>1.200m&sup2;</strong><span>de estrutura</span></div>
+        <div class="stat"><strong>79,99</strong><span>plano anual</span></div>
+        <div class="stat"><strong>19,99</strong><span>aula avulsa</span></div>
+    </div>
+
+    <div class="foot">
+        <span>Chame no WhatsApp</span>
+        <span class="url">link na <b>bio</b></span>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,342 @@
+/* =========================================================
+   LION FORCE — sistema visual para artes de Instagram
+   Tokens extraídos de styles.css do site (mesma identidade)
+   ========================================================= */
+
+@font-face { font-display: block; }
+
+:root {
+    --ink: #0a0a0b;
+    --dark: #131315;
+    --panel: #141416;
+    --red: #e3212a;
+    --red-dark: #b6111d;
+    --red-soft: #ffd9d6;
+    --line: rgba(255, 255, 255, .12);
+    --muted: rgba(255, 255, 255, .62);
+    --white: #fff;
+    --display: 'Barlow Condensed', Impact, sans-serif;
+    --body: 'DM Sans', Arial, sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+    width: 1080px;
+    height: 1350px;
+    overflow: hidden;
+}
+
+body {
+    font-family: var(--body);
+    background: var(--ink);
+    color: #fff;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+/* ---------- base do canvas ---------- */
+.art {
+    position: relative;
+    width: 1080px;
+    height: 1350px;
+    overflow: hidden;
+    background: var(--ink);
+    display: flex;
+    flex-direction: column;
+    padding: 78px 80px 0;
+}
+
+/* textura de fundo: brilho vermelho + listras diagonais + grão */
+.art::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(58% 42% at 84% 88%, rgba(227, 33, 42, .34) 0%, rgba(227, 33, 42, 0) 68%),
+        radial-gradient(46% 34% at 6% 4%, rgba(227, 33, 42, .16) 0%, rgba(227, 33, 42, 0) 70%);
+    pointer-events: none;
+}
+.art::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(115deg, rgba(255, 255, 255, .022) 0 2px, transparent 2px 22px);
+    pointer-events: none;
+}
+.art > * { position: relative; z-index: 2; }
+
+/* ---------- topo ---------- */
+.topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding-bottom: 26px;
+    border-bottom: 1px solid var(--line);
+}
+/* ---------- marca: logo com o leao ---------- */
+.brand { display: flex; align-items: center; gap: 20px; }
+.brand img {
+    height: 132px;
+    width: auto;
+    display: block;
+}
+.brand-name {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding-left: 20px;
+    border-left: 2px solid var(--red);
+    font: 700 20px/1 var(--body);
+    letter-spacing: .34em;
+    text-transform: uppercase;
+    color: #fff;
+    white-space: nowrap;
+}
+.brand-name small {
+    font: 700 15px/1 var(--body);
+    letter-spacing: .2em;
+    color: var(--muted);
+}
+.handle {
+    font: 700 20px/1 var(--body);
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, .72);
+    border: 1.5px solid rgba(255, 255, 255, .28);
+    border-radius: 999px;
+    padding: 13px 24px;
+}
+.handle b { color: var(--red); }
+
+/* ---------- tipografia ---------- */
+.eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    color: var(--red);
+    font: 700 24px/1 var(--display);
+    letter-spacing: .2em;
+    text-transform: uppercase;
+}
+.eyebrow::before { content: ''; width: 46px; height: 3px; background: var(--red); }
+
+h1, h2, h3 {
+    font-family: var(--display);
+    text-transform: uppercase;
+    letter-spacing: -.01em;
+    line-height: .9;
+    font-weight: 900;
+}
+h1 { font-size: 128px; }
+h2 { font-size: 92px; }
+h3 { font-size: 46px; }
+.red { color: var(--red); }
+
+.lead {
+    color: rgba(255, 255, 255, .78);
+    font-size: 30px;
+    line-height: 1.45;
+    max-width: 860px;
+}
+.lead b { color: #fff; font-weight: 700; }
+
+/* ---------- corpo / área segura (quadrado do grid) ---------- */
+.body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 34px;
+    padding: 40px 0 0;
+}
+
+/* ---------- botões ---------- */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 16px;
+    align-self: flex-start;
+    min-height: 92px;
+    padding: 0 46px;
+    border-radius: 999px;
+    background: var(--red);
+    color: #fff;
+    font: 700 30px/1 var(--body);
+    text-transform: uppercase;
+    letter-spacing: .08em;
+}
+.btn--ghost {
+    background: transparent;
+    border: 2px solid rgba(255, 255, 255, .35);
+}
+.arrow { font: 700 30px/1 var(--body); }
+
+/* ---------- rodapé / faixa de estatísticas ---------- */
+.stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    background: var(--red);
+    margin: 0 -80px;
+}
+.stat { padding: 34px 26px; border-right: 1px solid rgba(0, 0, 0, .18); }
+.stat:last-child { border-right: 0; }
+.stat strong { display: block; font: 800 62px/1 var(--display); }
+.stat span {
+    display: block;
+    margin-top: 8px;
+    font: 700 17px/1.2 var(--body);
+    text-transform: uppercase;
+    letter-spacing: .09em;
+    color: #ffd9d6;
+}
+
+.foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 30px 0 34px;
+    font: 700 20px/1.2 var(--body);
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, .68);
+}
+.foot > span { white-space: nowrap; }
+.foot .url { color: #fff; }
+.foot .url b { color: var(--red); }
+
+/* ---------- marca d'água do leao ---------- */
+.lion-mark {
+    position: absolute;
+    right: -70px;
+    bottom: 150px;
+    width: 620px;
+    mix-blend-mode: screen;
+    opacity: .13;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* ---------- selo de lançamento ---------- */
+.selo {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    align-self: flex-start;
+    border: 2px solid var(--red);
+    color: var(--red);
+    border-radius: 999px;
+    padding: 14px 28px;
+    font: 700 22px/1 var(--body);
+    text-transform: uppercase;
+    letter-spacing: .16em;
+}
+.selo .dot { width: 12px; height: 12px; border-radius: 50%; background: var(--red); }
+
+.acoes { display: flex; align-items: center; gap: 28px; }
+
+/* ---------- cartões ---------- */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+.card {
+    position: relative;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 22px;
+    padding: 34px 32px 36px;
+    min-height: 262px;
+    display: flex;
+    flex-direction: column;
+}
+.card .num {
+    position: absolute;
+    top: 26px;
+    right: 30px;
+    font: 800 40px/1 var(--display);
+    color: rgba(255, 255, 255, .12);
+}
+.card .tag {
+    align-self: flex-start;
+    background: rgba(227, 33, 42, .16);
+    border: 1px solid rgba(227, 33, 42, .5);
+    color: var(--red);
+    font: 700 17px/1 var(--body);
+    text-transform: uppercase;
+    letter-spacing: .12em;
+    padding: 10px 16px;
+    border-radius: 999px;
+    margin-bottom: 22px;
+}
+.card h3 { font-size: 50px; }
+.card h3 em { font-style: normal; color: var(--red); }
+.card p {
+    margin-top: 14px;
+    font-size: 24px;
+    line-height: 1.4;
+    color: var(--muted);
+}
+
+/* ---------- lista de planos ---------- */
+.planos { display: flex; flex-direction: column; gap: 16px; }
+.plano {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-left: 6px solid rgba(255, 255, 255, .16);
+    border-radius: 18px;
+    padding: 24px 32px;
+}
+.plano--top {
+    background: linear-gradient(90deg, rgba(227, 33, 42, .22), rgba(227, 33, 42, .06));
+    border: 1px solid rgba(227, 33, 42, .55);
+    border-left: 6px solid var(--red);
+}
+.plano .nome { display: flex; align-items: center; gap: 16px; }
+.plano .nome h3 { font-size: 46px; }
+.plano .flag {
+    background: var(--red);
+    color: #fff;
+    font: 700 15px/1 var(--body);
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    padding: 9px 14px;
+    border-radius: 999px;
+}
+.plano .preco { font: 800 54px/1 var(--display); white-space: nowrap; }
+.plano .preco small { font: 700 22px/1 var(--body); color: var(--muted); letter-spacing: .04em; }
+.plano--top .preco { color: #fff; }
+.plano--top .preco small { color: var(--red-soft); }
+
+.nota-planos {
+    display: flex;
+    gap: 34px;
+    flex-wrap: wrap;
+    font: 700 23px/1 var(--body);
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: .04em;
+}
+.nota-planos b { color: #fff; }
+
+/* ---------- linhas de informação (CTA) ---------- */
+.info { display: flex; flex-direction: column; gap: 14px; }
+.info div {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    font: 700 28px/1.3 var(--body);
+    color: rgba(255, 255, 255, .9);
+    text-transform: uppercase;
+    letter-spacing: .04em;
+}
+.info i {
+    flex: none;
+    width: 12px;
+    height: 12px;
+    background: var(--red);
+    transform: rotate(45deg);
+}

@@ -1,0 +1,156 @@
+=========================================================
+ LION FORCE — CAMPANHA DE LANÇAMENTO DO SITE
+ Conteúdo para publicação no Instagram
+ Data: 28/09/2026
+=========================================================
+
+---------------------------------------------------------
+ RESUMO DA ESTRATÉGIA
+---------------------------------------------------------
+Formato: carrossel de 5 artes (1080x1350, 4:5) + 2 stories
+(1080x1920, 9:16) no mesmo padrão visual.
+
+Sequência narrativa (funil):
+
+  01  GANCHO      O que é + por que importa (retenção)
+  02  VALOR       O que tem dentro do site (consideração)
+  03  OFERTA      Planos e preços (decisão)
+  04  CTA        Endereço, WhatsApp e link (conversão)
+  05  ENCERRAMENTO Compartilhar, salvar, seguir + QR (alcance)
+
+Ordem de publicação:
+  Story 05 (gancho)          → 30 min antes
+  Carrossel 01→02→03→04→05   → 12h00
+  Story 06 (CTA)             → 2h depois, com sticker de link
+
+Alt-text: o Instagram indexa o alt-text. Preencher em TODAS as
+publicações (SEO + acessibilidade). Textos prontos abaixo.
+
+---------------------------------------------------------
+ LEGENDA DO CARROSSEL (usar nos 4 designs juntos)
+---------------------------------------------------------
+Site novo. Lion Force no ar. 🦁
+
+A Lion Force Academia agora tem site próprio, feito para você
+decidir em segundos e começar a treinar hoje.
+
+O que você encontra lá:
+▸ 1.200m² de estrutura com musculação, cardio e funcional
+▸ Planos a partir de R$ 79,99/mês — sem fidelidade
+▸ Treino personalizado no app Next Fit
+▸ Avaliação física por R$ 49,99
+▸ Horários, endereço e WhatsApp sempre atualizados
+
+Somos +8 anos, 4.9 de nota no Google com 380 avaliações e
+1.200m² de estrutura no Jardim Das Fontes, São Paulo.
+Planos mensais, trimestrais, semestrais e anual.
+Aula avulsa de musculação por R$ 19,99 para testar.
+
+👉 Link na bio. Chama no WhatsApp (11) 94354-4884 que a gente
+explica tudo.
+
+#lionforceacademia #academia #academiasp #academiaemsaopaulo
+#jardimdasfontes #musculacao #hipertrofia #emagrecimento
+#treinopersonal #treinofuncional #cardio #nextfit
+#academiazonasul #saopaulo #treino #fitness #gym
+
+---------------------------------------------------------
+ LEGENDA DO ENCERRAMENTO (design 05)
+---------------------------------------------------------
+Curtiu? Salva e compartilha. É por aí que a Lion Force chega em
+quem ainda não conhece a unidade. 🦁
+
+Escaneie o QR ou toque no link da bio para ver os planos
+completos, a estrutura e os horários.
+
+Rua Fonte Nova, 34A — Jardim Das Fontes, São Paulo.
+Seg a sex 06:00 — 22:00 · Sáb 09:00 — 13:00
+WhatsApp (11) 94354-4884
+
+#lionforceacademia #academia #academiasp #jardimdasfontes
+#musculacao #treinopersonal #hipertrofia #nextfit
+
+---------------------------------------------------------
+ ALT-TEXT (cole em cada arte, em "Opções avançadas")
+---------------------------------------------------------
+01-feed-lancamento
+"Arte de lançamento em fundo preto e vermelho com a logo do leão
+da Lion Force Academia. Texto: agora a Lion Force tem um site.
+Estrutura, planos, treino no app e horários em um só lugar.
+Faixa inferior com os números 1.200m² de estrutura, nota 4.9 no
+Google, mais de 8 anos de história e horário das 6h às 22h.
+Chamada para ver o site e link na bio."
+
+02-feed-o-que-tem
+"Arte com quatro cartões da Lion Force Academia: 1.200m² de salão
+com musculação, cardio e funcional; planos a partir de R$ 79 sem
+fidelidade; treino personalizado no app Next Fit; e avaliação
+física por R$ 49,99. Título: a academia inteira no seu bolso."
+
+03-feed-planos
+"Arte com a tabela de planos da Lion Force Academia: mensal R$
+149,99; trimestral 3x R$ 119,99 marcado como mais escolhido;
+semestral 6x R$ 99,99; e anual 12x R$ 79,99. Todos com acesso
+total e treino no app. Matrícula e avaliação por R$ 49,99 e aula
+avulsa por R$ 19,99."
+
+04-feed-cta
+"Arte de chamada para ação sobre foto do salão da Lion Force
+Academia, em preto e vermelho. Texto: sua vida mais forte começa
+aqui. Endereço na Rua Fonte Nova 34A, Jardim Das Fontes, WhatsApp
+(11) 94354-4884, funcionamento das 6h às 22h de segunda a sexta e
+das 9h às 13h no sábado."
+
+07-feed-encerramento
+"Arte de encerramento do lançamento, com a logo do leão da Lion
+Force Academia. Texto: ajude esse lançamento a chegar longe. Três
+cartões pedem ao público compartilhar, salvar e seguir o perfil
+@lionsforce_academia. Na faixa vermelha inferior há um código QR
+para o site da academia e o endereço na Rua Fonte Nova 34A, Jardim
+Das Fontes."
+
+---------------------------------------------------------
+ STORY 05 — LANÇAMENTO (legenda curta)
+---------------------------------------------------------
+Site novo no ar. 🦁
+Estrutura, planos, app e horários em um só lugar.
+Link na bio ↑
+
+---------------------------------------------------------
+ STORY 06 — CTA (legenda curta)
+---------------------------------------------------------
+Vem treinar com a gente.
+Rua Fonte Nova, 34A — Jardim Das Fontes.
+Chama no WhatsApp: (11) 94354-4884
+
+---------------------------------------------------------
+ CONFIGURAR ANTES DE PUBLICAR
+---------------------------------------------------------
+1. Bio do perfil: colocar o link do site como único link
+   (usar Linktree ou similar se quiser manter o WhatsApp).
+   Ex.: "TREINE COMO UM LEÃO 🦁 | Site oficial no link 👇"
+2. Destaques: criar "SITE", "PLANOS", "AVALIAÇÃO" e "HORÁRIO"
+   usando crops das artes 02 e 03.
+3. Fixar o carrossel no topo do perfil — é o post de conversão.
+4. Nos 30 min seguintes, responder todos os comentários com o link.
+5. Publicar também no WhatsApp Business (status) e no Facebook,
+   reaproveitando as mesmas artes.
+
+---------------------------------------------------------
+ OBSERVAÇÕES DE SEO E MARCA
+---------------------------------------------------------
+- A bio do perfil hoje cita "TREINE COMO UM LEÃO" e o conceito
+  em hipertrofia e emagrecimento. Manter essas palavras nas
+  legendas e artes: elas são o que já é indexado.
+- Evitar o termo "GYM" nas novas publicações. A fachada da
+  unidade ainda usa "LION FORCE GYM" e "@lionforce_studio",
+  enquanto o site e o perfil usam "ACADEMIA" e
+  "@lionforce_academia". Vale alinhar a fachada ao mesmo padrão.
+- O site declara canonical lionforceacademia.com.br, mas esse
+  domínio ainda não resolve. O endereço que funciona hoje é
+  https://lionforceacademia.arcelinoleal.workers.dev/
+  As artes usam o endereço que está no ar. Publicar o
+  lançamento antes de o domínio próprio ficar ativo significa
+  trafficar para um endereço provisório e pedir compartilhamento
+  de um link que vai mudar. Recomendação: apontar o domínio antes
+  de publicar.

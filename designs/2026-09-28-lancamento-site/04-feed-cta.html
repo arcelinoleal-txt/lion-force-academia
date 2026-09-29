@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Lion Force — Design 4 · CTA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800;900&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="brand.css">
+<style>
+    .art {
+        background: #000;
+        background-image: url('../../unidade-2.jpg');
+        background-size: cover;
+        background-position: 52% 62%;
+    }
+    .art::before {
+        background:
+            linear-gradient(180deg, rgba(6,6,7,.93) 0%, rgba(6,6,7,.80) 42%, rgba(6,6,7,.93) 100%),
+            radial-gradient(60% 45% at 88% 84%, rgba(227,33,42,.42) 0%, rgba(227,33,42,0) 70%);
+    }
+    .art::after { background: repeating-linear-gradient(115deg, rgba(255,255,255,.03) 0 2px, transparent 2px 24px); }
+    .body { gap: 26px; }
+    h1 { font-size: 104px; }
+    .lead { font-size: 28px; }
+    .info div { font-size: 25px; }
+    .painel {
+        background: rgba(10,10,11,.62);
+        border: 1px solid var(--line);
+        border-radius: 20px;
+        padding: 26px 32px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+    }
+    .selo-final {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        align-self: flex-start;
+        color: var(--red);
+        font: 700 20px/1 var(--body);
+        text-transform: uppercase;
+        letter-spacing: .18em;
+    }
+    .selo-final::before { content: ''; width: 40px; height: 3px; background: var(--red); }
+</style>
+</head>
+<body>
+<div class="art">
+    <img class="lion-mark" src="assets/leao-mascote.png" alt="">
+
+    <div class="topbar">
+        <div class="brand">
+            <img src="assets/logo-lion-force.png" alt="Lion Force">
+            <span class="brand-name">Academia<small>Jardim Das Fontes</small></span>
+        </div>
+        <span class="handle">@<b>lionforce</b>_academia</span>
+    </div>
+
+    <div class="body">
+        <p class="selo-final">Vem treinar</p>
+
+        <h1>Sua vida mais<br><span class="red">forte</span><br>come&ccedil;a aqui.</h1>
+
+        <p class="lead">Navega pelo site, escolhe o plano e aparece na unidade. <b>Primeira aula com a gente.</b></p>
+
+        <span class="btn">Quero treinar <span class="arrow">&rarr;</span></span>
+
+        <div class="painel">
+            <div class="info">
+                <div><i></i> Rua Fonte Nova, 34A &mdash; Jardim Das Fontes</div>
+                <div><i></i> WhatsApp (11) 94354-4884</div>
+                <div><i></i> Seg a sex 06:00 &mdash; 22:00 &middot; S&aacute;b 09:00 &mdash; 13:00</div>
+                <div><i></i> Avalia&ccedil;&atilde;o f&iacute;sica R$ 49,99 &middot; Aula avulsa R$ 19,99</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="stats">
+        <div class="stat"><strong>4.9</strong><span>nota no Google</span></div>
+        <div class="stat"><strong>1.200m&sup2;</strong><span>de estrutura</span></div>
+        <div class="stat"><strong>79,99</strong><span>plano anual</span></div>
+        <div class="stat"><strong>+8</strong><span>anos de hist&oacute;ria</span></div>
+    </div>
+
+    <div class="foot">
+        <span>Site no ar &middot; link na bio</span>
+        <span class="url">@<b>lionforce_academia</b></span>
+    </div>
+</div>
+</body>
+</html>

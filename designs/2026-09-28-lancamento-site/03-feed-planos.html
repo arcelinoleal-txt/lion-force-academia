@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Lion Force — Design 3 · Planos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800;900&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="brand.css">
+<style>
+    .body { gap: 28px; }
+    h2 { font-size: 84px; }
+    .planos { gap: 14px; }
+    .plano { padding: 22px 30px; }
+    .plano .nome h3 { font-size: 44px; }
+    .plano .preco { font-size: 50px; }
+    .planos + .nota-planos { margin-top: 4px; }
+    .faixa {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        background: var(--red);
+        border-radius: 18px;
+        padding: 22px 30px;
+        font: 700 25px/1.2 var(--body);
+        text-transform: uppercase;
+        letter-spacing: .05em;
+        color: #fff;
+    }
+    .faixa span { color: #ffd9d6; }
+</style>
+</head>
+<body>
+<div class="art">
+    <img class="lion-mark" src="assets/leao-mascote.png" alt="">
+
+    <div class="topbar">
+        <div class="brand">
+            <img src="assets/logo-lion-force.png" alt="Lion Force">
+            <span class="brand-name">Academia<small>Jardim Das Fontes</small></span>
+        </div>
+        <span class="handle">@<b>lionforce</b>_academia</span>
+    </div>
+
+    <div class="body">
+        <p class="eyebrow">Planos</p>
+        <h2>Valores claros.<br><span class="red">Sem letra mi&uacute;da.</span></h2>
+
+        <div class="planos">
+            <article class="plano">
+                <div class="nome"><h3>Mensal</h3></div>
+                <div class="preco">R$ 149<small>,99/m&ecirc;s</small></div>
+            </article>
+            <article class="plano plano--top">
+                <div class="nome"><h3>Trimestral</h3><span class="flag">Mais escolhido</span></div>
+                <div class="preco">3x R$ 119<small>,99</small></div>
+            </article>
+            <article class="plano">
+                <div class="nome"><h3>Semestral</h3></div>
+                <div class="preco">6x R$ 99<small>,99/m&ecirc;s</small></div>
+            </article>
+            <article class="plano">
+                <div class="nome"><h3>Anual</h3></div>
+                <div class="preco">12x R$ 79<small>,99/m&ecirc;s</small></div>
+            </article>
+        </div>
+
+        <div class="faixa">Todos os planos com <span>acesso total + treino no app</span></div>
+    </div>
+
+    <div class="stats">
+        <div class="stat"><strong>49,99</strong><span>matr&iacute;cula</span></div>
+        <div class="stat"><strong>49,99</strong><span>avalia&ccedil;&atilde;o</span></div>
+        <div class="stat"><strong>19,99</strong><span>aula avulsa</span></div>
+        <div class="stat"><strong>79,99</strong><span>melhor valor</span></div>
+    </div>
+
+    <div class="foot">
+        <span>Valores da unidade Jardim Das Fontes</span>
+        <span class="url">planos no site &middot; <b>link na bio</b></span>
+    </div>
+</div>
+</body>
+</html>
