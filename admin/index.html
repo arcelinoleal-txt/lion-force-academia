@@ -389,7 +389,7 @@
 
         /* ---------- LOGIN ---------- */
         var AUTH_HASH = '04784ca0c149fad58cf07bdb19909df87b8a38bf61ad3519cf026acd7f8806b4';
-        var VAULT = {"data":"G5Q6hACz2WSCW7hpmYds9sZUbw5DZcyNpWzP7iEe+JXjVxS9YaKa1B/LjNJyFZyIpAcR/9oZ0Xt/o7oasxQnZFtpzy4mxDe3GPNNoSwCJ5aFWTUdlqevKUwEJ+AJ8JZ+","mac":"3+Y9092n9Dc2xS2X11B7UwZIWMwbW2hcnYv3noVScMU=","iv":"H3gCa+uS7bFhDM1U9ZgQuA==","salt":"j/p6Fyhe0pPFomB0G3S7YA=="};
+        var VAULT = {"data":"eshJZvOnk2UfE9WZ0uw/2TanK0BAK5W+g5mqu6sWbq8puya5aKjgxa4WhoYk2woXRzEYKd7LrM60vxIembeEsHHib6SsuNRb7E/oeY17I+vmWz0X4gZ5sV5GlqjG7Qn/","mac":"M7jhN58NgXEbCvcZZSdEUPv/7jaNptN+6Z6uPUKfVGk=","iv":"A0vvv3c3Ry+B08UJnJkr5Q==","salt":"qYMd69ztzRHn9dyzlmoUHw=="};
         function sha256(str) {
             return crypto.subtle.digest('SHA-256', new TextEncoder().encode(str)).then(function (buf) {
                 return Array.prototype.map.call(new Uint8Array(buf), function (b) { return ('0' + b.toString(16)).slice(-2); }).join('');
