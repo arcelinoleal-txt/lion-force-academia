@@ -48,11 +48,41 @@ jobs:
         env:
           SITE: https://lionforceacademia.arcelinoleal.workers.dev
         run: |
-          sleep 15
-          code=$(curl -s -o /dev/null -w "%{http_code}" "$SITE/index.html")
-          echo "index.html respondeu: $code"
+          sleep 20
+          echo "espera a Cloudflare propagar..."
+          for i in 1 2 3 4 5 6; do
+            code=$(curl -sL -o /dev/null -w "%{http_code}" "$SITE/")
+            echo "tentativa $i: $code"
+            if [ "$code" = "200" ]; then
+              echo "no ar: $SITE"
+              break
+            fi
+            sleep 10
+          done
           if [ "$code" != "200" ]; then
-            echo "FALHOU: o site nao respondeu"
+            echo "FALHOU: o site nao respondeu depois das tentativas"
             exit 1
           fi
-          echo "no ar: $SITE"
+
+      - name: Conferir as paginas principais
+        env:
+          SITE: https://lionforceacademia.arcelinoleal.workers.dev
+        run: |
+          falha=0
+          for p in index.html equipe.html jardim-das-fontes.html historia.html contato.html styles.css cms.js admin/index.html; do
+            code=$(curl -sL -o /dev/null -w "%{http_code}" "$SITE/$p")
+            echo "$p -> $code"
+            [ "$code" = "200" ] || falha=1
+          done
+          echo ""
+          echo "conferindo que os arquivos com senha NAO estao publicos:"
+          for s in PAINEL-GUIA.md CLOUDFLARE-PASSO-A-PASSO.md wrangler.jsonc; do
+            code=$(curl -sL -o /dev/null -w "%{http_code}" "$SITE/$s")
+            if [ "$code" = "200" ]; then
+              echo "  !!! $s ESTA PUBLICO (problema)"
+              falha=1
+            else
+              echo "  $s bloqueado ($code)"
+            fi
+          done
+          exit $falha

@@ -1,0 +1,13 @@
+﻿2026-09-29T01:17:17.9164035Z ##[group]Run echo "arquivos no repositorio:"
+2026-09-29T01:17:17.9164401Z [36;1mecho "arquivos no repositorio:"[0m
+2026-09-29T01:17:17.9164677Z [36;1mgit ls-files | wc -l[0m
+2026-09-29T01:17:17.9164887Z [36;1mecho ""[0m
+2026-09-29T01:17:17.9165131Z [36;1mecho "proibidos de publicar (tem que estar vazio):"[0m
+2026-09-29T01:17:17.9165562Z [36;1mgit ls-files | grep -Ei 'PAINEL-GUIA|CLOUDFLARE-PASSO|tools/|\.mp4' || echo "  nenhum"[0m
+2026-09-29T01:17:17.9225709Z shell: /usr/bin/bash -e {0}
+2026-09-29T01:17:17.9226009Z ##[endgroup]
+2026-09-29T01:17:17.9481104Z arquivos no repositorio:
+2026-09-29T01:17:17.9695747Z 41
+2026-09-29T01:17:17.9696306Z 
+2026-09-29T01:17:17.9696621Z proibidos de publicar (tem que estar vazio):
+2026-09-29T01:17:17.9713839Z   nenhum

@@ -1,0 +1,40 @@
+﻿2026-09-29T01:17:17.9816732Z ##[group]Run wrangler deploy
+2026-09-29T01:17:17.9817031Z [36;1mwrangler deploy[0m
+2026-09-29T01:17:17.9878139Z shell: /usr/bin/bash -e {0}
+2026-09-29T01:17:17.9878394Z env:
+2026-09-29T01:17:17.9878877Z   CLOUDFLARE_API_TOKEN: ***
+2026-09-29T01:17:17.9879267Z   CLOUDFLARE_ACCOUNT_ID: c69077e3ed99d5d0b6f638cb9f5024fe
+2026-09-29T01:17:17.9879531Z ##[endgroup]
+2026-09-29T01:17:18.7126022Z 
+2026-09-29T01:17:18.7127106Z  ⛅️ wrangler 4.86.0
+2026-09-29T01:17:18.7127694Z ───────────────────
+2026-09-29T01:17:19.2768443Z 🌀 Building list of assets...
+2026-09-29T01:17:19.2862931Z ✨ Read 191 files from the assets directory /home/runner/work/lion-force-academia/lion-force-academia
+2026-09-29T01:17:19.3381302Z 🌀 Starting asset upload...
+2026-09-29T01:17:20.4470478Z 🌀 Found 14 new or modified static assets to upload. Proceeding with upload...
+2026-09-29T01:17:20.4471408Z + /.wrangler/cache/wrangler-account.json
+2026-09-29T01:17:20.4471890Z + /.wrangler/tmp/deploy-7AqeYR/no-op-worker.js.map
+2026-09-29T01:17:20.4490162Z + /estrutura.html
+2026-09-29T01:17:20.4490680Z + /unidade.html
+2026-09-29T01:17:20.4490940Z + /jardim-das-fontes.html
+2026-09-29T01:17:20.4491254Z + /.wrangler/tmp/deploy-7AqeYR/no-op-worker.js
+2026-09-29T01:17:20.4491577Z + /.github/workflows/publicar.yml
+2026-09-29T01:17:20.4491795Z + /equipe.html
+2026-09-29T01:17:20.4491966Z + /planos.html
+2026-09-29T01:17:20.4492136Z + /index.html
+2026-09-29T01:17:20.4492314Z + /claude.agent.md
+2026-09-29T01:17:20.4492503Z + /historia.html
+2026-09-29T01:17:20.4492697Z + /trabalhe-conosco.html
+2026-09-29T01:17:20.4492929Z + /contato.html
+2026-09-29T01:17:21.2906711Z Uploaded 4 of 14 assets
+2026-09-29T01:17:21.4072906Z Uploaded 9 of 14 assets
+2026-09-29T01:17:21.4504034Z Uploaded 14 of 14 assets
+2026-09-29T01:17:21.4505381Z ✨ Success! Uploaded 14 files (24 already uploaded) (1.00 sec)
+2026-09-29T01:17:21.4505752Z 
+2026-09-29T01:17:21.4520217Z Total Upload: 0.36 KiB / gzip: 0.25 KiB
+2026-09-29T01:17:22.7006062Z Uploaded lionforceacademia (3.57 sec)
+2026-09-29T01:17:23.2366055Z Deployed lionforceacademia triggers (0.54 sec)
+2026-09-29T01:17:23.2366738Z   https://lionforceacademia.arcelinoleal.workers.dev
+2026-09-29T01:17:23.2367323Z Current Version ID: 28258229-68de-40b7-ba5f-f376642b4f33
+2026-09-29T01:17:23.2383696Z 
+2026-09-29T01:17:23.2384728Z Cloudflare collects anonymous telemetry about your usage of Wrangler. Learn more at https://github.com/cloudflare/workers-sdk/tree/main/packages/wrangler/telemetry.md

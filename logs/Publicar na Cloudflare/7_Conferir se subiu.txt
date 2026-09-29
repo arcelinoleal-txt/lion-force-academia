@@ -1,0 +1,16 @@
+﻿2026-09-29T01:17:23.2854974Z ##[group]Run sleep 15
+2026-09-29T01:17:23.2855229Z [36;1msleep 15[0m
+2026-09-29T01:17:23.2855496Z [36;1mcode=$(curl -s -o /dev/null -w "%{http_code}" "$SITE/index.html")[0m
+2026-09-29T01:17:23.2855812Z [36;1mecho "index.html respondeu: $code"[0m
+2026-09-29T01:17:23.2856067Z [36;1mif [ "$code" != "200" ]; then[0m
+2026-09-29T01:17:23.2856305Z [36;1m  echo "FALHOU: o site nao respondeu"[0m
+2026-09-29T01:17:23.2856544Z [36;1m  exit 1[0m
+2026-09-29T01:17:23.2856710Z [36;1mfi[0m
+2026-09-29T01:17:23.2856882Z [36;1mecho "no ar: $SITE"[0m
+2026-09-29T01:17:23.2913113Z shell: /usr/bin/bash -e {0}
+2026-09-29T01:17:23.2913341Z env:
+2026-09-29T01:17:23.2913592Z   SITE: https://lionforceacademia.arcelinoleal.workers.dev
+2026-09-29T01:17:23.2913880Z ##[endgroup]
+2026-09-29T01:17:38.4574710Z index.html respondeu: 307
+2026-09-29T01:17:38.4575196Z FALHOU: o site nao respondeu
+2026-09-29T01:17:38.4588916Z ##[error]Process completed with exit code 1.

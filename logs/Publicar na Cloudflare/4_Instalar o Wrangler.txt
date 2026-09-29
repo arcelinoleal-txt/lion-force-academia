@@ -1,0 +1,9 @@
+﻿2026-09-29T01:17:11.7718580Z ##[group]Run npm install -g wrangler@4
+2026-09-29T01:17:11.7718927Z [36;1mnpm install -g wrangler@4[0m
+2026-09-29T01:17:11.7924389Z shell: /usr/bin/bash -e {0}
+2026-09-29T01:17:11.7924724Z ##[endgroup]
+2026-09-29T01:17:17.8758438Z 
+2026-09-29T01:17:17.8764181Z added 35 packages in 6s
+2026-09-29T01:17:17.8764458Z 
+2026-09-29T01:17:17.8764681Z 7 packages are looking for funding
+2026-09-29T01:17:17.8764987Z   run `npm fund` for details
