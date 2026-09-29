@@ -1,0 +1,13 @@
+# Arquivos que NUNCA podem ser publicados.
+# O wrangler envia a pasta local inteira, nao o que esta no git.
+# Estes contem a senha do painel ou nao servem ao site.
+
+.git
+.gitignore
+wrangler.jsonc
+.assetsignore
+tools
+designs
+*.mp4
+PAINEL-GUIA.md
+CLOUDFLARE-PASSO-A-PASSO.md
