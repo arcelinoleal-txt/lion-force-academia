@@ -1,12 +1,20 @@
-﻿*.mp4
+﻿# Arquivos que NAO devem ir para o repositorio nem para o site
+*.mp4
+logs/
+logs.zip
+node_modules/
+package-lock.json
 
-# Nunca publicar: contem senha do painel e scripts de manutencao
+# Credenciais
 PAINEL-GUIA.md
-tools/
 CLOUDFLARE-PASSO-A-PASSO.md
 
-# Configuracao do deploy nao precisa ir para o site publico do GitHub
-logs
-logs.zip
-node_modules
-package-lock.json
+# Scripts de manutencao (rodam local, nunca no site)
+tools/
+
+# Configuracao local de agente, sem uso no site
+claude.agent.md
+
+# Imagens que nenhuma pagina usa
+App.png
+WhatsApp Image 2026-09-08 at 11.58.44.jpeg
