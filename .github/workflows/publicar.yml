@@ -1,0 +1,58 @@
+name: Publicar site na Cloudflare
+
+# Dispara a cada publicacao no main, inclusive quando o painel admin grava no GitHub
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Nao deixa duas publicacoes ao mesmo tempo
+concurrency:
+  group: cloudflare-deploy
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  publicar:
+    name: Publicar na Cloudflare
+    runs-on: ubuntu-latest
+    steps:
+      - name: Baixar o codigo
+        uses: actions/checkout@v4
+
+      - name: Preparar o Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Instalar o Wrangler
+        run: npm install -g wrangler@4
+
+      - name: Conferir o que sera publicado
+        run: |
+          echo "arquivos no repositorio:"
+          git ls-files | wc -l
+          echo ""
+          echo "proibidos de publicar (tem que estar vazio):"
+          git ls-files | grep -Ei 'PAINEL-GUIA|CLOUDFLARE-PASSO|tools/|\.mp4' || echo "  nenhum"
+
+      - name: Publicar
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: c69077e3ed99d5d0b6f638cb9f5024fe
+        run: wrangler deploy
+
+      - name: Conferir se subiu
+        env:
+          SITE: https://lionforceacademia.arcelinoleal.workers.dev
+        run: |
+          sleep 15
+          code=$(curl -s -o /dev/null -w "%{http_code}" "$SITE/index.html")
+          echo "index.html respondeu: $code"
+          if [ "$code" != "200" ]; then
+            echo "FALHOU: o site nao respondeu"
+            exit 1
+          fi
+          echo "no ar: $SITE"
