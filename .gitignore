@@ -6,3 +6,7 @@ tools/
 CLOUDFLARE-PASSO-A-PASSO.md
 
 # Configuracao do deploy nao precisa ir para o site publico do GitHub
+logs
+logs.zip
+node_modules
+package-lock.json
