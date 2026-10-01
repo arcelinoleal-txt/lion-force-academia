@@ -8,6 +8,7 @@ package-lock.json
 # Credenciais
 PAINEL-GUIA.md
 CLOUDFLARE-PASSO-A-PASSO.md
+GITHUB-PASSO-A-PASSO.md
 
 # Scripts de manutencao (rodam local, nunca no site)
 tools/

@@ -146,9 +146,9 @@ Chama no WhatsApp: (11) 94354-4884
   unidade ainda usa "LION FORCE GYM" e "@lionforce_studio",
   enquanto o site e o perfil usam "ACADEMIA" e
   "@lionforce_academia". Vale alinhar a fachada ao mesmo padrão.
-- O site declara canonical lionforceacademia.com.br, mas esse
-  domínio ainda não resolve. O endereço que funciona hoje é
-  https://lionforceacademia.arcelinoleal.workers.dev/
+- O site declara canonical lionforceacademia.com.br, que é o
+  endereço oficial. O domínio é servido pelo GitHub Pages
+  (o CNAME do repositório aponta para ele).
   As artes usam o endereço que está no ar. Publicar o
   lançamento antes de o domínio próprio ficar ativo significa
   trafficar para um endereço provisório e pedir compartilhamento
