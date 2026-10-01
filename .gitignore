@@ -18,3 +18,8 @@ claude.agent.md
 # Imagens que nenhuma pagina usa
 App.png
 WhatsApp Image 2026-09-08 at 11.58.44.jpeg
+
+# Arquivos temporarios de montagem do painel
+admin/.*.html
+admin/.parte-*.txt
+admin/.preservado.json
