@@ -1,4 +1,4 @@
-﻿# Arquivos que NAO devem ir para o repositorio nem para o site
+# Arquivos que NAO devem ir para o repositorio nem para o site
 *.mp4
 logs/
 logs.zip
@@ -26,3 +26,7 @@ admin/.preservado.json
 package.json
 package-lock.json
 node_modules/
+
+# Material de edicao de fotos (rascunhos, Photoroom, modelos).
+# Nenhum arquivo daqui e usado pelo site.
+Edi*/

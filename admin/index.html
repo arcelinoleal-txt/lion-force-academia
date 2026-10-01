@@ -1304,7 +1304,7 @@ document.getElementById('salvarTudo').addEventListener('click', function () {
 
 /* ---------- BOTOES DE ADICIONAR ---------- */
 document.getElementById('uniAdd').addEventListener('click', function () {
-    unisData.unidades.push({ id: slug('nova-unidade-' + Date.now()), nome: 'Nova unidade', endereco: '', horario: '', horarioTabela: [], telefone: '', whatsapp: '', promo: '', cep: '', cidade: '', pagina: '', fachada: '', recursos: ['musculacao', 'cardio', 'funcional', 'app', 'avaliacao'] });
+    unisData.unidades.push({ id: slug('nova-unidade-' + Date.now()), nome: 'Nova unidade', endereco: '', horario: '', horarioTabela: [], telefone: '', whatsapp: '', promo: '', cep: '', cidade: '', pagina: '', fachada: '', recursos: ['musculacao', 'cardio', 'app', 'avaliacao'] });
     renderUnis(); marcarSujo();
 });
 document.getElementById('eqAdd').addEventListener('click', function () {
