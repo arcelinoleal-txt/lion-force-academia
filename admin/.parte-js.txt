@@ -1,0 +1,551 @@
+function headers() { return { 'Accept': 'application/vnd.github+json', 'Authorization': 'Bearer ' + token }; }
+        function msg(id, text, ok) { var m = document.getElementById(id); m.textContent = text; m.className = 'msg ' + (ok ? 'ok' : 'err'); }
+        function b64decode(b64) { var bin = atob(b64.replace(/\n/g, '')); var bytes = new Uint8Array(bin.length); for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i); return new TextDecoder().decode(bytes); }
+        function b64encode(str) { var bytes = new TextEncoder().encode(str); var bin = ''; bytes.forEach(function (b) { bin += String.fromCharCode(b); }); return btoa(bin); }
+        function slug(s) { return (s || 'foto').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 40) || 'foto'; }
+
+        function apiGet(path) {
+            return fetch(API + path + '?ref=' + BRANCH, { headers: headers() }).then(function (r) {
+                if (!r.ok) throw new Error('HTTP ' + r.status);
+                return r.json();
+            });
+        }
+
+function msg(id, text, ok) { var m = document.getElementById(id); m.textContent = text; m.className = 'msg ' + (ok ? 'ok' : 'err'); }
+        function b64decode(b64) { var bin = atob(b64.replace(/\n/g, '')); var bytes = new Uint8Array(bin.length); for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i); return new TextDecoder().decode(bytes); }
+        function b64encode(str) { var bytes = new TextEncoder().encode(str); var bin = ''; bytes.forEach(function (b) { bin += String.fromCharCode(b); }); return btoa(bin); }
+        function slug(s) { return (s || 'foto').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 40) || 'foto'; }
+
+        function apiGet(path) {
+            return fetch(API + path + '?ref=' + BRANCH, { headers: headers() }).then(function (r) {
+                if (!r.ok) throw new Error('HTTP ' + r.status);
+                return r.json();
+            });
+        }
+
+function b64decode(b64) { var bin = atob(b64.replace(/\n/g, '')); var bytes = new Uint8Array(bin.length); for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i); return new TextDecoder().decode(bytes); }
+        function b64encode(str) { var bytes = new TextEncoder().encode(str); var bin = ''; bytes.forEach(function (b) { bin += String.fromCharCode(b); }); return btoa(bin); }
+        function slug(s) { return (s || 'foto').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 40) || 'foto'; }
+
+        function apiGet(path) {
+            return fetch(API + path + '?ref=' + BRANCH, { headers: headers() }).then(function (r) {
+                if (!r.ok) throw new Error('HTTP ' + r.status);
+                return r.json();
+            });
+        }
+
+function b64encode(str) { var bytes = new TextEncoder().encode(str); var bin = ''; bytes.forEach(function (b) { bin += String.fromCharCode(b); }); return btoa(bin); }
+        function slug(s) { return (s || 'foto').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 40) || 'foto'; }
+
+        function apiGet(path) {
+            return fetch(API + path + '?ref=' + BRANCH, { headers: headers() }).then(function (r) {
+                if (!r.ok) throw new Error('HTTP ' + r.status);
+                return r.json();
+            });
+        }
+
+function slug(s) { return (s || 'foto').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 40) || 'foto'; }
+
+        function apiGet(path) {
+            return fetch(API + path + '?ref=' + BRANCH, { headers: headers() }).then(function (r) {
+                if (!r.ok) throw new Error('HTTP ' + r.status);
+                return r.json();
+            });
+        }
+
+function apiGet(path) {
+            return fetch(API + path + '?ref=' + BRANCH, { headers: headers() }).then(function (r) {
+                if (!r.ok) throw new Error('HTTP ' + r.status);
+                return r.json();
+            });
+        }
+
+function loadJSON(path) {
+            return apiGet(path).then(function (j) {
+                cache[path] = j.sha;
+                return JSON.parse(b64decode(j.content));
+            });
+        }
+
+function saveJSON(path, obj, message) {
+            var body = JSON.stringify(obj, null, 2) + '\n';
+            return apiGet(path).then(function (j) {
+                return fetch(API + path, {
+                    method: 'PUT', headers: Object.assign({ 'Content-Type': 'application/json' }, headers()),
+                    body: JSON.stringify({ message: message, content: b64encode(body), sha: j.sha, branch: BRANCH })
+                });
+            }).then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); });
+        }
+
+function uploadImage(file, input, previewImg) {
+            var reader = new FileReader();
+            reader.onload = function () {
+                var base64 = String(reader.result).split(',')[1];
+                var ext = (file.name.split('.').pop() || 'jpg').toLowerCase().slice(0, 4);
+                var name = 'fotos/' + slug(file.name.replace(/\.[^.]+$/, '')) + '-' + Date.now() + '.' + ext;
+                input.value = 'Carregando...';
+                fetch(API + name, {
+                    method: 'PUT', headers: Object.assign({ 'Content-Type': 'application/json' }, headers()),
+                    body: JSON.stringify({ message: 'Admin: envia ' + name, content: base64, branch: BRANCH })
+                }).then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+                .then(function () { input.value = name; if (previewImg) { previewImg.src = name.startsWith('http') ? name : '../' + name; } msg(input.dataset.msg || 'galMsg', 'Foto enviada!', true); })
+                .catch(function () { input.value = ''; msg(input.dataset.msg || 'galMsg', 'Falha no envio. Confira o token.', false); });
+            };
+            reader.readAsDataURL(file);
+        }
+
+function photoField(value, onPick) {
+            var wrap = document.createElement('div');
+            var img = document.createElement('img');
+            img.className = 'thumb'; img.alt = 'Prévia';
+            var input = document.createElement('input');
+            input.type = 'text'; input.value = value || ''; input.placeholder = 'fotos/arquivo.jpg ou https://...';
+            input.style.marginBottom = '12px';
+            function sync() { img.src = input.value ? (input.value.startsWith('http') ? input.value : '../' + input.value) : ''; img.style.display = input.value ? '' : 'none'; }
+            input.addEventListener('input', function () { sync(); onPick(input.value); });
+            var row = document.createElement('div'); row.className = 'upload-row';
+            var lbl = document.createElement('label'); lbl.className = 'btn btn--ghost btn--small'; lbl.textContent = 'Enviar foto';
+            var file = document.createElement('input'); file.type = 'file'; file.accept = 'image/*';
+            file.addEventListener('change', function () { if (file.files[0]) uploadImage(file.files[0], input, img); });
+            lbl.appendChild(file); row.appendChild(lbl);
+            var urlBtn = document.createElement('button'); urlBtn.type = 'button'; urlBtn.className = 'btn btn--ghost btn--small'; urlBtn.textContent = 'Usar link';
+            urlBtn.addEventListener('click', function () { var u = prompt('Cole o link da imagem (https://...)'); if (u) { input.value = u; sync(); onPick(u); } });
+            row.appendChild(urlBtn);
+            wrap.appendChild(img); wrap.appendChild(input); wrap.appendChild(row);
+            sync();
+            return wrap;
+        }
+
+function sha256(str) {
+            return crypto.subtle.digest('SHA-256', new TextEncoder().encode(str)).then(function (buf) {
+                return Array.prototype.map.call(new Uint8Array(buf), function (b) { return ('0' + b.toString(16)).slice(-2); }).join('');
+            });
+        }
+
+function b64ToBytes(s) { var bin = atob(s); var b = new Uint8Array(bin.length); for (var i = 0; i < bin.length; i++) b[i] = bin.charCodeAt(i); return b; }
+        function bytesToB64(u8) { var s = ''; for (var i = 0; i < u8.length; i++) s += String.fromCharCode(u8[i]); return btoa(s); }
+
+        /* Cria um cofre novo: mesmo formato do unlockVault, usado ao trocar a senha */
+        function lockVault(plainToken, chave) {
+            var salt = crypto.getRandomValues(new Uint8Array(16));
+            var iv = crypto.getRandomValues(new Uint8Array(16));
+            return crypto.subtle.importKey('raw', new TextEncoder().encode(chave), 'PBKDF2', false, ['deriveBits'])
+                .then(function (base) {
+                    return crypto.subtle.deriveBits({ name: 'PBKDF2', salt: salt, iterations: 120000, hash: 'SHA-1' }, base, 512);
+                }).then(function (bits) {
+                    var raw = new Uint8Array(bits);
+                    var aesKey = raw.slice(0, 32), hmacKey = raw.slice(32, 64);
+                    return crypto.subtle.importKey('raw', aesKey, { name: 'AES-CBC', iv: iv }, false, ['encrypt'])
+                        .then(function (ak) { return crypto.subtle.encrypt({ name: 'AES-CBC', iv: iv }, ak, new TextEncoder().encode(plainToken)); })
+                        .then(function (data) {
+                            var cat = new Uint8Array(salt.length + iv.length + data.length);
+                            cat.set(salt, 0); cat.set(iv, salt.length); cat.set(data, salt.length + iv.length);
+                            return crypto.subtle.importKey('raw', hmacKey, { name: 'HMAC', hash: 'SHA-256' }, false, ['sign'])
+                                .then(function (hk) { return crypto.subtle.sign('HMAC', hk, cat); })
+                                .then(function (mac) {
+                                    return {
+                                        data: bytesToB64(new Uint8Array(data)),
+                                        mac: bytesToB64(new Uint8Array(mac)),
+                                        iv: bytesToB64(iv),
+                                        salt: bytesToB64(salt)
+                                    };
+                                });
+                        });
+                });
+        }
+
+function bytesToB64(u8) { var s = ''; for (var i = 0; i < u8.length; i++) s += String.fromCharCode(u8[i]); return btoa(s); }
+
+        /* Cria um cofre novo: mesmo formato do unlockVault, usado ao trocar a senha */
+        function lockVault(plainToken, chave) {
+            var salt = crypto.getRandomValues(new Uint8Array(16));
+            var iv = crypto.getRandomValues(new Uint8Array(16));
+            return crypto.subtle.importKey('raw', new TextEncoder().encode(chave), 'PBKDF2', false, ['deriveBits'])
+                .then(function (base) {
+                    return crypto.subtle.deriveBits({ name: 'PBKDF2', salt: salt, iterations: 120000, hash: 'SHA-1' }, base, 512);
+                }).then(function (bits) {
+                    var raw = new Uint8Array(bits);
+                    var aesKey = raw.slice(0, 32), hmacKey = raw.slice(32, 64);
+                    return crypto.subtle.importKey('raw', aesKey, { name: 'AES-CBC', iv: iv }, false, ['encrypt'])
+                        .then(function (ak) { return crypto.subtle.encrypt({ name: 'AES-CBC', iv: iv }, ak, new TextEncoder().encode(plainToken)); })
+                        .then(function (data) {
+                            var cat = new Uint8Array(salt.length + iv.length + data.length);
+                            cat.set(salt, 0); cat.set(iv, salt.length); cat.set(data, salt.length + iv.length);
+                            return crypto.subtle.importKey('raw', hmacKey, { name: 'HMAC', hash: 'SHA-256' }, false, ['sign'])
+                                .then(function (hk) { return crypto.subtle.sign('HMAC', hk, cat); })
+                                .then(function (mac) {
+                                    return {
+                                        data: bytesToB64(new Uint8Array(data)),
+                                        mac: bytesToB64(new Uint8Array(mac)),
+                                        iv: bytesToB64(iv),
+                                        salt: bytesToB64(salt)
+                                    };
+                                });
+                        });
+                });
+        }
+
+function unlockVault(password) {
+            var salt = b64ToBytes(VAULT.salt), iv = b64ToBytes(VAULT.iv),
+                data = b64ToBytes(VAULT.data), mac = b64ToBytes(VAULT.mac);
+            return crypto.subtle.importKey('raw', new TextEncoder().encode(password), 'PBKDF2', false, ['deriveBits']).then(function (base) {
+                return crypto.subtle.deriveBits({ name: 'PBKDF2', salt: salt, iterations: 120000, hash: 'SHA-1' }, base, 512);
+            }).then(function (bits) {
+                var raw = new Uint8Array(bits);
+                var aesKey = raw.slice(0, 32), hmacKey = raw.slice(32, 64);
+                return crypto.subtle.importKey('raw', hmacKey, { name: 'HMAC', hash: 'SHA-256' }, false, ['verify']).then(function (hk) {
+                    var cat = new Uint8Array(salt.length + iv.length + data.length);
+                    cat.set(salt, 0); cat.set(iv, salt.length); cat.set(data, salt.length + iv.length);
+                    return crypto.subtle.verify('HMAC', hk, mac, cat).then(function (ok) {
+                        if (!ok) throw new Error('hmac');
+                        return crypto.subtle.importKey('raw', aesKey, { name: 'AES-CBC', iv: iv }, false, ['decrypt']);
+                    }).then(function (ak) {
+                        return crypto.subtle.decrypt({ name: 'AES-CBC', iv: iv }, ak, data);
+                    }).then(function (pt) { return new TextDecoder().decode(pt); });
+                });
+            });
+        }
+
+function showPanel(show) {
+            document.getElementById('loginCard').classList.toggle('hidden', show);
+            document.getElementById('panel').classList.toggle('hidden', !show);
+            document.getElementById('logoutBtn').classList.toggle('hidden', !show);
+        }
+
+function enterWithToken(t) {
+            token = t;
+            msg('loginMsg', 'Verificando...', true);
+            fetch(API + 'conteudo/planos.json?ref=' + BRANCH, { headers: headers() }).then(function (r) {
+                if (!r.ok) throw new Error('HTTP ' + r.status);
+                showPanel(true); boot();
+                var u = document.getElementById('userAtual'); if (u) u.textContent = usuarioAtual ? 'Usuário: ' + usuarioAtual : '—';
+                iniciarMusica();
+                reiniciarIdle();
+            }).catch(function () { msg('loginMsg', 'Falha de acesso. Fale com o suporte.', false); });
+        }
+
+function sha256Hex(str) {
+            return crypto.subtle.digest('SHA-256', new TextEncoder().encode(str)).then(function (buf) {
+                return Array.prototype.map.call(new Uint8Array(buf), function (b) { return ('0' + b.toString(16)).slice(-2); }).join('');
+            });
+        }
+
+function lockVault(plainToken, chave) {
+            var salt = crypto.getRandomValues(new Uint8Array(16));
+            var iv = crypto.getRandomValues(new Uint8Array(16));
+            return crypto.subtle.importKey('raw', new TextEncoder().encode(chave), 'PBKDF2', false, ['deriveBits'])
+                .then(function (base) {
+                    return crypto.subtle.deriveBits({ name: 'PBKDF2', salt: salt, iterations: 120000, hash: 'SHA-1' }, base, 512);
+                }).then(function (bits) {
+                    var raw = new Uint8Array(bits);
+                    var aesKey = raw.slice(0, 32), hmacKey = raw.slice(32, 64);
+                    return crypto.subtle.importKey('raw', aesKey, { name: 'AES-CBC', iv: iv }, false, ['encrypt'])
+                        .then(function (ak) { return crypto.subtle.encrypt({ name: 'AES-CBC', iv: iv }, ak, new TextEncoder().encode(plainToken)); })
+                        .then(function (data) {
+                            var cat = new Uint8Array(salt.length + iv.length + data.length);
+                            cat.set(salt, 0); cat.set(iv, salt.length); cat.set(data, salt.length + iv.length);
+                            return crypto.subtle.importKey('raw', hmacKey, { name: 'HMAC', hash: 'SHA-256' }, false, ['sign'])
+                                .then(function (hk) { return crypto.subtle.sign('HMAC', hk, cat); })
+                                .then(function (mac) {
+                                    return {
+                                        data: bytesToB64(new Uint8Array(data)),
+                                        mac: bytesToB64(new Uint8Array(mac)),
+                                        iv: bytesToB64(iv),
+                                        salt: bytesToB64(salt)
+                                    };
+                                });
+                        });
+                });
+        }
+
+function abrirAba(nome) {
+            document.querySelectorAll('.tab').forEach(function (x) { x.classList.toggle('is-active', x.dataset.tab === nome); });
+            document.querySelectorAll('[data-pane]').forEach(function (p) { p.classList.toggle('hidden', p.dataset.pane !== nome); });
+        }
+
+function travaMensagem() {
+            var faltam = Math.ceil((bloqueadoAte - Date.now()) / 1000);
+            if (faltam <= 0) return null;
+            return 'Muitas tentativas. Tente de novo em ' + faltam + ' segundo' + (faltam > 1 ? 's' : '') + '.';
+        }
+
+function encerrarSessao(motivo) {
+            clearTimeout(idleTimer); clearTimeout(idleAviso);
+            token = '';
+            showPanel(false);
+            document.getElementById('passInput').value = '';
+            msg('loginMsg', motivo || 'Sessão encerrada por falta de uso. Entre de novo.', true);
+        }
+
+function reiniciarIdle() {
+            clearTimeout(idleTimer); clearTimeout(idleAviso);
+            idleTimer = setTimeout(function () { encerrarSessao(); }, MINUTOS_INATIVO * 60 * 1000);
+            // avisa 60 segundos antes para não perder o que estava editando
+            idleAviso = setTimeout(function () {
+                msg('tudoMsg', 'A sessão fecha em 1 minuto por inatividade. Mexa em qualquer campo.', true);
+            }, (MINUTOS_INATIVO * 60 - 60) * 1000);
+        }
+
+function tocarMusica(link, salvar) {
+            var box = document.getElementById('musicaFrame');
+            var p = playerDe(link);
+            if (!p) {
+                msg('musicaMsg', 'Link não reconhecido. Use Deezer, Spotify, SoundCloud ou YouTube.', false);
+                return false;
+            }
+            box.innerHTML = p.html;
+            msg('musicaMsg', 'Tocando de ' + p.nome + '. Clique no play do player.', true);
+            if (salvar) {
+                musicaSalva = link.trim();
+                try { localStorage.setItem('lf-musica', musicaSalva); } catch (e) { }
+                document.getElementById('musicaInput').value = musicaSalva;
+            }
+            return true;
+        }
+
+function iniciarMusica() {
+            try { musicaSalva = localStorage.getItem('lf-musica') || ''; } catch (e) { musicaSalva = ''; }
+            if (musicaSalva) {
+                document.getElementById('musicaInput').value = musicaSalva;
+                tocarMusica(musicaSalva, false);
+            }
+        }
+
+function renderPlanos() {
+            var box = document.getElementById('planosList'); box.innerHTML = '';
+            (planosData.planos || []).forEach(function (p, i) {
+                var d = document.createElement('div'); d.className = 'item';
+                d.innerHTML = '<div class="item-head"><strong>' + (p.nome || 'Plano') + '</strong><div class="item-actions"><button type="button" class="icon-btn" data-act="up">↑</button><button type="button" class="icon-btn" data-act="down">↓</button><button type="button" class="icon-btn danger" data-act="del">×</button></div></div>';
+                function field(label, key, ph) {
+                    var l = document.createElement('label'); l.className = 'f'; l.textContent = label;
+                    var inp = document.createElement('input'); inp.type = 'text'; inp.value = p[key] || ''; inp.placeholder = ph || '';
+                    inp.addEventListener('input', function () { p[key] = inp.value; });
+                    l.appendChild(inp); d.appendChild(l);
+                }
+                field('Nome', 'nome'); field('Descrição', 'descricao');
+                var r = document.createElement('div'); r.className = 'row';
+                [['Preço (ex: 3x R$ 119)', 'preco'], ['Centavos (ex: 119,99)', 'valor'], ['Período (ex: /mês)', 'parcelas'], ['Etiqueta (ex: Mais escolhido)', 'tag']].forEach(function (cfg) {
+                    var l = document.createElement('label'); l.className = 'f'; l.textContent = cfg[0];
+                    var inp = document.createElement('input'); inp.type = 'text'; inp.value = p[cfg[1]] || '';
+                    inp.addEventListener('input', function () { p[cfg[1]] = inp.value; });
+                    l.appendChild(inp); r.appendChild(l);
+                });
+                d.appendChild(r);
+                var lf = document.createElement('label'); lf.className = 'f'; lf.textContent = 'Benefícios (um por linha)';
+                var ta = document.createElement('textarea'); ta.value = (p.recursos || []).join('\n');
+                ta.addEventListener('input', function () { p.recursos = ta.value.split('\n').map(function (s) { return s.trim(); }).filter(Boolean); });
+                lf.appendChild(ta); d.appendChild(lf);
+                var ld = document.createElement('label'); ld.className = 'f'; ld.textContent = 'Destaque (aparece maior)';
+                var sel = document.createElement('select');
+                sel.innerHTML = '<option value="0">Não</option><option value="1">Sim</option>';
+                sel.value = p.destaque ? '1' : '0';
+                sel.addEventListener('change', function () { p.destaque = sel.value === '1'; });
+                ld.appendChild(sel); d.appendChild(ld);
+                d.querySelectorAll('[data-act]').forEach(function (b) {
+                    b.addEventListener('click', function () {
+                        var a = planosData.planos;
+                        if (b.dataset.act === 'del' && confirm('Remover este plano?')) a.splice(i, 1);
+                        if (b.dataset.act === 'up' && i > 0) { a.splice(i - 1, 0, a.splice(i, 1)[0]); }
+                        if (b.dataset.act === 'down' && i < a.length - 1) { a.splice(i + 1, 0, a.splice(i, 1)[0]); }
+                        renderPlanos();
+                    });
+                });
+                box.appendChild(d);
+            });
+        }
+
+function renderDep() {
+            var box = document.getElementById('depList'); box.innerHTML = '';
+            (depData.depoimentos || []).forEach(function (t, i) {
+                var d = document.createElement('div'); d.className = 'item';
+                d.innerHTML = '<div class="item-head"><strong>Depoimento ' + (i + 1) + '</strong><div class="item-actions"><button type="button" class="icon-btn danger" data-act="del">×</button></div></div>';
+                [['Nome', 'nome'], ['Unidade', 'unidade']].forEach(function (cfg) {
+                    var l = document.createElement('label'); l.className = 'f'; l.textContent = cfg[0];
+                    var inp = document.createElement('input'); inp.type = 'text'; inp.value = t[cfg[1]] || '';
+                    inp.addEventListener('input', function () { t[cfg[1]] = inp.value; });
+                    l.appendChild(inp); d.appendChild(l);
+                });
+                var lt = document.createElement('label'); lt.className = 'f'; lt.textContent = 'Texto';
+                var ta = document.createElement('textarea'); ta.value = t.texto || '';
+                ta.addEventListener('input', function () { t.texto = ta.value; });
+                lt.appendChild(ta); d.appendChild(lt);
+                var lf = document.createElement('label'); lf.className = 'f'; lf.textContent = 'Foto da pessoa';
+                d.appendChild(lf);
+                d.appendChild(photoField(t.foto, function (v) { t.foto = v; }));
+                d.querySelector('[data-act]').addEventListener('click', function () {
+                    if (confirm('Remover este depoimento?')) { depData.depoimentos.splice(i, 1); renderDep(); }
+                });
+                box.appendChild(d);
+            });
+        }
+
+function renderEq() {
+            var box = document.getElementById('eqList'); box.innerHTML = '';
+            (eqData.membros || []).forEach(function (m, i) {
+                var d = document.createElement('div'); d.className = 'item';
+                d.innerHTML = '<div class="item-head"><strong>' + (m.nome || 'Nova pessoa') + '</strong>' +
+                    '<div class="item-actions">' +
+                    '<button type="button" class="icon-btn" data-act="up" title="Mover para cima">\u2191</button>' +
+                    '<button type="button" class="icon-btn" data-act="down" title="Mover para baixo">\u2193</button>' +
+                    '<button type="button" class="icon-btn danger" data-act="del" title="Remover">\u00d7</button>' +
+                    '</div></div>';
+                [['Nome', 'nome'], ['Cargo (ex: Personal Trainer \u00b7 Musculação)', 'cargo'], ['Instagram (link do perfil)', 'instagram']].forEach(function (cfg) {
+                    var l = document.createElement('label'); l.className = 'f'; l.textContent = cfg[0];
+                    var inp = document.createElement('input'); inp.type = 'text'; inp.value = m[cfg[1]] || '';
+                    inp.placeholder = cfg[1] === 'instagram' ? 'https://www.instagram.com/...' : '';
+                    inp.addEventListener('input', function () { m[cfg[1]] = inp.value; });
+                    l.appendChild(inp); d.appendChild(l);
+                });
+                var lu = document.createElement('label'); lu.className = 'f'; lu.textContent = 'Unidade';
+                var selU = document.createElement('select');
+                selU.innerHTML = unitOptions(m.unidade);
+                selU.addEventListener('change', function () { m.unidade = selU.value; });
+                lu.appendChild(selU); d.appendChild(lu);
+                var ld = document.createElement('label'); ld.className = 'f'; ld.textContent = 'Destaque (fica maior e primeiro)';
+                var sel = document.createElement('select');
+                sel.innerHTML = '<option value="0">Não</option><option value="1">Sim</option>';
+                sel.value = m.destaque ? '1' : '0';
+                sel.addEventListener('change', function () { m.destaque = sel.value === '1'; });
+                ld.appendChild(sel); d.appendChild(ld);
+                var lf = document.createElement('label'); lf.className = 'f'; lf.textContent = 'Foto';
+                d.appendChild(lf);
+                d.appendChild(photoField(m.foto, function (v) { m.foto = v; }));
+                d.querySelectorAll('[data-act]').forEach(function (b) {
+                    b.addEventListener('click', function () {
+                        var a = eqData.membros;
+                        if (b.dataset.act === 'del' && confirm('Remover esta pessoa?')) a.splice(i, 1);
+                        if (b.dataset.act === 'up' && i > 0) { a.splice(i - 1, 0, a.splice(i, 1)[0]); }
+                        if (b.dataset.act === 'down' && i < a.length - 1) { a.splice(i + 1, 0, a.splice(i, 1)[0]); }
+                        renderEq();
+                    });
+                });
+                box.appendChild(d);
+            });
+            if (!(eqData.membros || []).length) {
+                var vazio = document.createElement('p');
+                vazio.className = 'hint';
+                vazio.textContent = 'Nenhum profissional cadastrado. Use o botão "+ Adicionar pessoa".';
+                box.appendChild(vazio);
+            }
+        }
+
+function renderGal() {
+            var box = document.getElementById('galList'); box.innerHTML = '';
+            (galData.fotos || []).forEach(function (f, i) {
+                var d = document.createElement('div'); d.className = 'item';
+                d.innerHTML = '<div class="item-head"><strong>Foto ' + (i + 1) + '</strong><div class="item-actions"><button type="button" class="icon-btn" data-act="up">↑</button><button type="button" class="icon-btn" data-act="down">↓</button><button type="button" class="icon-btn danger" data-act="del">×</button></div></div>';
+                d.appendChild(photoField(f.src, function (v) { f.src = v; }));
+                var l = document.createElement('label'); l.className = 'f'; l.textContent = 'Descrição';
+                var inp = document.createElement('input'); inp.type = 'text'; inp.value = f.alt || '';
+                inp.addEventListener('input', function () { f.alt = inp.value; });
+                l.appendChild(inp); d.appendChild(l);
+                d.querySelectorAll('[data-act]').forEach(function (b) {
+                    b.addEventListener('click', function () {
+                        var a = galData.fotos;
+                        if (b.dataset.act === 'del' && confirm('Remover esta foto?')) a.splice(i, 1);
+                        if (b.dataset.act === 'up' && i > 0) { a.splice(i - 1, 0, a.splice(i, 1)[0]); }
+                        if (b.dataset.act === 'down' && i < a.length - 1) { a.splice(i + 1, 0, a.splice(i, 1)[0]); }
+                        renderGal();
+                    });
+                });
+                box.appendChild(d);
+            });
+        }
+
+function renderUnis() {
+            var box = document.getElementById('uniList'); box.innerHTML = '';
+            (unisData.unidades || []).forEach(function (u, i) {
+                var d = document.createElement('div'); d.className = 'item';
+                d.innerHTML = '<div class="item-head"><strong>' + (u.nome || 'Nova unidade') + '</strong><div class="item-actions"><button type="button" class="icon-btn" data-act="up">↑</button><button type="button" class="icon-btn" data-act="down">↓</button><button type="button" class="icon-btn danger" data-act="del">×</button></div></div>';
+                [['Nome (ex: Jardim Das Fontes)', 'nome'], ['Endereço completo', 'endereco'], ['Horário (ex: Segunda a sexta · 06:00 — 22:00)', 'horario'], ['Telefone (ex: (11) 94354-4884)', 'telefone'], ['WhatsApp só números', 'whatsapp'], ['Destaque (ex: Aula avulsa R$ 19,99)', 'promo'], ['CEP', 'cep'], ['Cidade (ex: São Paulo/SP)', 'cidade'], ['Página de detalhe (ex: jardim-das-fontes.html)', 'pagina']].forEach(function (cfg) {
+                    var l = document.createElement('label'); l.className = 'f'; l.textContent = cfg[0];
+                    var inp = document.createElement('input'); inp.type = 'text'; inp.value = u[cfg[1]] || '';
+                    inp.addEventListener('input', function () {
+                        u[cfg[1]] = inp.value;
+                        if (cfg[1] === 'nome') u.id = slug(inp.value);
+                    });
+                    l.appendChild(inp); d.appendChild(l);
+                });
+                var lh = document.createElement('label'); lh.className = 'f'; lh.textContent = 'Tabela de horários (uma linha: Dia | Hora)';
+                var ta = document.createElement('textarea');
+                ta.value = (u.horarioTabela || []).map(function (r) { return r.join(' | '); }).join('\n');
+                ta.addEventListener('input', function () {
+                    u.horarioTabela = ta.value.split('\n').map(function (s) { return s.trim(); }).filter(Boolean).map(function (s) {
+                        var p = s.split('|'); return [p[0].trim(), (p[1] || '').trim()];
+                    });
+                });
+                lh.appendChild(ta); d.appendChild(lh);
+                var lf = document.createElement('label'); lf.className = 'f'; lf.textContent = 'Foto da fachada';
+                d.appendChild(lf);
+                d.appendChild(photoField(u.fachada, function (v) { u.fachada = v; }));
+                d.querySelectorAll('[data-act]').forEach(function (b) {
+                    b.addEventListener('click', function () {
+                        var a = unisData.unidades;
+                        if (b.dataset.act === 'del' && confirm('Remover esta unidade?')) a.splice(i, 1);
+                        if (b.dataset.act === 'up' && i > 0) { a.splice(i - 1, 0, a.splice(i, 1)[0]); }
+                        if (b.dataset.act === 'down' && i < a.length - 1) { a.splice(i + 1, 0, a.splice(i, 1)[0]); }
+                        renderUnis();
+                    });
+                });
+                box.appendChild(d);
+            });
+        }
+
+function renderTxt() {
+            var box = document.getElementById('txtList'); box.innerHTML = '';
+            TXT_CAMPOS.forEach(function (cfg) {
+                var l = document.createElement('label'); l.className = 'f'; l.textContent = cfg[1];
+                var inp = document.createElement('input'); inp.type = 'text';
+                inp.value = (txtData.textos || {})[cfg[0]] || '';
+                inp.addEventListener('input', function () {
+                    if (!txtData.textos) txtData.textos = {};
+                    txtData.textos[cfg[0]] = inp.value;
+                });
+                l.appendChild(inp); box.appendChild(l);
+            });
+        }
+
+function histField(boxId, obj, key, label, ph, multiline) {
+            var l = document.createElement('label'); l.className = 'f'; l.textContent = label;
+            var inp = document.createElement(multiline ? 'textarea' : 'input');
+            if (!multiline) inp.type = 'text';
+            inp.value = obj[key] || ''; inp.placeholder = ph || '';
+            inp.addEventListener('input', function () { obj[key] = inp.value; });
+            l.appendChild(inp); document.getElementById(boxId).appendChild(l);
+            return inp;
+        }
+
+function renderHist() {
+            var h = histData.historia;
+            if (!h.fundador) h.fundador = { nome: '', cargo: '', foto: '', instagram: '', resumo: '' };
+
+            var head = document.getElementById('histHead'); head.innerHTML = '';
+            histField('histHead', h, 'subtitulo', 'Linha em cima do título (ex: Dominadores como um leão)');
+            histField('histHead', h, 'titulo', 'Título (ex: Nossa história)');
+
+            var fund = document.getElementById('histFund'); fund.innerHTML = '';
+            histField('histFund', h.fundador, 'nome', 'Nome do fundador');
+            histField('histFund', h.fundador, 'cargo', 'Cargo (ex: Fundador e Proprietário)');
+            histField('histFund', h.fundador, 'instagram', 'Instagram do fundador');
+            var lf = document.createElement('label'); lf.className = 'f'; lf.textContent = 'Foto do fundador';
+            fund.appendChild(lf);
+            fund.appendChild(photoField(h.fundador.foto, function (v) { h.fundador.foto = v; }));
+            histField('histFund', h.fundador, 'resumo', 'Texto do fundador', '', true);
+
+            var txt = document.getElementById('histText'); txt.innerHTML = '';
+            histField('histText', h, 'texto1', 'Primeiro parágrafo', '', true);
+            histField('histText', h, 'texto2', 'Segundo parágrafo', '', true);
+            var lm = document.createElement('label'); lm.className = 'f'; lm.textContent = 'Destaques (um por linha)';
+            var ta = document.createElement('textarea');
+            ta.value = (h.marca || []).join('\n');
+            ta.addEventListener('input', function () {
+                h.marca = ta.value.split('\n').map(function (s) { return s.trim(); }).filter(Boolean);
+            });
+            lm.appendChild(ta); txt.appendChild(lm);
+        }
+
+function unitOptions(selected) {
+            return (unisData.unidades || []).map(function (u) {
+                return '<option value="' + u.id + '"' + (u.id === selected ? ' selected' : '') + '>' + u.nome + '</option>';
+            }).join('');
+        }

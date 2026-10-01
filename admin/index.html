@@ -1,328 +1,353 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Painel Lion Force</title>
-    <meta name="robots" content="noindex, nofollow">
-    <link rel="icon" type="image/png" href="../Lion force academia.png">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root { --red: #e3212a; --red-dark: #b6111d; --bg: #0a0a0b; --card: #141416; --line: rgba(255,255,255,.12); --txt: #fff; --mut: rgba(255,255,255,.6); }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Painel Lion Force</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/png" href="../Lion force academia.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+
+        :root { --red:#e3212a; --red-dark:#b6111d; --bg:#0a0a0b; --card:#141416; --line:rgba(255,255,255,.12); --txt:#fff; --mut:rgba(255,255,255,.6); --ok:#4ade80; --aviso:#fbbf24; }
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background: var(--bg); color: var(--txt); font-family: 'DM Sans', Arial, sans-serif; min-height: 100vh; }
-        .wrap { width: min(880px, calc(100% - 32px)); margin: 0 auto; padding: 28px 0 80px; }
-        header.top { display: flex; align-items: center; gap: 12px; padding: 18px 0; }
-        header.top img { width: 52px; height: 52px; object-fit: contain; }
-        header.top h1 { font: 800 1.6rem 'Barlow Condensed', sans-serif; text-transform: uppercase; letter-spacing: .02em; }
-        header.top h1 span { color: var(--red); }
-        header.top .sp { flex: 1; }
-        .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; padding: 0 22px; border-radius: 999px; border: 0; background: var(--red); color: #fff; font: 700 .82rem 'DM Sans', sans-serif; text-transform: uppercase; letter-spacing: .05em; cursor: pointer; }
-        .btn:hover { background: var(--red-dark); }
-        .btn:disabled { opacity: .5; cursor: wait; }
-        .btn--ghost { background: transparent; border: 1.5px solid rgba(255,255,255,.3); }
-        .btn--ghost:hover { background: rgba(255,255,255,.08); }
-        .btn--small { min-height: 38px; padding: 0 16px; font-size: .72rem; }
-        .card { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 26px; margin-top: 18px; }
-        .card h2 { font: 800 1.5rem 'Barlow Condensed', sans-serif; text-transform: uppercase; margin-bottom: 6px; }
-        .card > p.hint { color: var(--mut); font-size: .85rem; margin-bottom: 18px; }
-        label.f { display: grid; gap: 6px; font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: rgba(255,255,255,.7); margin-bottom: 12px; }
-        input[type=text], input[type=password], textarea, select { background: #050506; border: 1.5px solid var(--line); border-radius: 12px; color: #fff; font: 500 16px 'DM Sans', sans-serif; padding: 12px 14px; width: 100%; outline: 0; }
-        input:focus, textarea:focus, select:focus { border-color: var(--red); }
-        textarea { min-height: 80px; resize: vertical; }
-        .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 20px; }
-        .tab { border: 1px solid var(--line); background: transparent; color: rgba(255,255,255,.65); border-radius: 999px; padding: 11px 22px; font: 700 .78rem 'DM Sans', sans-serif; text-transform: uppercase; letter-spacing: .05em; cursor: pointer; }
-        .tab.is-active { background: var(--red); border-color: var(--red); color: #fff; }
-        .item { border: 1px solid var(--line); border-radius: 14px; padding: 18px; margin-bottom: 14px; background: #101012; }
-        .item-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 14px; }
-        .item-head strong { font-size: .95rem; }
-        .item-actions { display: flex; gap: 8px; }
-        .icon-btn { width: 36px; height: 36px; border-radius: 10px; border: 1px solid var(--line); background: transparent; color: #fff; cursor: pointer; font-size: 1rem; line-height: 1; }
-        .icon-btn:hover { border-color: var(--red); color: var(--red); }
-        .icon-btn.danger:hover { border-color: var(--red); background: var(--red); color: #fff; }
-        .thumb { width: 100%; max-height: 180px; object-fit: cover; border-radius: 10px; margin-bottom: 12px; display: block; background: #000; }
-        .thumb.round { width: 84px; height: 84px; border-radius: 50%; object-fit: cover; }
-        .upload-row { display: flex; gap: 8px; margin-bottom: 12px; }
-        .upload-row input[type=file] { display: none; }
-        .msg { margin-top: 14px; font-size: .85rem; font-weight: 700; min-height: 22px; }
-        .msg.ok { color: #4ade80; }
-        .msg.err { color: #ff7a82; }
-        .hidden { display: none !important; }
+        body { background: var(--bg); color: var(--txt); font-family:'DM Sans',Arial,sans-serif; min-height:100vh; -webkit-tap-highlight-color: transparent; }
+        a { color: var(--red); }
 
-        /* Player de musica do Spotify */
-        .musica { background: #0f0f11; border: 1px solid var(--line); border-radius: 18px; padding: 18px 20px; margin-top: 18px; }
-        .musica-head { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
-        .musica-head h3 { font: 700 .8rem 'DM Sans', sans-serif; text-transform: uppercase; letter-spacing: .06em; color: rgba(255,255,255,.6); }
-        .musica-head .sp { flex: 1; }
-        .musica-row { display: flex; gap: 8px; }
-        .musica-row input { flex: 1; }
-        .musica-frame { margin-top: 14px; border-radius: 14px; overflow: hidden; background: #000; }
-        .musica-frame iframe { display: block; width: 100%; height: 232px; border: 0; }
-        .musica-dica { color: var(--mut); font-size: .78rem; margin: 10px 0 0; }
-        .musica-dica a { color: var(--red); }
-        .musica-lista { display: grid; gap: 8px; margin-bottom: 6px; }
-        .voltar-topo { position: fixed; right: 18px; bottom: calc(18px + env(safe-area-inset-bottom, 0px)); z-index: 50; width: 46px; height: 46px; border-radius: 50%; border: 1px solid var(--line); background: #141416; color: #fff; display: grid; place-items: center; cursor: pointer; opacity: 0; pointer-events: none; transition: opacity .2s, background .2s; }
-        .voltar-topo.show { opacity: 1; pointer-events: auto; }
-        .voltar-topo:hover { background: var(--red); border-color: var(--red); }
-        .login-hero { text-align: center; padding: 40px 0 10px; }
-        .login-hero img { width: 110px; margin: 0 auto 16px; }
-        .login-hero h1 { font: 800 clamp(2.4rem, 7vw, 4rem)/1 'Barlow Condensed', sans-serif; text-transform: uppercase; }
-        .login-hero h1 span { color: var(--red); }
-        .login-hero p { color: var(--mut); margin-top: 10px; }
-        ol.steps { margin: 14px 0 14px 20px; color: var(--mut); font-size: .85rem; display: grid; gap: 6px; }
-        ol.steps a { color: var(--red); }
-        /* ---------- RESPONSIVO: tablet e celular ---------- */
-        /* iPad em retrato e celulares largos: uma coluna so */
-        @media (max-width: 900px) {
-            .row { grid-template-columns: 1fr; }
-            .wrap { width: min(100% - 28px, 720px); padding: 20px 0 70px; }
+        .topo { display:flex; align-items:center; gap:12px; padding:14px 20px; border-bottom:1px solid var(--line); position:sticky; top:0; background:var(--bg); z-index:40; }
+        .topo img { width:44px; height:44px; object-fit:contain; }
+        .topo h1 { font:800 1.3rem 'Barlow Condensed',sans-serif; text-transform:uppercase; letter-spacing:.02em; }
+        .topo h1 span { color: var(--red); }
+        .topo .sp { flex:1; }
+        .topo-user { font-size:.76rem; color:var(--mut); text-align:right; line-height:1.3; }
+
+        .layout { display:grid; grid-template-columns: 250px 1fr; min-height: calc(100vh - 73px); }
+
+        /* menu lateral */
+        .menu { border-right:1px solid var(--line); padding:18px 12px 40px; position:sticky; top:73px; align-self:start; max-height: calc(100vh - 73px); overflow-y:auto; }
+        .menu-grupo { font-size:.64rem; text-transform:uppercase; letter-spacing:.1em; color:rgba(255,255,255,.35); padding:14px 12px 6px; }
+        .menu a { display:flex; align-items:center; gap:10px; padding:11px 12px; border-radius:11px; color:rgba(255,255,255,.78); text-decoration:none; font-weight:600; font-size:.87rem; margin-bottom:2px; }
+        .menu a:hover { background:rgba(255,255,255,.06); color:#fff; }
+        .menu a.is-active { background:rgba(227,33,42,.16); color:#fff; }
+        .menu a.is-active .ic { opacity:1; }
+        .menu .ic { font-size:1.05rem; width:22px; text-align:center; opacity:.7; flex:0 0 22px; }
+
+        /* conteudo */
+        .conteudo { padding:26px 28px 70px; max-width:1180px; }
+        .painel { display:none; }
+        .painel.is-active { display:block; }
+        .painel h2 { font:800 1.7rem 'Barlow Condensed',sans-serif; text-transform:uppercase; margin-bottom:6px; }
+        .dica { color:var(--mut); font-size:.88rem; margin-bottom:20px; line-height:1.55; }
+        .dica b { color:#fff; }
+
+        .card { background:var(--card); border:1px solid var(--line); border-radius:16px; padding:24px; margin-bottom:16px; }
+        .bloco { background:var(--card); border:1px solid var(--line); border-radius:16px; padding:22px; margin-bottom:16px; }
+        .bloco-titulo { font:700 1.05rem 'Barlow Condensed',sans-serif; text-transform:uppercase; letter-spacing:.04em; margin-bottom:4px; }
+
+        label.f { display:grid; gap:6px; font-size:.72rem; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:rgba(255,255,255,.7); margin-bottom:14px; }
+        label.f small { font-weight:400; text-transform:none; letter-spacing:0; color:var(--mut); font-size:.76rem; }
+        input[type=text], input[type=password], textarea, select { background:#050506; border:1.5px solid var(--line); border-radius:12px; color:#fff; font:500 16px 'DM Sans',sans-serif; padding:12px 14px; width:100%; outline:0; }
+        input:focus, textarea:focus, select:focus { border-color:var(--red); }
+        textarea { min-height:92px; resize:vertical; line-height:1.5; }
+        .linha2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+
+        .btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; min-height:48px; padding:0 20px; border-radius:999px; border:0; background:var(--red); color:#fff; font:700 .82rem 'DM Sans',sans-serif; text-transform:uppercase; letter-spacing:.05em; cursor:pointer; }
+        .btn:hover { background:var(--red-dark); }
+        .btn:disabled { opacity:.5; cursor:wait; }
+        .btn--ghost { background:transparent; border:1.5px solid rgba(255,255,255,.3); }
+        .btn--ghost:hover { background:rgba(255,255,255,.08); }
+        .btn--mini { min-height:38px; padding:0 14px; font-size:.72rem; }
+        .btn--largo { width:100%; }
+
+        .msg { margin-top:12px; font-size:.85rem; font-weight:700; min-height:20px; }
+        .msg.ok { color:var(--ok); } .msg.err { color:#ff7a82; } .msg.aviso { color:var(--aviso); }
+        .hidden { display:none !important; }
+
+        /* item com imagem */
+        .item { border:1px solid var(--line); border-radius:14px; padding:16px; margin-bottom:12px; background:#101012; }
+        .item-topo { display:flex; align-items:center; gap:12px; margin-bottom:14px; }
+        .item-topo .mini { width:56px; height:56px; border-radius:10px; object-fit:cover; background:#000; flex:0 0 56px; }
+        .item-topo strong { font-size:.95rem; flex:1; line-height:1.35; }
+        .acoes { display:flex; gap:6px; flex:0 0 auto; }
+        .icone { width:36px; height:36px; border-radius:10px; border:1px solid var(--line); background:transparent; color:#fff; cursor:pointer; font-size:1rem; }
+        .icone:hover { border-color:var(--red); color:var(--red); }
+        .icone.perigo:hover { background:var(--red); color:#fff; }
+
+        .foto-caixa { display:grid; gap:10px; margin-bottom:14px; }
+        .foto-previa { width:100%; max-height:190px; object-fit:cover; border-radius:12px; background:#000; display:block; }
+        .foto-vazia { border:2px dashed var(--line); border-radius:12px; padding:22px; text-align:center; color:var(--mut); font-size:.82rem; background:rgba(255,255,255,.02); }
+        .foto-linha { display:flex; gap:8px; flex-wrap:wrap; }
+
+        .vazio { color:var(--mut); font-size:.85rem; padding:14px; text-align:center; border:1px dashed var(--line); border-radius:12px; }
+
+        /* login */
+        .login-tela { min-height:100vh; display:grid; place-items:center; padding:20px; }
+        .login-caixa { width:min(420px,100%); background:var(--card); border:1px solid var(--line); border-radius:20px; padding:34px 30px; }
+        .login-caixa img { width:88px; margin:0 auto 14px; display:block; }
+        .login-caixa h1 { font:800 clamp(1.9rem,6vw,2.5rem) 'Barlow Condensed',sans-serif; text-transform:uppercase; text-align:center; }
+        .login-caixa h1 span { color:var(--red); }
+        .login-caixa p { color:var(--mut); text-align:center; margin:8px 0 22px; font-size:.86rem; }
+
+        /* agenda */
+        .tarefa { display:flex; gap:11px; align-items:flex-start; border:1px solid var(--line); border-radius:12px; padding:12px; margin-bottom:8px; background:#101012; }
+        .tarefa[data-feita="1"] { opacity:.5; }
+        .tarefa[data-feita="1"] .tarefa-txt { text-decoration:line-through; }
+        .tarefa input[type=checkbox] { width:22px; height:22px; flex:0 0 22px; margin-top:1px; accent-color:var(--red); cursor:pointer; }
+        .tarefa-corpo { flex:1; min-width:0; }
+        .tarefa-txt { font-size:.89rem; line-height:1.45; word-break:break-word; }
+        .tarefa-meta { font-size:.72rem; color:var(--mut); margin-top:4px; display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+        .selo { font-size:.66rem; text-transform:uppercase; letter-spacing:.05em; padding:2px 8px; border-radius:99px; font-weight:700; }
+        .selo--foto { background:rgba(59,130,246,.16); color:#93c5fd; }
+        .selo--texto { background:rgba(167,139,250,.16); color:#c4b5fd; }
+        .selo--pessoa { background:rgba(74,222,128,.16); color:var(--ok); }
+        .selo--fazer { background:rgba(251,191,36,.16); color:var(--aviso); }
+
+        @media (max-width:900px) {
+            .layout { grid-template-columns:1fr; }
+            .menu { position:sticky; top:57px; z-index:35; background:var(--bg); border-right:0; border-bottom:1px solid var(--line); padding:10px; max-height:none; display:flex; gap:7px; overflow-x:auto; }
+            .menu-grupo { display:none; }
+            .menu a { white-space:nowrap; margin:0; padding:10px 13px; font-size:.8rem; }
+            .menu a span.txt { display:none; }
+            .conteudo { padding:18px 14px 60px; }
+            .topo { padding:11px 14px; }
+            .topo img { width:38px; height:38px; }
+            .topo h1 { font-size:1.1rem; }
+            .linha2 { grid-template-columns:1fr; }
+            .item-topo { flex-wrap:wrap; }
         }
 
-        @media (max-width: 640px) {
-            body { -webkit-text-size-adjust: 100%; }
-            /* no celular o cartao encosta nas laterais: largura total, sem faixa vazia */
-            .wrap { width: 100%; max-width: 100%; padding: 0 0 calc(80px + env(safe-area-inset-bottom, 0px)); }
-            header.top { flex-wrap: wrap; gap: 10px; padding: 12px 14px; }
-            header.top img { width: 44px; height: 44px; }
-            header.top h1 { font-size: 1.28rem; flex: 1 1 auto; min-width: 0; }
-            header.top .sp { display: none; }
-            header.top .btn--small { min-height: 42px; padding: 0 13px; font-size: .68rem; flex: 0 0 auto; }
-
-            .card { padding: 20px 18px; border-radius: 0; border-left: 0; border-right: 0; }
-            .card h2 { font-size: 1.28rem; }
-
-            /* abas viram grade, todas visiveis */
-            .tabs { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 14px; }
-            .tab { padding: 13px 8px; font-size: .7rem; text-align: center; }
-
-            .btn { min-height: 50px; padding: 0 18px; font-size: .76rem; }
-            .btn--small { min-height: 44px; }
-            label.f { font-size: .68rem; margin-bottom: 14px; }
-            input, select, textarea { font-size: 16px; padding: 14px; border-radius: 12px; }
-            textarea { min-height: 110px; }
-
-            .item { padding: 15px; border-radius: 13px; }
-            .item-head { flex-wrap: wrap; row-gap: 10px; }
-            .item-head strong { font-size: .92rem; line-height: 1.35; }
-            .item-actions { flex: 0 0 auto; }
-            .icon-btn { width: 42px; height: 42px; font-size: 1.15rem; }
-
-            .upload-row { flex-wrap: wrap; }
-            .upload-row .btn { flex: 1 1 100%; }
-            .thumb { max-height: 210px; }
-
-            .musica-row { flex-wrap: wrap; }
-            .musica-row input { flex: 1 1 100%; }
-            .musica-row .btn { flex: 1 1 auto; }
-            .musica-frame iframe { height: 260px; }
-
-            .login-hero { padding: 26px 0 8px; }
-            .login-hero img { width: 84px; }
-            .voltar-topo { right: 14px; bottom: calc(14px + env(safe-area-inset-bottom, 0px)); }
-        }
-
-        /* Tela deitada no celular */
-        @media (max-height: 480px) and (orientation: landscape) {
-            .login-hero { padding: 16px 0 4px; }
-            .login-hero img { width: 56px; margin-bottom: 8px; }
-            .login-hero h1 { font-size: 1.7rem; }
-            .tabs { grid-template-columns: repeat(4, 1fr); }
-        }
-
-        /* Barra de endereço do iPhone encolhe ao rolar: nao deixa o conteudo pular */
-        @supports (-webkit-touch-callout: none) {
-            .wrap { padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)); }
-        }
-
-        /* Nenhum elemento pode criar rolagem horizontal */
-        .wrap > *, .card > *, .item > * { max-width: 100%; }
-        img, iframe, input, select, textarea { max-width: 100%; }
-
-        /* Telas bem estreitas (Galaxy A55, 360px): aperta o cabecalho para
-           os dois botoes caberem sem estourar */
-        @media (max-width: 380px) {
-            header.top { padding-left: 12px; padding-right: 12px; }
-            header.top h1 { font-size: 1.08rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-            header.top img { width: 38px; height: 38px; }
-            header.top .btn--small { padding: 0 11px; font-size: .64rem; min-height: 40px; }
-            .card { padding: 18px 14px; }
-            .tabs { grid-template-columns: repeat(2, 1fr); gap: 7px; }
-            .tab { padding: 12px 6px; font-size: .66rem; }
-        }
-    </style>
+</style>
 </head>
 <body>
-    <div class="wrap">
-        <header class="top">
-            <img src="../Lion force academia.png" alt="Lion Force">
-            <h1>Painel <span>Lion Force</span></h1>
-            <span class="sp"></span>
-            <a class="btn btn--ghost btn--small" href="../index.html" target="_blank" rel="noreferrer">Ver site</a>
-            <button class="btn btn--ghost btn--small hidden" id="logoutBtn" type="button">Sair</button>
-        </header>
 
-        <button class="voltar-topo" id="voltarTopo" type="button" aria-label="Voltar ao topo" title="Voltar ao topo">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 7-7 7 7"/><path d="M12 19V5"/></svg>
-        </button>
+<!-- LOGIN -->
+<section class="login-tela" id="loginTela">
+    <div class="login-caixa">
+        <img src="../Lion force academia.png" alt="Lion Force">
+        <h1>Painel <span>Lion Force</span></h1>
+        <p>Use seu usuário e senha. A sessão fecha sozinha depois de 10 minutos sem mexer em nada.</p>
+        <label class="f">Usuário<input type="text" id="userInput" placeholder="admin" autocomplete="username"></label>
+        <label class="f">Senha<input type="password" id="passInput" placeholder="Sua senha" autocomplete="current-password"></label>
+        <button class="btn btn--largo" id="loginBtn" type="button">Entrar</button>
+        <p class="msg" id="loginMsg" role="status"></p>
+    </div>
+</section>
 
-        <!-- LOGIN -->
-        <section class="card" id="loginCard">
-            <div class="login-hero">
-                <img src="../Lion force academia.png" alt="Lion Force">
-                <h1>Área da <span>equipe</span></h1>
-                <p>Use seu usuário e senha. A sessão fecha sozinha depois de 10 minutos sem mexer em nada.</p>
-            </div>
-            <label class="f">Usuário<input type="text" id="userInput" placeholder="Seu usuário" autocomplete="username"></label>
-            <label class="f">Senha<input type="password" id="passInput" placeholder="Sua senha" autocomplete="current-password"></label>
-            <button class="btn" id="loginBtn" type="button" style="width:100%">Entrar no painel</button>
-            <p class="msg" id="loginMsg" role="status"></p>
-        </section>
+<!-- PAINEL -->
+<div class="hidden" id="painelTopo">
+    <header class="topo">
+        <img src="../Lion force academia.png" alt="Lion Force">
+        <h1>Painel <span>Lion Force</span></h1>
+        <span class="sp"></span>
+        <div class="topo-user" id="userAtual"></div>
+        <a class="btn btn--ghost btn--mini" href="../index.html" target="_blank" rel="noreferrer">Ver site</a>
+        <button class="btn btn--ghost btn--mini" id="logoutBtn" type="button">Sair</button>
+    </header>
 
-        <!-- PAINEL -->
-        <section id="panel" class="hidden">
-            <div class="tabs" role="tablist">
-                <button class="tab is-active" data-tab="textos" type="button">Textos do site</button>
-                <button class="tab" data-tab="historia" type="button">Nossa história</button>
-                <button class="tab" data-tab="planos" type="button">Planos</button>
-                <button class="tab" data-tab="depoimentos" type="button">Depoimentos</button>
-                <button class="tab" data-tab="equipe" type="button">Equipe</button>
-                <button class="tab" data-tab="galeria" type="button">Galeria</button>
-                <button class="tab" data-tab="unidades" type="button">Unidades</button>
-                <button class="tab" data-tab="seguranca" type="button">Segurança</button>
-                <button class="tab" data-tab="musica" type="button">Música</button>
-            </div>
+    <div class="layout">
+        <nav class="menu" aria-label="Seções do painel">
+            <div class="menu-grupo">Começar por aqui</div>
+            <a href="#" data-tab="agenda"><span class="ic">📋</span><span class="txt">Minha agenda</span></a>
+            <a href="#" data-tab="resumo"><span class="ic">⚡</span><span class="txt">Publicar tudo</span></a>
+            <div class="menu-grupo">Imagens</div>
+            <a href="#" data-tab="unidades"><span class="ic">🏢</span><span class="txt">Unidades e fotos</span></a>
+            <a href="#" data-tab="equipe"><span class="ic">👥</span><span class="txt">Equipe e pessoas</span></a>
+            <a href="#" data-tab="galeria"><span class="ic">🖼️</span><span class="txt">Galeria</span></a>
+            <div class="menu-grupo">Textos</div>
+            <a href="#" data-tab="historia"><span class="ic">🦁</span><span class="txt">Nossa história</span></a>
+            <a href="#" data-tab="textos"><span class="ic">✏️</span><span class="txt">Textos do site</span></a>
+            <a href="#" data-tab="planos"><span class="ic">💳</span><span class="txt">Planos e preços</span></a>
+            <a href="#" data-tab="depoimentos"><span class="ic">💬</span><span class="txt">Avaliações</span></a>
+            <div class="menu-grupo">Conta</div>
+            <a href="#" data-tab="seguranca"><span class="ic">🔒</span><span class="txt">Senha e acesso</span></a>
+        </nav>
 
-            <div class="card hidden" data-pane="musica">
-                <h2>Música no painel</h2>
-                <p class="hint">Cole o link de uma playlist e ela toca aqui, só para você.
-                Quem visita o site não ouve nada.</p>
+        <main class="conteudo">
 
-                <label class="f">Link da playlist
-                    <input type="text" id="musicaInput" placeholder="https://..." autocomplete="off">
-                </label>
-                <div class="musica-row">
-                    <button class="btn" id="musicaOk" type="button">Tocar</button>
-                    <button class="btn btn--ghost" id="musicaEsquecer" type="button">Esquecer</button>
-                </div>
-
-                <div class="musica-frame" id="musicaFrame"></div>
-                <p class="msg" id="musicaMsg"></p>
-
-                <p class="musica-dica">Aceita link de playlist, álbum ou música do Deezer, Spotify,
-                SoundCloud e YouTube. O Spotify não deixa começar sozinho — precisa de um clique no play.
-                A playlist fica salva neste computador; o botão <strong>Esquecer</strong> apaga.</p>
-            </div>
-
-            <div class="card hidden" data-pane="seguranca">
-                <h2>Segurança</h2>
-                <p class="hint">Troque a senha do painel quando quiser. O acesso ao GitHub continua o mesmo — só a senha do painel muda.</p>
-                <label class="f">Nova senha (mínimo 8 caracteres)<input type="text" id="newPass" placeholder="Nova senha" autocomplete="new-password"></label>
-                <label class="f">Repita a nova senha<input type="text" id="newPass2" placeholder="Repita a senha" autocomplete="new-password"></label>
-                <button class="btn" id="senhaSave" type="button" style="width:100%">Trocar senha</button>
-                <p class="msg" id="senhaMsg"></p>
-                <div class="row" style="margin-top:22px">
-                    <div>
-                        <h3 style="font:700 .8rem 'DM Sans';text-transform:uppercase;letter-spacing:.06em;color:rgba(255,255,255,.5);margin:0 0 8px">Acesso atual</h3>
-                        <p class="hint" id="userAtual" style="margin:0">—</p>
+            <!-- AGENDA -->
+            <section class="painel" data-pane="agenda">
+                <h2>Minha agenda</h2>
+                <p class="dica">Sua lista de tarefas. Marque o que já fez e o que falta. Fica guardada neste
+                computador, então não se perde. Use como apoio no dia a dia — pode anotar qualquer coisa.</p>
+                <div class="bloco">
+                    <div class="bloco-titulo">Nova tarefa</div>
+                    <label class="f">O que precisa fazer
+                        <input type="text" id="tarefaTexto" placeholder="Ex.: mandar a foto da recepção">
+                    </label>
+                    <div class="linha2">
+                        <label class="f">É sobre<select id="tarefaTipo">
+                            <option value="fazer">Outra coisa</option>
+                            <option value="foto">Foto</option>
+                            <option value="pessoa">Pessoa</option>
+                            <option value="texto">Texto</option>
+                        </select></label>
+                        <label class="f">Quando<select id="tarefaPrazo">
+                            <option value="">Sem prazo</option>
+                            <option value="hoje">Hoje</option>
+                            <option value="semana">Esta semana</option>
+                            <option value="urgente">Urgente</option>
+                        </select></label>
                     </div>
-                    <div>
-                        <h3 style="font:700 .8rem 'DM Sans';text-transform:uppercase;letter-spacing:.06em;color:rgba(255,255,255,.5);margin:0 0 8px">Depois de publicar</h3>
-                        <p class="hint" style="margin:0">Espere 1–2 min e aperte Ctrl+F5 para ver no site.</p>
-                    </div>
+                    <button class="btn" id="tarefaAdd" type="button">+ Adicionar na agenda</button>
                 </div>
-
-                <div class="musica">
-                    <div class="musica-head">
-                        <h3>Quer música enquanto edita?</h3>
-                        <span class="sp"></span>
-                        <button class="btn btn--ghost btn--small" data-ir-aba="musica" type="button">Abrir aba Música</button>
-                    </div>
-                    <p class="musica-dica" style="margin:0">A playlist do Spotify tem uma aba só dela, aqui do lado.</p>
+                <div class="bloco">
+                    <div class="bloco-titulo">Tarefas de hoje <span id="tarefaCont" style="color:var(--mut);font-weight:400"></span></div>
+                    <div class="filtros" id="tarefaFiltros" style="display:flex;gap:7px;margin-bottom:14px;flex-wrap:wrap"></div>
+                    <div id="tarefaLista"></div>
+                    <p class="msg" id="tarefaMsg"></p>
                 </div>
-                <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px">
-                    <button class="btn" id="salvarTudo" type="button">Publicar tudo de uma vez</button>
-                    <p class="msg" id="tudoMsg" style="margin:0;align-self:center"></p>
+                <div class="bloco">
+                    <div class="bloco-titulo">Sugestões que já sabemos que faltam</div>
+                    <p class="dica">Coisas que já conversamos e que ainda estão pendentes. Marque aqui e acompanhe.</p>
+                    <div id="sugestoes"></div>
                 </div>
-            </div>
+            </section>
 
-            <div class="card" data-pane="textos">
-                <h2>Textos do site</h2>
-                <p class="hint">Horários, contatos e números que aparecem em todo o site. É só publicar aqui — o site inteiro atualiza. Não precisa mexer em código.</p>
-                <div id="txtList"></div>
-                <button class="btn" id="txtSave" type="button" style="width:100%">Publicar textos</button>
-                <p class="msg" id="txtMsg"></p>
-            </div>
+            <!-- RESUMO / PUBLICAR TUDO -->
+            <section class="painel" data-pane="resumo">
+                <h2>Publicar tudo</h2>
+                <p class="dica">Depois de mexer em qualquer seção, volte aqui e clique em publicar. Salva todas
+                de uma vez e o site atualiza sozinho em 1 a 2 minutos. Não precisa publicar seção por seção.</p>
+                <div class="bloco">
+                    <div id="resumoStatus" style="display:grid;gap:9px;margin-bottom:16px"></div>
+                    <button class="btn btn--largo" id="salvarTudo" type="button">Publicar todas as alterações</button>
+                    <p class="msg" id="tudoMsg"></p>
+                </div>
+                <div class="bloco">
+                    <div class="bloco-titulo">O que publica em cada seção</div>
+                    <p class="dica">
+                        <b>Unidades e fotos</b> — nome, endereço, telefone, horários e a foto de cada academia.<br>
+                        <b>Equipe e pessoas</b> — nome, cargo, Instagram, foto e a unidade de cada pessoa. É aqui
+                        que entram os personais, a recepção e o dono.<br>
+                        <b>Galeria</b> — as fotos grandes da unidade, com ordem e descrição.<br>
+                        <b>Nossa história</b> — o card do fundador e o texto da história.<br>
+                        <b>Textos do site</b> — horários, contatos e números que aparecem em todo o site.<br>
+                        <b>Planos</b> — preços e benefícios.<br>
+                        <b>Avaliações</b> — os depoimentos da página inicial.
+                    </p>
+                </div>
+            </section>
 
-            <div class="card hidden" data-pane="historia">
-                <h2>Nossa história</h2>
-                <p class="hint">Seção da home com o texto da academia e o card do fundador. A foto em branco mostra um espaço com borda tracejada.</p>
-                <h3 style="font:700 .8rem 'DM Sans';text-transform:uppercase;letter-spacing:.06em;color:rgba(255,255,255,.5);margin:22px 0 10px">Cabeçalho</h3>
-                <div id="histHead"></div>
-                <h3 style="font:700 .8rem 'DM Sans';text-transform:uppercase;letter-spacing:.06em;color:rgba(255,255,255,.5);margin:22px 0 10px">Fundador</h3>
-                <div id="histFund"></div>
-                <h3 style="font:700 .8rem 'DM Sans';text-transform:uppercase;letter-spacing:.06em;color:rgba(255,255,255,.5);margin:22px 0 10px">Texto da história</h3>
-                <div id="histText"></div>
-                <button class="btn" id="histSave" type="button" style="margin-top:18px;width:100%">Publicar história</button>
-                <p class="msg" id="histMsg"></p>
-            </div>
-
-            <div class="card hidden" data-pane="planos">
-                <h2>Planos</h2>
-                <p class="hint">Preços e benefícios. O plano com “destaque” aparece em preto e maior.</p>
-                <div id="planosList"></div>
-                <button class="btn btn--ghost" id="planoAdd" type="button">+ Adicionar plano</button>
-                <button class="btn" id="planosSave" type="button" style="margin-top:12px;width:100%">Publicar planos</button>
-                <p class="msg" id="planosMsg"></p>
-            </div>
-
-            <div class="card hidden" data-pane="depoimentos">
-                <h2>Depoimentos</h2>
-                <p class="hint">Avaliações da home. Foto pode ser enviada ou link.</p>
-                <div id="depList"></div>
-                <button class="btn btn--ghost" id="depAdd" type="button">+ Adicionar depoimento</button>
-                <button class="btn" id="depSave" type="button" style="margin-top:12px;width:100%">Publicar depoimentos</button>
-                <p class="msg" id="depMsg"></p>
-            </div>
-
-            <div class="card hidden" data-pane="equipe">
-                <h2>Equipe</h2>
-                <p class="hint">Treinadores com foto. Vazio = mostra “equipe em montagem”.</p>
-                <div id="eqList"></div>
-                <button class="btn btn--ghost" id="eqAdd" type="button">+ Adicionar pessoa</button>
-                <button class="btn" id="eqSave" type="button" style="margin-top:12px;width:100%">Publicar equipe</button>
-                <p class="msg" id="eqMsg"></p>
-            </div>
-
-            <div class="card hidden" data-pane="galeria">
-                <h2>Galeria da unidade</h2>
-                <p class="hint">Fotos da página da unidade. Use ↑ ↓ para ordenar.</p>
-                <div id="galList"></div>
-                <button class="btn btn--ghost" id="galAdd" type="button">+ Adicionar foto</button>
-                <button class="btn" id="galSave" type="button" style="margin-top:12px;width:100%">Publicar galeria</button>
-                <p class="msg" id="galMsg"></p>
-            </div>
-
-            <div class="card hidden" data-pane="unidades">
-                <h2>Unidades</h2>
-                <p class="hint">Cada unidade aparece na busca. A página de detalhe (ex: jardim-das-fontes.html) usa a primeira da lista — novas unidades ganham a página depois.</p>
+            <!-- UNIDADES -->
+            <section class="painel" data-pane="unidades">
+                <h2>Unidades e fotos</h2>
+                <p class="dica">Cada academia da rede. A foto que você envia aqui é a <b>fachada</b> que aparece
+                em destaque. As fotos da galeria ficam na seção ao lado.</p>
                 <div id="uniList"></div>
                 <button class="btn btn--ghost" id="uniAdd" type="button">+ Adicionar unidade</button>
-                <button class="btn" id="uniSave" type="button" style="margin-top:12px;width:100%">Publicar unidades</button>
-                <p class="msg" id="uniMsg"></p>
-            </div>
-        </section>
+            </section>
+
+            <!-- EQUIPE -->
+            <section class="painel" data-pane="equipe">
+                <h2>Equipe e pessoas</h2>
+                <p class="dica">Personais, recepção, dono — quem quiser aparecer. Sem foto, o cartão fica
+                com espaço reservado (borda tracejada) e você preenche depois. A ordem aqui é a ordem que
+                aparece no site.</p>
+                <div id="eqList"></div>
+                <button class="btn btn--ghost" id="eqAdd" type="button">+ Adicionar pessoa</button>
+            </section>
+
+            <!-- GALERIA -->
+            <section class="painel" data-pane="galeria">
+                <h2>Galeria de fotos</h2>
+                <p class="dica">Fotos grandes que aparecem na página da unidade. Envie na horizontal para
+                ficar melhor no site. Use as setas para ordenar.</p>
+                <div id="galList"></div>
+                <button class="btn btn--ghost" id="galAdd" type="button">+ Adicionar foto</button>
+            </section>
+
+            <!-- HISTORIA -->
+            <section class="painel" data-pane="historia">
+                <h2>Nossa história</h2>
+                <p class="dica">O texto da academia e o card do dono. A foto do fundador aparece com moldura
+                à esquerda na home e na página da história.</p>
+                <div class="bloco">
+                    <div class="bloco-titulo">Fundador / dono</div>
+                    <div id="histFund"></div>
+                </div>
+                <div class="bloco">
+                    <div class="bloco-titulo">Cabeçalho</div>
+                    <div id="histHead"></div>
+                </div>
+                <div class="bloco">
+                    <div class="bloco-titulo">Texto da história</div>
+                    <div id="histText"></div>
+                </div>
+            </section>
+
+            <!-- TEXTOS -->
+            <section class="painel" data-pane="textos">
+                <h2>Textos do site</h2>
+                <p class="dica">Horários, contatos e números. O que você muda aqui <b>atualiza o site inteiro</b>,
+                inclusive o rodapé de todas as páginas. Não precisa mexer em mais lugar nenhum.</p>
+                <div id="txtList"></div>
+            </section>
+
+            <!-- PLANOS -->
+            <section class="painel" data-pane="planos">
+                <h2>Planos e preços</h2>
+                <p class="dica">Preço, o que cada plano inclui e qual aparece em destaque (o destaque vai
+                maior e na frente).</p>
+                <div id="planosList"></div>
+                <button class="btn btn--ghost" id="planoAdd" type="button">+ Adicionar plano</button>
+            </section>
+
+            <!-- DEPOIMENTOS -->
+            <section class="painel" data-pane="depoimentos">
+                <h2>Avaliações e depoimentos</h2>
+                <p class="dica">O que os alunos falam. Quem tem foto aparece com o retrato; quem não tem,
+                aparece só o texto. Eles se alternam sozinhos na página inicial.</p>
+                <div id="depList"></div>
+                <button class="btn btn--ghost" id="depAdd" type="button">+ Adicionar avaliação</button>
+            </section>
+
+            <!-- SEGURANCA -->
+            <section class="painel" data-pane="seguranca">
+                <h2>Senha e acesso</h2>
+                <p class="dica">Troque a senha quando quiser. Só muda a senha do painel, o acesso ao site
+                continua igual.</p>
+                <div class="bloco">
+                    <div class="bloco-titulo">Trocar senha</div>
+                    <label class="f">Nova senha (mínimo 8 caracteres)<input type="text" id="newPass" placeholder="Nova senha" autocomplete="new-password"></label>
+                    <label class="f">Repita a nova senha<input type="text" id="newPass2" placeholder="Repita a senha" autocomplete="new-password"></label>
+                    <button class="btn" id="senhaSave" type="button">Salvar nova senha</button>
+                    <p class="msg" id="senhaMsg"></p>
+                </div>
+                <div class="bloco">
+                    <div class="bloco-titulo">Sessão</div>
+                    <p class="dica">Esta sessão fecha sozinha depois de <b>10 minutos</b> sem mexer em nada.
+                    Isso protege o site mesmo se você esquecer o painel aberto.</p>
+                    <button class="btn btn--ghost" id="logoutBtn2" type="button">Sair agora</button>
+                </div>
+                <div class="bloco">
+                    <div class="bloco-titulo">Outros endereços</div>
+                    <p class="dica">
+                        Site no ar: <a href="https://lionforceacademia.arcelinoleal.workers.dev" target="_blank" rel="noreferrer">lionforceacademia.arcelinoleal.workers.dev</a><br>
+                        Site antigo: <a href="https://arcelinoleal-txt.github.io/lion-force-academia" target="_blank" rel="noreferrer">github.io/lion-force-academia</a><br>
+                        Os dois recebem as atualizações ao mesmo tempo.
+                    </p>
+                </div>
+            </section>
+
+        </main>
     </div>
+</div>
 
-    <script>
-        var OWNER = 'arcelinoleal-txt', REPO = 'lion-force-academia', BRANCH = 'main';
-        var API = 'https://api.github.com/repos/' + OWNER + '/' + REPO + '/contents/';
-        var token = '';
-        var cache = {};
+<script>
+var OWNER = 'arcelinoleal-txt', REPO = 'lion-force-academia', BRANCH = 'main';
+        var AUTH_HASH = '04784ca0c149fad58cf07bdb19909df87b8a38bf61ad3519cf026acd7f8806b4';
+        var VAULT = {"data":"eshJZvOnk2UfE9WZ0uw/2TanK0BAK5W+g5mqu6sWbq8puya5aKjgxa4WhoYk2woXRzEYKd7LrM60vxIembeEsHHib6SsuNRb7E/oeY17I+vmWz0X4gZ5sV5GlqjG7Qn/","mac":"M7jhN58NgXEbCvcZZSdEUPv/7jaNptN+6Z6uPUKfVGk=","iv":"A0vvv3c3Ry+B08UJnJkr5Q==","salt":"qYMd69ztzRHn9dyzlmoUHw=="};;
+        var tentativas = 0, bloqueadoAte = 0;
+var API = 'https://api.github.com/repos/' + OWNER + '/' + REPO + '/contents/';
+var token = '';
+var cache = {};
+var usuarioAtual = '';
+var txtData = null, histData = null, eqData = null, galData = null,
+    planosData = null, depData = null, unisData = null;
 
-        function headers() { return { 'Accept': 'application/vnd.github+json', 'Authorization': 'Bearer ' + token }; }
+function headers() { return { 'Accept': 'application/vnd.github+json', 'Authorization': 'Bearer ' + token }; }
         function msg(id, text, ok) { var m = document.getElementById(id); m.textContent = text; m.className = 'msg ' + (ok ? 'ok' : 'err'); }
         function b64decode(b64) { var bin = atob(b64.replace(/\n/g, '')); var bytes = new Uint8Array(bin.length); for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i); return new TextDecoder().decode(bytes); }
         function b64encode(str) { var bytes = new TextEncoder().encode(str); var bin = ''; bytes.forEach(function (b) { bin += String.fromCharCode(b); }); return btoa(bin); }
@@ -334,13 +359,64 @@
                 return r.json();
             });
         }
-        function loadJSON(path) {
+
+function msg(id, text, ok) { var m = document.getElementById(id); m.textContent = text; m.className = 'msg ' + (ok ? 'ok' : 'err'); }
+        function b64decode(b64) { var bin = atob(b64.replace(/\n/g, '')); var bytes = new Uint8Array(bin.length); for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i); return new TextDecoder().decode(bytes); }
+        function b64encode(str) { var bytes = new TextEncoder().encode(str); var bin = ''; bytes.forEach(function (b) { bin += String.fromCharCode(b); }); return btoa(bin); }
+        function slug(s) { return (s || 'foto').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 40) || 'foto'; }
+
+        function apiGet(path) {
+            return fetch(API + path + '?ref=' + BRANCH, { headers: headers() }).then(function (r) {
+                if (!r.ok) throw new Error('HTTP ' + r.status);
+                return r.json();
+            });
+        }
+
+function b64decode(b64) { var bin = atob(b64.replace(/\n/g, '')); var bytes = new Uint8Array(bin.length); for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i); return new TextDecoder().decode(bytes); }
+        function b64encode(str) { var bytes = new TextEncoder().encode(str); var bin = ''; bytes.forEach(function (b) { bin += String.fromCharCode(b); }); return btoa(bin); }
+        function slug(s) { return (s || 'foto').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 40) || 'foto'; }
+
+        function apiGet(path) {
+            return fetch(API + path + '?ref=' + BRANCH, { headers: headers() }).then(function (r) {
+                if (!r.ok) throw new Error('HTTP ' + r.status);
+                return r.json();
+            });
+        }
+
+function b64encode(str) { var bytes = new TextEncoder().encode(str); var bin = ''; bytes.forEach(function (b) { bin += String.fromCharCode(b); }); return btoa(bin); }
+        function slug(s) { return (s || 'foto').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 40) || 'foto'; }
+
+        function apiGet(path) {
+            return fetch(API + path + '?ref=' + BRANCH, { headers: headers() }).then(function (r) {
+                if (!r.ok) throw new Error('HTTP ' + r.status);
+                return r.json();
+            });
+        }
+
+function slug(s) { return (s || 'foto').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 40) || 'foto'; }
+
+        function apiGet(path) {
+            return fetch(API + path + '?ref=' + BRANCH, { headers: headers() }).then(function (r) {
+                if (!r.ok) throw new Error('HTTP ' + r.status);
+                return r.json();
+            });
+        }
+
+function apiGet(path) {
+            return fetch(API + path + '?ref=' + BRANCH, { headers: headers() }).then(function (r) {
+                if (!r.ok) throw new Error('HTTP ' + r.status);
+                return r.json();
+            });
+        }
+
+function loadJSON(path) {
             return apiGet(path).then(function (j) {
                 cache[path] = j.sha;
                 return JSON.parse(b64decode(j.content));
             });
         }
-        function saveJSON(path, obj, message) {
+
+function saveJSON(path, obj, message) {
             var body = JSON.stringify(obj, null, 2) + '\n';
             return apiGet(path).then(function (j) {
                 return fetch(API + path, {
@@ -349,7 +425,8 @@
                 });
             }).then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); });
         }
-        function uploadImage(file, input, previewImg) {
+
+function uploadImage(file, input, previewImg) {
             var reader = new FileReader();
             reader.onload = function () {
                 var base64 = String(reader.result).split(',')[1];
@@ -365,7 +442,8 @@
             };
             reader.readAsDataURL(file);
         }
-        function photoField(value, onPick) {
+
+function photoField(value, onPick) {
             var wrap = document.createElement('div');
             var img = document.createElement('img');
             img.className = 'thumb'; img.alt = 'Prévia';
@@ -387,15 +465,13 @@
             return wrap;
         }
 
-        /* ---------- LOGIN ---------- */
-        var AUTH_HASH = '04784ca0c149fad58cf07bdb19909df87b8a38bf61ad3519cf026acd7f8806b4';
-        var VAULT = {"data":"eshJZvOnk2UfE9WZ0uw/2TanK0BAK5W+g5mqu6sWbq8puya5aKjgxa4WhoYk2woXRzEYKd7LrM60vxIembeEsHHib6SsuNRb7E/oeY17I+vmWz0X4gZ5sV5GlqjG7Qn/","mac":"M7jhN58NgXEbCvcZZSdEUPv/7jaNptN+6Z6uPUKfVGk=","iv":"A0vvv3c3Ry+B08UJnJkr5Q==","salt":"qYMd69ztzRHn9dyzlmoUHw=="};
-        function sha256(str) {
+function sha256(str) {
             return crypto.subtle.digest('SHA-256', new TextEncoder().encode(str)).then(function (buf) {
                 return Array.prototype.map.call(new Uint8Array(buf), function (b) { return ('0' + b.toString(16)).slice(-2); }).join('');
             });
         }
-        function b64ToBytes(s) { var bin = atob(s); var b = new Uint8Array(bin.length); for (var i = 0; i < bin.length; i++) b[i] = bin.charCodeAt(i); return b; }
+
+function b64ToBytes(s) { var bin = atob(s); var b = new Uint8Array(bin.length); for (var i = 0; i < bin.length; i++) b[i] = bin.charCodeAt(i); return b; }
         function bytesToB64(u8) { var s = ''; for (var i = 0; i < u8.length; i++) s += String.fromCharCode(u8[i]); return btoa(s); }
 
         /* Cria um cofre novo: mesmo formato do unlockVault, usado ao trocar a senha */
@@ -426,46 +502,39 @@
                         });
                 });
         }
-        function sha256Hex(str) {
-            return crypto.subtle.digest('SHA-256', new TextEncoder().encode(str)).then(function (buf) {
-                return Array.prototype.map.call(new Uint8Array(buf), function (b) { return ('0' + b.toString(16)).slice(-2); }).join('');
-            });
-        }
-        var usuarioAtual = '';
-        document.getElementById('senhaSave').addEventListener('click', function () {
-            var b = this;
-            var np = document.getElementById('newPass').value;
-            var np2 = document.getElementById('newPass2').value;
-            if (np.length < 8) { msg('senhaMsg', 'Use pelo menos 8 caracteres.', false); return; }
-            if (np !== np2) { msg('senhaMsg', 'As duas senhas não são iguais.', false); return; }
-            if (!usuarioAtual) { msg('senhaMsg', 'Sessão expirada. Entre de novo.', false); return; }
-            b.disabled = true; msg('senhaMsg', 'Gerando acesso...', true);
-            var novaChave = usuarioAtual + ':' + np;
-            Promise.all([lockVault(token, novaChave), sha256Hex(novaChave)]).then(function (res) {
-                var novoVault = res[0], novoHash = res[1];
-                return apiGet('admin/index.html').then(function (j) {
-                    var html = b64decode(j.content);
-                    var h2 = html.replace(/AUTH_HASH = '[^']+';/, "AUTH_HASH = '" + novoHash + "';");
-                    h2 = h2.replace(/VAULT = \{.*?\};/, 'VAULT = ' + JSON.stringify(novoVault) + ';');
-                    if (h2 === html) throw new Error('nao encontrou o cofre');
-                    return fetch(API + 'admin/index.html', {
-                        method: 'PUT', headers: Object.assign({ 'Content-Type': 'application/json' }, headers()),
-                        body: JSON.stringify({
-                            message: 'Admin: troca de senha do painel',
-                            content: b64encode(h2), sha: j.sha, branch: BRANCH
-                        })
-                    });
-                }).then(function (r) {
-                    if (!r.ok) throw new Error('HTTP ' + r.status);
-                    msg('senhaMsg', 'Senha trocada! Use a nova no próximo acesso.', true);
-                    document.getElementById('newPass').value = '';
-                    document.getElementById('newPass2').value = '';
+
+function bytesToB64(u8) { var s = ''; for (var i = 0; i < u8.length; i++) s += String.fromCharCode(u8[i]); return btoa(s); }
+
+        /* Cria um cofre novo: mesmo formato do unlockVault, usado ao trocar a senha */
+        function lockVault(plainToken, chave) {
+            var salt = crypto.getRandomValues(new Uint8Array(16));
+            var iv = crypto.getRandomValues(new Uint8Array(16));
+            return crypto.subtle.importKey('raw', new TextEncoder().encode(chave), 'PBKDF2', false, ['deriveBits'])
+                .then(function (base) {
+                    return crypto.subtle.deriveBits({ name: 'PBKDF2', salt: salt, iterations: 120000, hash: 'SHA-1' }, base, 512);
+                }).then(function (bits) {
+                    var raw = new Uint8Array(bits);
+                    var aesKey = raw.slice(0, 32), hmacKey = raw.slice(32, 64);
+                    return crypto.subtle.importKey('raw', aesKey, { name: 'AES-CBC', iv: iv }, false, ['encrypt'])
+                        .then(function (ak) { return crypto.subtle.encrypt({ name: 'AES-CBC', iv: iv }, ak, new TextEncoder().encode(plainToken)); })
+                        .then(function (data) {
+                            var cat = new Uint8Array(salt.length + iv.length + data.length);
+                            cat.set(salt, 0); cat.set(iv, salt.length); cat.set(data, salt.length + iv.length);
+                            return crypto.subtle.importKey('raw', hmacKey, { name: 'HMAC', hash: 'SHA-256' }, false, ['sign'])
+                                .then(function (hk) { return crypto.subtle.sign('HMAC', hk, cat); })
+                                .then(function (mac) {
+                                    return {
+                                        data: bytesToB64(new Uint8Array(data)),
+                                        mac: bytesToB64(new Uint8Array(mac)),
+                                        iv: bytesToB64(iv),
+                                        salt: bytesToB64(salt)
+                                    };
+                                });
+                        });
                 });
-            }).catch(function (e) {
-                msg('senhaMsg', 'Erro ao trocar a senha (' + e.message + ').', false);
-            }).finally(function () { b.disabled = false; });
-        });
-        function unlockVault(password) {
+        }
+
+function unlockVault(password) {
             var salt = b64ToBytes(VAULT.salt), iv = b64ToBytes(VAULT.iv),
                 data = b64ToBytes(VAULT.data), mac = b64ToBytes(VAULT.mac);
             return crypto.subtle.importKey('raw', new TextEncoder().encode(password), 'PBKDF2', false, ['deriveBits']).then(function (base) {
@@ -485,12 +554,14 @@
                 });
             });
         }
-        function showPanel(show) {
+
+function showPanel(show) {
             document.getElementById('loginCard').classList.toggle('hidden', show);
             document.getElementById('panel').classList.toggle('hidden', !show);
             document.getElementById('logoutBtn').classList.toggle('hidden', !show);
         }
-        function enterWithToken(t) {
+
+function enterWithToken(t) {
             token = t;
             msg('loginMsg', 'Verificando...', true);
             fetch(API + 'conteudo/planos.json?ref=' + BRANCH, { headers: headers() }).then(function (r) {
@@ -501,53 +572,61 @@
                 reiniciarIdle();
             }).catch(function () { msg('loginMsg', 'Falha de acesso. Fale com o suporte.', false); });
         }
-        /* Trava tentativas de adivinhação: espera progressiva e bloqueio por um tempo */
-        var tentativas = 0, bloqueadoAte = 0;
-        function travaMensagem() {
+
+function sha256Hex(str) {
+            return crypto.subtle.digest('SHA-256', new TextEncoder().encode(str)).then(function (buf) {
+                return Array.prototype.map.call(new Uint8Array(buf), function (b) { return ('0' + b.toString(16)).slice(-2); }).join('');
+            });
+        }
+
+function lockVault(plainToken, chave) {
+            var salt = crypto.getRandomValues(new Uint8Array(16));
+            var iv = crypto.getRandomValues(new Uint8Array(16));
+            return crypto.subtle.importKey('raw', new TextEncoder().encode(chave), 'PBKDF2', false, ['deriveBits'])
+                .then(function (base) {
+                    return crypto.subtle.deriveBits({ name: 'PBKDF2', salt: salt, iterations: 120000, hash: 'SHA-1' }, base, 512);
+                }).then(function (bits) {
+                    var raw = new Uint8Array(bits);
+                    var aesKey = raw.slice(0, 32), hmacKey = raw.slice(32, 64);
+                    return crypto.subtle.importKey('raw', aesKey, { name: 'AES-CBC', iv: iv }, false, ['encrypt'])
+                        .then(function (ak) { return crypto.subtle.encrypt({ name: 'AES-CBC', iv: iv }, ak, new TextEncoder().encode(plainToken)); })
+                        .then(function (data) {
+                            var cat = new Uint8Array(salt.length + iv.length + data.length);
+                            cat.set(salt, 0); cat.set(iv, salt.length); cat.set(data, salt.length + iv.length);
+                            return crypto.subtle.importKey('raw', hmacKey, { name: 'HMAC', hash: 'SHA-256' }, false, ['sign'])
+                                .then(function (hk) { return crypto.subtle.sign('HMAC', hk, cat); })
+                                .then(function (mac) {
+                                    return {
+                                        data: bytesToB64(new Uint8Array(data)),
+                                        mac: bytesToB64(new Uint8Array(mac)),
+                                        iv: bytesToB64(iv),
+                                        salt: bytesToB64(salt)
+                                    };
+                                });
+                        });
+                });
+        }
+
+function abrirAba(nome) {
+            document.querySelectorAll('.tab').forEach(function (x) { x.classList.toggle('is-active', x.dataset.tab === nome); });
+            document.querySelectorAll('[data-pane]').forEach(function (p) { p.classList.toggle('hidden', p.dataset.pane !== nome); });
+        }
+
+function travaMensagem() {
             var faltam = Math.ceil((bloqueadoAte - Date.now()) / 1000);
             if (faltam <= 0) return null;
             return 'Muitas tentativas. Tente de novo em ' + faltam + ' segundo' + (faltam > 1 ? 's' : '') + '.';
         }
-        document.getElementById('loginBtn').addEventListener('click', function () {
-            var u = document.getElementById('userInput').value.trim();
-            var p = document.getElementById('passInput').value;
-            if (!u || !p) { msg('loginMsg', 'Digite usuário e senha.', false); return; }
-            var espera = travaMensagem();
-            if (espera) { msg('loginMsg', espera, false); return; }
-            msg('loginMsg', 'Verificando...', true);
-            sha256(u + ':' + p).then(function (h) {
-                if (h !== AUTH_HASH) {
-                    tentativas++;
-                    // 3 tentativas: espera 15s. 5 ou mais: 10 minutos.
-                    bloqueadoAte = Date.now() + (tentativas >= 5 ? 600000 : tentativas * 5000);
-                    msg('loginMsg', 'Usuário ou senha incorretos. (' + tentativas + '/3 antes do bloqueio)', false);
-                    document.getElementById('passInput').value = '';
-                    return;
-                }
-                tentativas = 0; bloqueadoAte = 0;
-                msg('loginMsg', 'Abrindo...', true);
-                unlockVault(u + ':' + p).then(function (t) { usuarioAtual = u; enterWithToken(t); })
-                .catch(function () { msg('loginMsg', 'Falha ao destravar. Tente de novo.', false); });
-            });
-        });
-        document.getElementById('passInput').addEventListener('keydown', function (e) {
-            if (e.key === 'Enter') { e.preventDefault(); document.getElementById('loginBtn').click(); }
-        });
-        /* ---------- FECHAMENTO AUTOMÁTICO POR INATIVIDADE ---------- */
-        var MINUTOS_INATIVO = 10;
-        var idleTimer = null, idleAviso = null;
-        function avisoInatividade() {
-            var s = MINUTOS_INATIVO * 60;
-            return Math.floor(s / 60) + ' minuto' + (s > 60 ? 's' : '');
-        }
-        function encerrarSessao(motivo) {
+
+function encerrarSessao(motivo) {
             clearTimeout(idleTimer); clearTimeout(idleAviso);
             token = '';
             showPanel(false);
             document.getElementById('passInput').value = '';
             msg('loginMsg', motivo || 'Sessão encerrada por falta de uso. Entre de novo.', true);
         }
-        function reiniciarIdle() {
+
+function reiniciarIdle() {
             clearTimeout(idleTimer); clearTimeout(idleAviso);
             idleTimer = setTimeout(function () { encerrarSessao(); }, MINUTOS_INATIVO * 60 * 1000);
             // avisa 60 segundos antes para não perder o que estava editando
@@ -555,28 +634,33 @@
                 msg('tudoMsg', 'A sessão fecha em 1 minuto por inatividade. Mexa em qualquer campo.', true);
             }, (MINUTOS_INATIVO * 60 - 60) * 1000);
         }
-        ['mousemove', 'mousedown', 'keydown', 'scroll', 'touchstart', 'wheel'].forEach(function (ev) {
-            addEventListener(ev, function () {
-                if (token) reiniciarIdle();
-            }, { passive: true });
-        });
-        document.addEventListener('visibilitychange', function () {
-            if (document.hidden && token) reiniciarIdle();
-        });
-        document.getElementById('logoutBtn').addEventListener('click', function () {
-            encerrarSessao('Você saiu do painel.');
-        });
-        function abrirAba(nome) {
-            document.querySelectorAll('.tab').forEach(function (x) { x.classList.toggle('is-active', x.dataset.tab === nome); });
-            document.querySelectorAll('[data-pane]').forEach(function (p) { p.classList.toggle('hidden', p.dataset.pane !== nome); });
-        }
-        document.querySelectorAll('.tab').forEach(function (t) {
-            t.addEventListener('click', function () { abrirAba(t.dataset.tab); });
-        });
 
-        /* ---------- PLANOS ---------- */
-        var planosData = null;
-        function renderPlanos() {
+function tocarMusica(link, salvar) {
+            var box = document.getElementById('musicaFrame');
+            var p = playerDe(link);
+            if (!p) {
+                msg('musicaMsg', 'Link não reconhecido. Use Deezer, Spotify, SoundCloud ou YouTube.', false);
+                return false;
+            }
+            box.innerHTML = p.html;
+            msg('musicaMsg', 'Tocando de ' + p.nome + '. Clique no play do player.', true);
+            if (salvar) {
+                musicaSalva = link.trim();
+                try { localStorage.setItem('lf-musica', musicaSalva); } catch (e) { }
+                document.getElementById('musicaInput').value = musicaSalva;
+            }
+            return true;
+        }
+
+function iniciarMusica() {
+            try { musicaSalva = localStorage.getItem('lf-musica') || ''; } catch (e) { musicaSalva = ''; }
+            if (musicaSalva) {
+                document.getElementById('musicaInput').value = musicaSalva;
+                tocarMusica(musicaSalva, false);
+            }
+        }
+
+function renderPlanos() {
             var box = document.getElementById('planosList'); box.innerHTML = '';
             (planosData.planos || []).forEach(function (p, i) {
                 var d = document.createElement('div'); d.className = 'item';
@@ -618,19 +702,8 @@
                 box.appendChild(d);
             });
         }
-        document.getElementById('planoAdd').addEventListener('click', function () {
-            planosData.planos.push({ nome: 'Novo plano', descricao: '', preco: 'R$ 99', valor: '99,99', parcelas: '/mês', tag: '', destaque: false, recursos: ['Acesso à estrutura completa'] });
-            renderPlanos();
-        });
-        document.getElementById('planosSave').addEventListener('click', function () {
-            var b = this; b.disabled = true; msg('planosMsg', 'Publicando...', true);
-            saveJSON('conteudo/planos.json', planosData, 'Admin: atualiza planos').then(function () { msg('planosMsg', 'Publicado! O site atualiza em 1–2 min.', true); })
-            .catch(function () { msg('planosMsg', 'Erro ao publicar. Tente de novo.', false); }).finally(function () { b.disabled = false; });
-        });
 
-        /* ---------- DEPOIMENTOS ---------- */
-        var depData = null;
-        function renderDep() {
+function renderDep() {
             var box = document.getElementById('depList'); box.innerHTML = '';
             (depData.depoimentos || []).forEach(function (t, i) {
                 var d = document.createElement('div'); d.className = 'item';
@@ -654,19 +727,8 @@
                 box.appendChild(d);
             });
         }
-        document.getElementById('depAdd').addEventListener('click', function () {
-            depData.depoimentos.push({ nome: '', unidade: 'Unidade Jardim Das Fontes', texto: '', foto: '' });
-            renderDep();
-        });
-        document.getElementById('depSave').addEventListener('click', function () {
-            var b = this; b.disabled = true; msg('depMsg', 'Publicando...', true);
-            saveJSON('conteudo/depoimentos.json', depData, 'Admin: atualiza depoimentos').then(function () { msg('depMsg', 'Publicado! O site atualiza em 1–2 min.', true); })
-            .catch(function () { msg('depMsg', 'Erro ao publicar. Tente de novo.', false); }).finally(function () { b.disabled = false; });
-        });
 
-        /* ---------- EQUIPE ---------- */
-        var eqData = null;
-        function renderEq() {
+function renderEq() {
             var box = document.getElementById('eqList'); box.innerHTML = '';
             (eqData.membros || []).forEach(function (m, i) {
                 var d = document.createElement('div'); d.className = 'item';
@@ -715,20 +777,8 @@
                 box.appendChild(vazio);
             }
         }
-        document.getElementById('eqAdd').addEventListener('click', function () {
-            var firstUnit = (unisData.unidades[0] && unisData.unidades[0].id) || '';
-            eqData.membros.push({ nome: '', cargo: '', foto: '', unidade: firstUnit, instagram: '', destaque: false });
-            renderEq();
-        });
-        document.getElementById('eqSave').addEventListener('click', function () {
-            var b = this; b.disabled = true; msg('eqMsg', 'Publicando...', true);
-            saveJSON('conteudo/equipe.json', eqData, 'Admin: atualiza equipe').then(function () { msg('eqMsg', 'Publicado! O site atualiza em 1–2 min.', true); })
-            .catch(function () { msg('eqMsg', 'Erro ao publicar. Tente de novo.', false); }).finally(function () { b.disabled = false; });
-        });
 
-        /* ---------- GALERIA ---------- */
-        var galData = null;
-        function renderGal() {
+function renderGal() {
             var box = document.getElementById('galList'); box.innerHTML = '';
             (galData.fotos || []).forEach(function (f, i) {
                 var d = document.createElement('div'); d.className = 'item';
@@ -750,24 +800,8 @@
                 box.appendChild(d);
             });
         }
-        document.getElementById('galAdd').addEventListener('click', function () {
-            galData.fotos.push({ src: '', alt: '' });
-            renderGal();
-        });
-        document.getElementById('galSave').addEventListener('click', function () {
-            var b = this; b.disabled = true; msg('galMsg', 'Publicando...', true);
-            saveJSON('conteudo/galeria.json', galData, 'Admin: atualiza galeria').then(function () { msg('galMsg', 'Publicado! O site atualiza em 1–2 min.', true); })
-            .catch(function () { msg('galMsg', 'Erro ao publicar. Tente de novo.', false); }).finally(function () { b.disabled = false; });
-        });
 
-        /* ---------- UNIDADES ---------- */
-        var unisData = null;
-        function unitOptions(selected) {
-            return (unisData.unidades || []).map(function (u) {
-                return '<option value="' + u.id + '"' + (u.id === selected ? ' selected' : '') + '>' + u.nome + '</option>';
-            }).join('');
-        }
-        function renderUnis() {
+function renderUnis() {
             var box = document.getElementById('uniList'); box.innerHTML = '';
             (unisData.unidades || []).forEach(function (u, i) {
                 var d = document.createElement('div'); d.className = 'item';
@@ -805,32 +839,8 @@
                 box.appendChild(d);
             });
         }
-        document.getElementById('uniAdd').addEventListener('click', function () {
-            unisData.unidades.push({ id: 'nova-unidade', nome: 'Nova unidade', endereco: '', horario: '', horarioTabela: [], telefone: '', whatsapp: '', promo: '', cep: '', cidade: '', pagina: '', fachada: '', recursos: ['musculacao', 'cardio', 'funcional', 'app', 'avaliacao'] });
-            renderUnis();
-        });
-        document.getElementById('uniSave').addEventListener('click', function () {
-            var b = this; b.disabled = true; msg('uniMsg', 'Publicando...', true);
-            saveJSON('conteudo/unidades.json', unisData, 'Admin: atualiza unidades').then(function () { msg('uniMsg', 'Publicado! O site atualiza em 1–2 min.', true); })
-            .catch(function () { msg('uniMsg', 'Erro ao publicar. Tente de novo.', false); }).finally(function () { b.disabled = false; });
-        });
 
-        /* ---------- TEXTOS DO SITE ---------- */
-        var txtData = null;
-        var TXT_CAMPOS = [
-            ['horarioSemana', 'Horário seg a sex (ex: 06:00 — 22:00)', 'text'],
-            ['horarioSabado', 'Horário sábado (ex: 09:00 — 13:00)', 'text'],
-            ['horarioFechado', 'Domingo / feriados (ex: Fechado)', 'text'],
-            ['telefone', 'Telefone com DDD (ex: (11) 94354-4884)', 'text'],
-            ['whatsapp', 'WhatsApp só números (ex: 5511943544884)', 'text'],
-            ['email', 'E-mail de contato', 'text'],
-            ['instagram', 'Instagram da academia', 'text'],
-            ['nota', 'Nota no Google (ex: 4.9)', 'text'],
-            ['avaliacoes', 'Quantidade de avaliações (ex: 380)', 'text'],
-            ['areaM2', 'Metragem da estrutura (ex: 1.200m²)', 'text'],
-            ['anosHistoria', 'Anos de história (ex: +8)', 'text']
-        ];
-        function renderTxt() {
+function renderTxt() {
             var box = document.getElementById('txtList'); box.innerHTML = '';
             TXT_CAMPOS.forEach(function (cfg) {
                 var l = document.createElement('label'); l.className = 'f'; l.textContent = cfg[1];
@@ -843,18 +853,8 @@
                 l.appendChild(inp); box.appendChild(l);
             });
         }
-        document.getElementById('txtSave').addEventListener('click', function () {
-            var b = this; b.disabled = true; msg('txtMsg', 'Publicando...', true);
-            if (!txtData.textos) txtData.textos = {};
-            saveJSON('conteudo/textos.json', txtData, 'Admin: atualiza textos do site')
-                .then(function () { msg('txtMsg', 'Publicado! O site atualiza em 1–2 min.', true); })
-                .catch(function () { msg('txtMsg', 'Erro ao publicar. Tente de novo.', false); })
-                .finally(function () { b.disabled = false; });
-        });
 
-        /* ---------- NOSSA HISTÓRIA ---------- */
-        var histData = null;
-        function histField(boxId, obj, key, label, ph, multiline) {
+function histField(boxId, obj, key, label, ph, multiline) {
             var l = document.createElement('label'); l.className = 'f'; l.textContent = label;
             var inp = document.createElement(multiline ? 'textarea' : 'input');
             if (!multiline) inp.type = 'text';
@@ -863,7 +863,8 @@
             l.appendChild(inp); document.getElementById(boxId).appendChild(l);
             return inp;
         }
-        function renderHist() {
+
+function renderHist() {
             var h = histData.historia;
             if (!h.fundador) h.fundador = { nome: '', cargo: '', foto: '', instagram: '', resumo: '' };
 
@@ -891,161 +892,681 @@
             });
             lm.appendChild(ta); txt.appendChild(lm);
         }
-        document.getElementById('histSave').addEventListener('click', function () {
-            var b = this; b.disabled = true; msg('histMsg', 'Publicando...', true);
-            saveJSON('conteudo/historia.json', histData, 'Admin: atualiza nossa história')
-                .then(function () { msg('histMsg', 'Publicado! O site atualiza em 1–2 min.', true); })
-                .catch(function () { msg('histMsg', 'Erro ao publicar. Tente de novo.', false); })
-                .finally(function () { b.disabled = false; });
-        });
 
-        /* ---------- MÚSICA (Deezer, Spotify, SoundCloud, YouTube) ---------- */
-        /* Reconhece o link e devolve o HTML do player certo. */
-        function playerDe(link) {
-            var s = String(link || '').trim();
-            if (!s) return null;
-
-            // ---- Deezer (grátis, sem cartão) ----
-            var dz = s.match(/deezer\.com\/(?:[a-z]{2}\/)?(playlist|album|track)\/(\d+)/i)
-                 || s.match(/^deezer:(playlist|album|track):(\d+)/i);
-            if (dz) {
-                return { html: '<iframe src="https://widget.deezer.com/widget/dark/' + dz[1].toLowerCase() + '/' + dz[2] + '" width="100%" height="' + (dz[1].toLowerCase() === 'playlist' ? '300' : '200') + '" frameborder="0" allowtransparency="true" allow="encrypted-media" title="Player do Deezer"></iframe>', nome: 'Deezer' };
-            }
-
-            // ---- Spotify ----
-            var app = s.match(/^spotify:(album|playlist|track|artist):([A-Za-z0-9]{10,})/i);
-            var m = app || s
-                .replace(/^https?:\/\/(open\.spotify\.com\/(embed\/)?|spotify\.com\/|play\.spotify\.com\/)/i, '')
-                .replace(/[?#].*$/, '')
-                .match(/^(?:intl-[a-z]{2}\/)?(album|playlist|track|artist)\/([A-Za-z0-9]{10,})/i);
-            if (m) {
-                return { html: '<iframe src="https://open.spotify.com/embed/' + m[1].toLowerCase() + '/' + m[2] + '?utm_source=generator&theme=0" title="Player do Spotify" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>', nome: 'Spotify' };
-            }
-
-            // ---- SoundCloud ----
-            var sc = s.match(/soundcloud\.com\/([A-Za-z0-9_\-\/]+)/i);
-            if (sc) {
-                var scUrl = 'https://soundcloud.com/' + sc[1];
-                return { html: '<iframe width="100%" height="232" scrolling="no" frameborder="no" allow="autoplay" title="Player do SoundCloud" src="https://w.soundcloud.com/player/?url=' + encodeURIComponent(scUrl) + '&color=%23e3212a&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=false"></iframe>', nome: 'SoundCloud' };
-            }
-
-            // ---- YouTube (playlist) ----
-            var yt = s.match(/[?&]list=([A-Za-z0-9_-]{8,})/);
-            if (yt && /youtube\.com|youtu\.be/i.test(s)) {
-                return { html: '<iframe src="https://www.youtube.com/embed/videoseries?list=' + yt[1] + '" title="Player do YouTube" allow="autoplay; encrypted-media" loading="lazy"></iframe>', nome: 'YouTube' };
-            }
-
-            return null;
+function unitOptions(selected) {
+            return (unisData.unidades || []).map(function (u) {
+                return '<option value="' + u.id + '"' + (u.id === selected ? ' selected' : '') + '>' + u.nome + '</option>';
+            }).join('');
         }
 
-        var musicaSalva = '';
-        function tocarMusica(link, salvar) {
-            var box = document.getElementById('musicaFrame');
-            var p = playerDe(link);
-            if (!p) {
-                msg('musicaMsg', 'Link não reconhecido. Use Deezer, Spotify, SoundCloud ou YouTube.', false);
-                return false;
-            }
-            box.innerHTML = p.html;
-            msg('musicaMsg', 'Tocando de ' + p.nome + '. Clique no play do player.', true);
-            if (salvar) {
-                musicaSalva = link.trim();
-                try { localStorage.setItem('lf-musica', musicaSalva); } catch (e) { }
-                document.getElementById('musicaInput').value = musicaSalva;
-            }
-            return true;
+/* ---------- MENU LATERAL ---------- */
+var ABAS_AGENDA = null;
+document.querySelectorAll('.menu a[data-tab]').forEach(function (a) {
+    a.addEventListener('click', function (ev) {
+        ev.preventDefault();
+        abrirAba(a.getAttribute('data-tab'));
+    });
+});
+
+/* ---------- FOTOS: campo completo com enviar, link e apagar ---------- */
+function fotoCampo(valor, aoMudar, rotulo) {
+    var wrap = document.createElement('div');
+    wrap.className = 'foto-caixa';
+
+    var previa = document.createElement('img');
+    previa.className = 'foto-previa';
+    previa.alt = '';
+    previa.style.display = 'none';
+
+    var aviso = document.createElement('div');
+    aviso.className = 'foto-vazia';
+    aviso.textContent = 'Sem foto — vai aparecer um espaço reservado';
+
+    var input = document.createElement('input');
+    input.type = 'text';
+    input.value = valor || '';
+    input.placeholder = 'fotos/arquivo.jpg ou https://...';
+    input.style.marginBottom = '4px';
+
+    function sync() {
+        var v = input.value.trim();
+        if (v) { previa.src = v.startsWith('http') ? v : '../' + v; previa.style.display = ''; aviso.style.display = 'none'; }
+        else { previa.style.display = 'none'; aviso.style.display = ''; }
+    }
+    input.addEventListener('input', function () { sync(); aoMudar(input.value.trim()); });
+
+    var linha = document.createElement('div');
+    linha.className = 'foto-linha';
+
+    var lbl = document.createElement('label');
+    lbl.className = 'btn btn--ghost btn--mini';
+    lbl.textContent = '📤 Enviar foto do computador';
+    var arq = document.createElement('input');
+    arq.type = 'file'; arq.accept = 'image/*'; arq.style.display = 'none';
+    arq.addEventListener('change', function () {
+        if (!arq.files[0]) return;
+        lbl.textContent = 'Enviando...';
+        uploadImage(arq.files[0], input, previa);
+        lbl.textContent = '📤 Enviar foto do computador';
+    });
+    lbl.appendChild(arq);
+    linha.appendChild(lbl);
+
+    var btnLink = document.createElement('button');
+    btnLink.type = 'button'; btnLink.className = 'btn btn--ghost btn--mini';
+    btnLink.textContent = '🔗 Usar link';
+    btnLink.addEventListener('click', function () {
+        var u = prompt('Cole o link da imagem (https://...)');
+        if (u) { input.value = u; sync(); aoMudar(u); }
+    });
+    linha.appendChild(btnLink);
+
+    var btnLimpar = document.createElement('button');
+    btnLimpar.type = 'button'; btnLimpar.className = 'btn btn--ghost btn--mini';
+    btnLimpar.textContent = '✕ Tirar foto';
+    btnLimpar.addEventListener('click', function () { input.value = ''; sync(); aoMudar(''); });
+    linha.appendChild(btnLimpar);
+
+    wrap.appendChild(previa);
+    wrap.appendChild(aviso);
+    wrap.appendChild(input);
+    wrap.appendChild(linha);
+    sync();
+    return wrap;
+}
+
+/* ---------- UNIDADES ---------- */
+function renderUnis() {
+    var box = document.getElementById('uniList'); box.innerHTML = '';
+    if (!(unisData.unidades || []).length) {
+        box.appendChild(elVazio('Nenhuma unidade cadastrada.'));
+        return;
+    }
+    unisData.unidades.forEach(function (u, i) {
+        var d = document.createElement('div'); d.className = 'item';
+        var cab = document.createElement('div'); cab.className = 'item-topo';
+        var mini = document.createElement('img'); mini.className = 'mini';
+        mini.alt = ''; mini.style.visibility = 'hidden';
+        if (u.fachada) { mini.src = u.fachada.startsWith('http') ? u.fachada : '../' + u.fachada; mini.style.visibility = ''; }
+        var forte = document.createElement('strong'); forte.textContent = u.nome || 'Nova unidade';
+        cab.appendChild(mini); cab.appendChild(forte); cab.appendChild(botoesOrdem(i, unisData.unidades, renderUnis));
+        d.appendChild(cab);
+
+        [['Nome da academia', 'nome', 'Ex: Jardim Das Fontes'],
+         ['Endereço completo', 'endereco', 'Rua, número, bairro, cidade'],
+         ['WhatsApp (só números)', 'whatsapp', '551194354884'],
+         ['Telefone com DDD', 'telefone', '(11) 94354-4884'],
+         ['Destaque (ex: Aula avulsa R$ 19,99)', 'promo', ''],
+         ['CEP', 'cep', '']].forEach(function (cfg) {
+            d.appendChild(campoTexto(u, cfg[0], cfg[1], cfg[2]));
+        });
+
+        d.appendChild(campoTexto(u, 'Página de detalhe (deixe vazio por agora)', 'pagina', 'jardim-das-fontes.html'));
+
+        var lh = document.createElement('label'); lh.className = 'f';
+        lh.textContent = 'Horário (uma linha: Dia | Hora)';
+        var ta = document.createElement('textarea');
+        ta.value = (u.horarioTabela || []).map(function (r) { return r.join(' | '); }).join('\n');
+        ta.addEventListener('input', function () {
+            u.horarioTabela = ta.value.split('\n').map(function (s) { return s.trim(); }).filter(Boolean).map(function (s) {
+                var p = s.split('|'); return [p[0].trim(), (p[1] || '').trim()];
+            });
+        });
+        lh.appendChild(ta); d.appendChild(lh);
+
+        var lf = document.createElement('label'); lf.className = 'f';
+        lf.textContent = 'Foto da fachada (aparece em destaque no site)';
+        d.appendChild(lf);
+        d.appendChild(fotoCampo(u.fachada, function (v) { u.fachada = v; }));
+
+        d.appendChild(botaoExcluir('Remover esta unidade?', function () {
+            if (confirm('Remover esta unidade?')) { unisData.unidades.splice(i, 1); renderUnis(); marcarSujo(); }
+        }));
+        box.appendChild(d);
+    });
+}
+
+/* ---------- EQUIPE ---------- */
+function renderEq() {
+    var box = document.getElementById('eqList'); box.innerHTML = '';
+    if (!(eqData.membros || []).length) {
+        box.appendChild(elVazio('Ninguém cadastrado ainda. Use "+ Adicionar pessoa".'));
+        return;
+    }
+    eqData.membros.forEach(function (m, i) {
+        var d = document.createElement('div'); d.className = 'item';
+        var cab = document.createElement('div'); cab.className = 'item-topo';
+        var mini = document.createElement('img'); mini.className = 'mini'; mini.alt = '';
+        mini.style.visibility = 'hidden';
+        if (m.foto) { mini.src = m.foto.startsWith('http') ? m.foto : '../' + m.foto; mini.style.visibility = ''; }
+        var forte = document.createElement('strong');
+        forte.textContent = m.nome || 'Nova pessoa';
+        if (m.destaque) { var s = document.createElement('span'); s.className = 'selo selo--pessoa'; s.textContent = 'destaque'; forte.appendChild(document.createTextNode(' ')); forte.appendChild(s); }
+        cab.appendChild(mini); cab.appendChild(forte); cab.appendChild(botoesOrdem(i, eqData.membros, renderEq));
+        d.appendChild(cab);
+
+        d.appendChild(campoTexto(m, 'Nome', 'nome', 'Nome completo'));
+        d.appendChild(campoTexto(m, 'Cargo (ex: Personal Trainer · Musculação)', 'cargo', ''));
+        d.appendChild(campoTexto(m, 'Instagram (link do perfil)', 'instagram', 'https://www.instagram.com/...'));
+
+        var lu = document.createElement('label'); lu.className = 'f'; lu.textContent = 'Unidade';
+        var sel = document.createElement('select');
+        sel.innerHTML = unitOptions(m.unidade);
+        sel.addEventListener('change', function () { m.unidade = sel.value; marcarSujo(); });
+        lu.appendChild(sel); d.appendChild(lu);
+
+        var ld = document.createElement('label'); ld.className = 'f';
+        ld.textContent = 'Destaque (fica com borda vermelha no site)';
+        var sel2 = document.createElement('select');
+        sel2.innerHTML = '<option value="0">Não</option><option value="1">Sim</option>';
+        sel2.value = m.destaque ? '1' : '0';
+        sel2.addEventListener('change', function () { m.destaque = sel2.value === '1'; marcarSujo(); });
+        ld.appendChild(sel2); d.appendChild(ld);
+
+        var lf = document.createElement('label'); lf.className = 'f'; lf.textContent = 'Foto';
+        d.appendChild(lf);
+        d.appendChild(fotoCampo(m.foto, function (v) { m.foto = v; }));
+
+        d.appendChild(botaoExcluir('Remover esta pessoa?', function () {
+            if (confirm('Remover esta pessoa?')) { eqData.membros.splice(i, 1); renderEq(); marcarSujo(); }
+        }));
+        box.appendChild(d);
+    });
+}
+
+/* ---------- GALERIA ---------- */
+function renderGal() {
+    var box = document.getElementById('galList'); box.innerHTML = '';
+    if (!(galData.fotos || []).length) {
+        box.appendChild(elVazio('Nenhuma foto na galeria.'));
+        return;
+    }
+    galData.fotos.forEach(function (f, i) {
+        var d = document.createElement('div'); d.className = 'item';
+        var cab = document.createElement('div'); cab.className = 'item-topo';
+        var forte = document.createElement('strong'); forte.textContent = 'Foto ' + (i + 1);
+        cab.appendChild(forte); cab.appendChild(botoesOrdem(i, galData.fotos, renderGal));
+        d.appendChild(cab);
+        d.appendChild(fotoCampo(f.src, function (v) { f.src = v; }));
+        d.appendChild(campoTexto(f, 'Descrição (aparece em quem não vê a imagem)', 'alt', 'Ex: Sala de musculação'));
+        d.appendChild(botaoExcluir('Remover esta foto?', function () {
+            if (confirm('Remover esta foto?')) { galData.fotos.splice(i, 1); renderGal(); marcarSujo(); }
+        }));
+        box.appendChild(d);
+    });
+}
+
+/* ---------- PLANEIS ---------- */
+function renderPlanos() {
+    var box = document.getElementById('planosList'); box.innerHTML = '';
+    planosData.planos.forEach(function (p, i) {
+        var d = document.createElement('div'); d.className = 'item';
+        var cab = document.createElement('div'); cab.className = 'item-topo';
+        var forte = document.createElement('strong');
+        forte.textContent = (p.nome || 'Plano') + (p.destaque ? ' ★' : '');
+        cab.appendChild(forte); cab.appendChild(botoesOrdem(i, planosData.planos, renderPlanos));
+        d.appendChild(cab);
+        d.appendChild(campoTexto(p, 'Nome', 'nome', 'Mensal'));
+        d.appendChild(campoTexto(p, 'Descrição', 'descricao', 'Uma frase curta'));
+        var l1 = document.createElement('label'); l1.className = 'f'; l1.textContent = 'Preço';
+        var i1 = document.createElement('input'); i1.type = 'text'; i1.value = p.preco || '';
+        i1.addEventListener('input', function () { p.preco = i1.value; marcarSujo(); });
+        l1.appendChild(i1); d.appendChild(l1);
+        var l2 = document.createElement('label'); l2.className = 'f'; l2.textContent = 'Etiqueta (ex: Mais escolhido)';
+        var i2 = document.createElement('input'); i2.type = 'text'; i2.value = p.tag || '';
+        i2.addEventListener('input', function () { p.tag = i2.value; marcarSujo(); });
+        l2.appendChild(i2); d.appendChild(l2);
+        var lb = document.createElement('label'); lb.className = 'f';
+        lb.textContent = 'Benefícios (um por linha)';
+        var tb = document.createElement('textarea');
+        tb.value = (p.recursos || []).join('\n');
+        tb.addEventListener('input', function () {
+            p.recursos = tb.value.split('\n').map(function (s) { return s.trim(); }).filter(Boolean);
+            marcarSujo();
+        });
+        lb.appendChild(tb); d.appendChild(lb);
+        var ld = document.createElement('label'); ld.className = 'f'; ld.textContent = 'Destaque (aparece maior, na frente)';
+        var sd = document.createElement('select');
+        sd.innerHTML = '<option value="0">Não</option><option value="1">Sim</option>';
+        sd.value = p.destaque ? '1' : '0';
+        sd.addEventListener('change', function () { p.destaque = sd.value === '1'; marcarSujo(); });
+        ld.appendChild(sd); d.appendChild(ld);
+        d.appendChild(botaoExcluir('Remover este plano?', function () {
+            if (confirm('Remover este plano?')) { planosData.planos.splice(i, 1); renderPlanos(); marcarSujo(); }
+        }));
+        box.appendChild(d);
+    });
+}
+
+/* ---------- DEPOIMENTOS ---------- */
+function renderDep() {
+    var box = document.getElementById('depList'); box.innerHTML = '';
+    if (!(depData.depoimentos || []).length) {
+        box.appendChild(elVazio('Nenhuma avaliação cadastrada.'));
+        return;
+    }
+    depData.depoimentos.forEach(function (t, i) {
+        var d = document.createElement('div'); d.className = 'item';
+        var cab = document.createElement('div'); cab.className = 'item-topo';
+        var forte = document.createElement('strong'); forte.textContent = 'Avaliação ' + (i + 1);
+        cab.appendChild(forte); cab.appendChild(botoesOrdem(i, depData.depoimentos, renderDep));
+        d.appendChild(cab);
+        d.appendChild(campoTexto(t, 'Nome (ou "Aluno Lion Force")', 'nome', ''));
+        d.appendChild(campoTexto(t, 'Unidade', 'unidade', 'Unidade Jardim Das Fontes'));
+        var lt = document.createElement('label'); lt.className = 'f'; lt.textContent = 'Texto da avaliação';
+        var ta = document.createElement('textarea');
+        ta.value = t.texto || '';
+        ta.addEventListener('input', function () { t.texto = ta.value; marcarSujo(); });
+        lt.appendChild(ta); d.appendChild(lt);
+        var lf = document.createElement('label'); lf.className = 'f';
+        lf.textContent = 'Foto (opcional — sem foto aparece só o texto)';
+        d.appendChild(lf);
+        d.appendChild(fotoCampo(t.foto, function (v) { t.foto = v; }));
+        d.appendChild(botaoExcluir('Remover esta avaliação?', function () {
+            if (confirm('Remover esta avaliação?')) { depData.depoimentos.splice(i, 1); renderDep(); marcarSujo(); }
+        }));
+        box.appendChild(d);
+    });
+}
+
+/* ---------- HISTORIA ---------- */
+function renderHist() {
+    if (!histData.historia.fundador) histData.historia.fundador = { nome:'', cargo:'', foto:'', instagram:'', resumo:'' };
+
+    var fund = document.getElementById('histFund'); fund.innerHTML = '';
+    fund.appendChild(campoTexto(histData.historia.fundador, 'Nome do fundador', 'nome', 'Nome completo'));
+    fund.appendChild(campoTexto(histData.historia.fundador, 'Cargo', 'cargo', 'Fundador e Proprietário'));
+    fund.appendChild(campoTexto(histData.historia.fundador, 'Instagram', 'instagram', 'https://...'));
+    var lff = document.createElement('label'); lff.className = 'f';
+    lff.textContent = 'Foto do fundador (fica à esquerda, em destaque)';
+    fund.appendChild(lff);
+    fund.appendChild(fotoCampo(histData.historia.fundador.foto, function (v) { histData.historia.fundador.foto = v; }));
+    var lr = document.createElement('label'); lr.className = 'f'; lr.textContent = 'Texto sobre o fundador';
+    var tr = document.createElement('textarea');
+    tr.value = histData.historia.fundador.resumo || '';
+    tr.addEventListener('input', function () { histData.historia.fundador.resumo = tr.value; marcarSujo(); });
+    lr.appendChild(tr); fund.appendChild(lr);
+
+    var head = document.getElementById('histHead'); head.innerHTML = '';
+    head.appendChild(campoTexto(histData.historia, 'Linha em cima do título', 'subtitulo', 'Dominadores como um leão'));
+    head.appendChild(campoTexto(histData.historia, 'Título', 'titulo', 'Nossa história'));
+
+    var txt = document.getElementById('histText'); txt.innerHTML = '';
+    histField('histText', histData.historia, 'texto1', 'Primeiro parágrafo');
+    histField('histText', histData.historia, 'texto2', 'Segundo parágrafo');
+    var lm = document.createElement('label'); lm.className = 'f'; lm.textContent = 'Destaques (um por linha)';
+    var tm = document.createElement('textarea');
+    tm.value = (histData.historia.marca || []).join('\n');
+    tm.addEventListener('input', function () {
+        histData.historia.marca = tm.value.split('\n').map(function (s) { return s.trim(); }).filter(Boolean);
+        marcarSujo();
+    });
+    lm.appendChild(tm); txt.appendChild(lm);
+}
+
+/* ---------- TEXTOS ---------- */
+var TXT_CAMPOS = [
+    ['horarioSemana', 'Horário seg a sex', 'Ex: 06:00 — 22:00'],
+    ['horarioSabado', 'Horário sábado', 'Ex: 09:00 — 13:00'],
+    ['horarioFechado', 'Domingo e feriados', 'Ex: Fechado'],
+    ['telefone', 'Telefone com DDD', 'Ex: (11) 94354-4884'],
+    ['whatsapp', 'WhatsApp (só números)', 'Ex: 5511943544884'],
+    ['email', 'E-mail de contato', 'Ex: lionforce.contato@gmail.com'],
+    ['instagram', 'Instagram da academia', 'https://www.instagram.com/...'],
+    ['nota', 'Nota no Google', 'Ex: 4.9'],
+    ['avaliacoes', 'Quantidade de avaliações', 'Ex: 380'],
+    ['areaM2', 'Metragem da estrutura', 'Ex: 1.200m²'],
+    ['anosHistoria', 'Anos de história', 'Ex: +8']
+];
+function renderTxt() {
+    var box = document.getElementById('txtList'); box.innerHTML = '';
+    TXT_CAMPOS.forEach(function (cfg) {
+        box.appendChild(campoTexto(txtData.textos, cfg[1], cfg[0], cfg[2]));
+    });
+}
+
+/* ---------- AJUDANTES ---------- */
+function campoTexto(obj, rotulo, chave, exemplo) {
+    var l = document.createElement('label'); l.className = 'f';
+    l.textContent = rotulo;
+    if (exemplo) { var s = document.createElement('small'); s.textContent = exemplo; l.appendChild(s); }
+    var i = document.createElement('input'); i.type = 'text';
+    i.value = obj[chave] || '';
+    i.addEventListener('input', function () { obj[chave] = i.value; marcarSujo(); });
+    l.appendChild(i);
+    return l;
+}
+function elVazio(txt) { var d = document.createElement('div'); d.className = 'vazio'; d.textContent = txt; return d; }
+function botaoExcluir(msgTxt, aoClicar) {
+    var b = document.createElement('button');
+    b.type = 'button'; b.className = 'btn btn--ghost btn--mini';
+    b.textContent = '✕ Remover';
+    b.style.marginTop = '6px'; b.style.color = '#ff7a82';
+    b.addEventListener('click', function () { if (confirm(msgTxt)) aoClicar(); });
+    return b;
+}
+function botoesOrdem(i, lista, aoRedesenhar) {
+    var wrap = document.createElement('div'); wrap.className = 'acoes';
+    var up = document.createElement('button'); up.type = 'button'; up.className = 'icone'; up.textContent = '↑'; up.title = 'Mover para cima';
+    up.addEventListener('click', function () { if (i > 0) { lista.splice(i - 1, 0, lista.splice(i, 1)[0]); aoRedesenhar(); marcarSujo(); } });
+    var dn = document.createElement('button'); dn.type = 'button'; dn.className = 'icone'; dn.textContent = '↓'; dn.title = 'Mover para baixo';
+    dn.addEventListener('click', function () { if (i < lista.length - 1) { lista.splice(i + 1, 0, lista.splice(i, 1)[0]); aoRedesenhar(); marcarSujo(); } });
+    var rm = document.createElement('button'); rm.type = 'button'; rm.className = 'icone perigo'; rm.textContent = '✕'; rm.title = 'Remover';
+    rm.addEventListener('click', function () { if (confirm('Remover este item?')) { lista.splice(i, 1); aoRedesenhar(); marcarSujo(); } });
+    wrap.appendChild(up); wrap.appendChild(dn); wrap.appendChild(rm);
+    return wrap;
+}
+
+/* ---------- MARCAR ALTERACOES ---------- */
+var sujo = false;
+function marcarSujo() {
+    if (sujo) return;
+    sujo = true;
+    pintarStatus();
+}
+function pintarStatus() {
+    var box = document.getElementById('resumoStatus');
+    if (!box) return;
+    box.innerHTML = sujo
+        ? '<div style="background:rgba(251,191,36,.12);border:1px solid rgba(251,191,36,.4);border-radius:12px;padding:13px;font-size:.88rem">⏳ <b>Tem alteração não publicada.</b> Quando terminar, clique em "Publicar todas as alterações".</div>'
+        : '<div style="background:rgba(74,222,128,.1);border:1px solid rgba(74,222,128,.35);border-radius:12px;padding:13px;font-size:.88rem">✅ Tudo publicado. O site está em dia.</div>';
+}
+document.addEventListener('click', function (ev) {
+    if (ev.target && ev.target.closest && ev.target.closest('.menu')) return;
+}, true);
+
+/* ---------- PUBLICAR TUDO ---------- */
+document.getElementById('salvarTudo').addEventListener('click', function () {
+    var b = this; b.disabled = true; msg('tudoMsg', 'Publicando...', true);
+    var alvos = [
+        ['conteudo/textos.json', txtData, 'Admin: atualiza textos', 'texto'],
+        ['conteudo/historia.json', histData, 'Admin: atualiza história', 'história'],
+        ['conteudo/equipe.json', eqData, 'Admin: atualiza equipe', 'equipe'],
+        ['conteudo/galeria.json', galData, 'Admin: atualiza galeria', 'galeria'],
+        ['conteudo/unidades.json', unisData, 'Admin: atualiza unidades', 'unidades'],
+        ['conteudo/planos.json', planosData, 'Admin: atualiza planos', 'planos'],
+        ['conteudo/depoimentos.json', depData, 'Admin: atualiza avaliações', 'avaliações']
+    ];
+    var feitos = 0, erros = [];
+    alvos.reduce(function (p, a) {
+        return p.then(function () {
+            return saveJSON(a[0], a[1], a[2]).then(function () { feitos++; }).catch(function () { erros.push(a[3]); });
+        });
+    }, Promise.resolve()).then(function () {
+        if (erros.length) {
+            msg('tudoMsg', 'Publicado ' + feitos + ' de ' + alvos.length + '. Falhou: ' + erros.join(', ') + '.', false);
+        } else {
+            msg('tudoMsg', 'Tudo publicado. O site atualiza em 1 a 2 minutos.', true);
         }
+        sujo = false; pintarStatus();
+    }).finally(function () { b.disabled = false; });
+});
 
-        /* Busca no Deezer: API pública, sem chave, sem cadastro */
-        document.getElementById('musicaOk').addEventListener('click', function () {
-            tocarMusica(document.getElementById('musicaInput').value, true);
-        });
-        document.getElementById('musicaInput').addEventListener('keydown', function (e) {
-            if (e.key === 'Enter') { e.preventDefault(); tocarMusica(this.value, true); }
-        });
-        document.getElementById('musicaEsquecer').addEventListener('click', function () {
-            musicaSalva = '';
-            try { localStorage.removeItem('lf-musica'); } catch (e) { }
-            document.getElementById('musicaFrame').innerHTML = '';
-            document.getElementById('musicaInput').value = '';
-            msg('musicaMsg', 'Playlist apagada deste computador.', true);
-        });
-        function iniciarMusica() {
-            try { musicaSalva = localStorage.getItem('lf-musica') || ''; } catch (e) { musicaSalva = ''; }
-            if (musicaSalva) {
-                document.getElementById('musicaInput').value = musicaSalva;
-                tocarMusica(musicaSalva, false);
-            }
+/* ---------- BOTOES DE ADICIONAR ---------- */
+document.getElementById('uniAdd').addEventListener('click', function () {
+    unisData.unidades.push({ id: slug('nova-unidade-' + Date.now()), nome: 'Nova unidade', endereco: '', horario: '', horarioTabela: [], telefone: '', whatsapp: '', promo: '', cep: '', cidade: '', pagina: '', fachada: '', recursos: ['musculacao', 'cardio', 'funcional', 'app', 'avaliacao'] });
+    renderUnis(); marcarSujo();
+});
+document.getElementById('eqAdd').addEventListener('click', function () {
+    var firstUnit = (unisData.unidades[0] && unisData.unidades[0].id) || '';
+    eqData.membros.push({ nome: '', cargo: '', foto: '', unidade: firstUnit, instagram: '', destaque: false });
+    renderEq(); marcarSujo();
+});
+document.getElementById('galAdd').addEventListener('click', function () {
+    galData.fotos.push({ src: '', alt: '' }); renderGal(); marcarSujo();
+});
+document.getElementById('planoAdd').addEventListener('click', function () {
+    planosData.planos.push({ nome: 'Novo plano', descricao: '', preco: 'R$ 99', valor: '99,99', parcelas: '/mês', tag: '', destaque: false, recursos: ['Acesso à estrutura completa'] });
+    renderPlanos(); marcarSujo();
+});
+document.getElementById('depAdd').addEventListener('click', function () {
+    depData.depoimentos.push({ nome: '', unidade: 'Unidade Jardim Das Fontes', texto: '', foto: '' });
+    renderDep(); marcarSujo();
+});
+
+/* ---------- LOGIN / TRAVA ---------- */
+document.getElementById('loginBtn').addEventListener('click', function () {
+    var u = document.getElementById('userInput').value.trim();
+    var pw = document.getElementById('passInput').value;
+    if (!u || !pw) { msg('loginMsg', 'Digite usuário e senha.', false); return; }
+    var espera = travaMensagem();
+    if (espera) { msg('loginMsg', espera, false); return; }
+    msg('loginMsg', 'Verificando...', true);
+    sha256(u + ':' + pw).then(function (h) {
+        if (h !== AUTH_HASH) {
+            tentativas++;
+            bloqueadoAte = Date.now() + (tentativas >= 5 ? 600000 : tentativas * 5000);
+            msg('loginMsg', 'Usuário ou senha incorretos. (' + tentativas + '/3 antes do bloqueio)', false);
+            document.getElementById('passInput').value = '';
+            return;
         }
-        /* Atalhos para pular entre abas */
-        document.querySelectorAll('[data-ir-aba]').forEach(function (b) {
-            b.addEventListener('click', function () { abrirAba(b.getAttribute('data-ir-aba')); });
+        tentativas = 0; bloqueadoAte = 0;
+        msg('loginMsg', 'Abrindo...', true);
+        unlockVault(u + ':' + pw).then(function (t) { usuarioAtual = u; entrarComToken(t); })
+            .catch(function () { msg('loginMsg', 'Falha ao destravar. Tente de novo.', false); });
+    });
+});
+document.getElementById('passInput').addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') { e.preventDefault(); document.getElementById('loginBtn').click(); }
+});
+
+/* ---------- INATIVIDADE ---------- */
+var MINUTOS_INATIVO = 10;
+var idleTimer = null, idleAviso = null;
+function encerrarSessao(motivo) {
+    clearTimeout(idleTimer); clearTimeout(idleAviso);
+    token = '';
+    document.getElementById('painelTopo').classList.add('hidden');
+    document.getElementById('loginTela').classList.remove('hidden');
+    document.getElementById('passInput').value = '';
+    msg('loginMsg', motivo || 'Sessão encerrada por falta de uso. Entre de novo.', true);
+}
+function reiniciarIdle() {
+    clearTimeout(idleTimer); clearTimeout(idleAviso);
+    idleTimer = setTimeout(function () { encerrarSessao(); }, MINUTOS_INATIVO * 60 * 1000);
+    idleAviso = setTimeout(function () { msg('tudoMsg', 'A sessão fecha em 1 minuto por inatividade. Mexa em qualquer campo.', true); }, (MINUTOS_INATIVO * 60 - 60) * 1000);
+}
+['mousemove', 'mousedown', 'keydown', 'scroll', 'touchstart', 'wheel'].forEach(function (ev) {
+    addEventListener(ev, function () { if (token) reiniciarIdle(); }, { passive: true });
+});
+document.addEventListener('visibilitychange', function () { if (document.hidden && token) reiniciarIdle(); });
+document.getElementById('logoutBtn').addEventListener('click', function () { encerrarSessao('Você saiu do painel.'); });
+document.getElementById('logoutBtn2').addEventListener('click', function () { encerrarSessao('Você saiu do painel.'); });
+
+/* ---------- SENHA ---------- */
+document.getElementById('senhaSave').addEventListener('click', function () {
+    var b = this;
+    var np = document.getElementById('newPass').value;
+    var np2 = document.getElementById('newPass2').value;
+    if (np.length < 8) { msg('senhaMsg', 'Use pelo menos 8 caracteres.', false); return; }
+    if (np !== np2) { msg('senhaMsg', 'As duas senhas não são iguais.', false); return; }
+    if (!usuarioAtual) { msg('senhaMsg', 'Sessão expirada. Entre de novo.', false); return; }
+    b.disabled = true; msg('senhaMsg', 'Gerando acesso...', true);
+    var novaChave = usuarioAtual + ':' + np;
+    Promise.all([lockVault(token, novaChave), sha256Hex(novaChave)]).then(function (res) {
+        var novoVault = res[0], novoHash = res[1];
+        return apiGet('admin/index.html').then(function (j) {
+            var h2 = b64decode(j.content);
+            h2 = h2.replace(/AUTH_HASH = '[^']+';/, "AUTH_HASH = '" + novoHash + "';");
+            h2 = h2.replace(/VAULT = \{.*?\};/, 'VAULT = ' + JSON.stringify(novoVault) + ';');
+            if (h2.indexOf(novoHash) < 0) throw new Error('não encontrei o cofre');
+            return fetch(API + 'admin/index.html', {
+                method: 'PUT', headers: Object.assign({ 'Content-Type': 'application/json' }, headers()),
+                body: JSON.stringify({ message: 'Admin: troca de senha', content: b64encode(h2), sha: j.sha, branch: BRANCH })
+            });
+        }).then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); });
+    }).then(function () {
+        msg('senhaMsg', 'Senha trocada! Use a nova no próximo acesso.', true);
+        document.getElementById('newPass').value = '';
+        document.getElementById('newPass2').value = '';
+    }).catch(function (e) {
+        msg('senhaMsg', 'Erro ao trocar a senha (' + e.message + ').', false);
+    }).finally(function () { b.disabled = false; });
+});
+
+/* ---------- AGENDA ---------- */
+var CHAVE_AGENDA = 'lf-agenda';
+var filtroAgenda = 'aberta';
+
+var SUGESTOES = [
+    { id: 's1', txt: 'Enviar foto do fundador (card da página Nossa história)', tipo: 'foto' },
+    { id: 's2', txt: 'Cadastrar as meninas da recepção na Equipe', tipo: 'pessoa' },
+    { id: 's3', txt: 'Cadastrar os outros personais na Equipe', tipo: 'pessoa' },
+    { id: 's4', txt: 'Substituir fotos de banco de imagem pelas fotos reais da academia', tipo: 'foto' },
+    { id: 's5', txt: 'Enviar fotos de dentro da academia para a Galeria', tipo: 'foto' },
+    { id: 's6', txt: 'Configurar o DNS do domínio lionforceacademia.com.br', tipo: 'fazer' },
+    { id: 's7', txt: 'Trocar a senha do painel para uma só sua', tipo: 'fazer' },
+    { id: 's8', txt: 'Revogar o token antigo do GitHub e gerar um novo', tipo: 'fazer' }
+];
+
+function lerTarefas() {
+    try { return JSON.parse(localStorage.getItem(CHAVE_AGENDA) || '[]'); }
+    catch (e) { return []; }
+}
+function salvarTarefas(t) {
+    try { localStorage.setItem(CHAVE_AGENDA, JSON.stringify(t)); } catch (e) { }
+}
+function rotuloTipo(t) {
+    return { foto: 'Foto', pessoa: 'Pessoa', texto: 'Texto', fazer: 'Outra' }[t] || 'Outra';
+}
+function rotuloPrazo(p) {
+    return { hoje: 'Hoje', semana: 'Esta semana', urgente: 'Urgente' }[p] || '';
+}
+function desenharAgenda() {
+    var box = document.getElementById('tarefaLista');
+    box.innerHTML = '';
+    var todas = lerTarefas().concat(SUGESTOES.map(function (s) {
+        return { txt: s.txt, tipo: s.tipo, prazo: '', feita: false, sugestao: true, id: s.id };
+    }));
+    var vis = todas.filter(function (t) {
+        if (filtroAgenda === 'aberta') return !t.feita;
+        if (filtroAgenda === 'hoje') return !t.feita && t.prazo === 'hoje';
+        if (filtroAgenda === 'feitas') return t.feita;
+        return true;
+    });
+    var feitas = todas.filter(function (t) { return t.feita; }).length;
+    document.getElementById('tarefaCont').textContent = '(' + (todas.length - feitas) + ' a fazer)';
+
+    if (!vis.length) { box.appendChild(elVazio('Nada aqui. Bom sinal — ou troque o filtro acima.')); return; }
+
+    vis.forEach(function (t) {
+        var d = document.createElement('div');
+        d.className = 'tarefa';
+        d.setAttribute('data-feita', t.feita ? '1' : '0');
+
+        var chk = document.createElement('input');
+        chk.type = 'checkbox'; chk.checked = !!t.feita;
+        chk.addEventListener('change', function () {
+            t.feita = chk.checked;
+            if (!t.sugestao) salvarTarefas(lerTarefas());
+            desenharAgenda();
         });
 
-        /* Botão de voltar ao topo */
-        var topo = document.getElementById('voltarTopo');
-        addEventListener('scroll', function () { topo.classList.toggle('show', scrollY > 600); }, { passive: true });
-        topo.addEventListener('click', function () { scrollTo({ top: 0, behavior: 'smooth' }); });
+        var corpo = document.createElement('div'); corpo.className = 'tarefa-corpo';
+        var txt = document.createElement('div'); txt.className = 'tarefa-txt'; txt.textContent = t.txt;
+        var meta = document.createElement('div'); meta.className = 'tarefa-meta';
+        var selo = document.createElement('span');
+        selo.className = 'selo selo--' + (t.tipo || 'fazer');
+        selo.textContent = rotuloTipo(t.tipo);
+        meta.appendChild(selo);
+        var p = rotuloPrazo(t.prazo);
+        if (p) { var sp = document.createElement('span'); sp.textContent = '⏰ ' + p; meta.appendChild(sp); }
+        if (t.sugestao) { var ss = document.createElement('span'); ss.textContent = 'sugestão'; meta.appendChild(ss); }
+        corpo.appendChild(txt); corpo.appendChild(meta);
 
-        /* ---------- PUBLICAR TUDO ---------- */
-        document.getElementById('salvarTudo').addEventListener('click', function () {
-            var b = this;
-            b.disabled = true; msg('tudoMsg', 'Publicando tudo...', true);
-            var alvos = [
-                ['conteudo/textos.json', txtData, 'Admin: atualiza textos do site', 'txtMsg'],
-                ['conteudo/historia.json', histData, 'Admin: atualiza nossa história', 'histMsg'],
-                ['conteudo/planos.json', planosData, 'Admin: atualiza planos', 'planosMsg'],
-                ['conteudo/depoimentos.json', depData, 'Admin: atualiza depoimentos', 'depMsg'],
-                ['conteudo/equipe.json', eqData, 'Admin: atualiza equipe', 'eqMsg'],
-                ['conteudo/galeria.json', galData, 'Admin: atualiza galeria', 'galMsg'],
-                ['conteudo/unidades.json', unisData, 'Admin: atualiza unidades', 'uniMsg']
-            ];
-            var feitos = 0, erros = [];
-            alvos.reduce(function (p, a) {
-                return p.then(function () {
-                    return saveJSON(a[0], a[1], a[2]).then(function () {
-                        feitos++; msg(a[3], 'Publicado!', true);
-                    }).catch(function (e) {
-                        erros.push(a[0].split('/')[1]);
-                        msg(a[3], 'Erro ao publicar.', false);
-                    });
-                });
-            }, Promise.resolve()).then(function () {
-                if (erros.length) {
-                    msg('tudoMsg', 'Publicado ' + feitos + ' de ' + alvos.length + '. Falhou: ' + erros.join(', '), false);
-                } else {
-                    msg('tudoMsg', 'Tudo publicado (' + feitos + ' seções). O site atualiza em 1–2 min.', true);
-                }
-            }).finally(function () { b.disabled = false; });
-        });
+        d.appendChild(chk); d.appendChild(corpo);
 
-        /* ---------- BOOT ---------- */
-        function boot() {
-            Promise.all([
-                loadJSON('conteudo/planos.json'), loadJSON('conteudo/depoimentos.json'),
-                loadJSON('conteudo/equipe.json'), loadJSON('conteudo/galeria.json'),
-                loadJSON('conteudo/unidades.json')
-            ]).then(function (res) {
-                planosData = res[0]; depData = res[1]; eqData = res[2]; galData = res[3]; unisData = res[4];
-                if (!Array.isArray(planosData.planos)) planosData.planos = [];
-                if (!Array.isArray(depData.depoimentos)) depData.depoimentos = [];
-                if (!Array.isArray(eqData.membros)) eqData.membros = [];
-                if (!Array.isArray(galData.fotos)) galData.fotos = [];
-                if (!Array.isArray(unisData.unidades)) unisData.unidades = [];
-                renderPlanos(); renderDep(); renderEq(); renderGal(); renderUnis();
-                return loadJSON('conteudo/textos.json').catch(function () { return { textos: {} }; });
-            }).then(function (t) {
-                txtData = t;
-                if (!txtData.textos) txtData.textos = {};
-                renderTxt();
-                return loadJSON('conteudo/historia.json').catch(function () { return { historia: {} }; });
-            }).then(function (h) {
-                histData = h;
-                if (!histData.historia) histData.historia = {};
-                renderHist();
-            }).catch(function () { msg('txtMsg', 'Falha ao carregar dados. Recarregue a página.', false); });
+        if (!t.sugestao) {
+            var rm = document.createElement('button');
+            rm.type = 'button'; rm.className = 'icone perigo'; rm.textContent = '✕'; rm.title = 'Apagar tarefa';
+            rm.addEventListener('click', function () {
+                salvarTarefas(lerTarefas().filter(function (x) { return x.id !== t.id; }));
+                desenharAgenda();
+            });
+            d.appendChild(rm);
         }
-        /* Sempre pede usuário e senha; o token fica guardado no aparelho. */
-    </script>
+        box.appendChild(d);
+    });
+}
+function desenharFiltros() {
+    var box = document.getElementById('tarefaFiltros'); box.innerHTML = '';
+    [['aberta', 'A fazer'], ['hoje', 'Para hoje'], ['todas', 'Todas'], ['feitas', 'Já feitas']].forEach(function (f) {
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'btn ' + (filtroAgenda === f[0] ? '' : 'btn--ghost') + ' btn--mini';
+        b.textContent = f[1];
+        b.addEventListener('click', function () { filtroAgenda = f[0]; desenharFiltros(); desenharAgenda(); });
+        box.appendChild(b);
+    });
+}
+document.getElementById('tarefaAdd').addEventListener('click', function () {
+    var t = document.getElementById('tarefaTexto').value.trim();
+    if (!t) { msg('tarefaMsg', 'Escreva o que precisa fazer.', false); return; }
+    var lista = lerTarefas();
+    lista.push({
+        id: 't' + Date.now(),
+        txt: t,
+        tipo: document.getElementById('tarefaTipo').value,
+        prazo: document.getElementById('tarefaPrazo').value,
+        feita: false
+    });
+    salvarTarefas(lista);
+    document.getElementById('tarefaTexto').value = '';
+    msg('tarefaMsg', 'Adicionada.', true);
+    desenharAgenda();
+});
+document.getElementById('tarefaTexto').addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') { e.preventDefault(); document.getElementById('tarefaAdd').click(); }
+});
+
+/* ---------- BOOT ---------- */
+function entrarComToken(t) {
+    token = t;
+    msg('loginMsg', 'Verificando...', true);
+    fetch(API + 'conteudo/textos.json?ref=' + BRANCH, { headers: headers() }).then(function (r) {
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        document.getElementById('loginTela').classList.add('hidden');
+        document.getElementById('painelTopo').classList.remove('hidden');
+        var u = document.getElementById('userAtual');
+        u.textContent = 'Conectado como ' + usuarioAtual;
+        boot();
+        reiniciarIdle();
+    }).catch(function () { msg('loginMsg', 'Falha de acesso. Fale com o suporte.', false); });
+}
+
+function boot() {
+    Promise.all([
+        loadJSON('conteudo/textos.json').catch(function () { return { textos: {} }; }),
+        loadJSON('conteudo/historia.json').catch(function () { return { historia: {} }; }),
+        loadJSON('conteudo/unidades.json'),
+        loadJSON('conteudo/equipe.json'),
+        loadJSON('conteudo/galeria.json'),
+        loadJSON('conteudo/planos.json'),
+        loadJSON('conteudo/depoimentos.json')
+    ]).then(function (res) {
+        txtData = res[0]; histData = res[1]; unisData = res[2];
+        eqData = res[3]; galData = res[4]; planosData = res[5]; depData = res[6];
+
+        if (!txtData.textos) txtData.textos = {};
+        if (!histData.historia) histData.historia = {};
+        if (!Array.isArray(unisData.unidades)) unisData.unidades = [];
+        if (!Array.isArray(eqData.membros)) eqData.membros = [];
+        if (!Array.isArray(galData.fotos)) galData.fotos = [];
+        if (!Array.isArray(planosData.planos)) planosData.planos = [];
+        if (!Array.isArray(depData.depoimentos)) depData.depoimentos = [];
+
+        renderUnis(); renderEq(); renderGal(); renderPlanos();
+        renderDep(); renderHist(); renderTxt();
+
+        desenharFiltros(); desenharAgenda();
+        pintarStatus();
+        abrirAba('agenda');
+    }).catch(function () {
+        msg('tudoMsg', 'Falha ao carregar os dados. Recarregue a página (Ctrl+F5).', false);
+    });
+}
+
+abrirAba('agenda');
+</script>
 </body>
 </html>
