@@ -1,1 +1,16 @@
-{"fotos":[{"alt":"Recepção da Lion Force com suplementos e catraca","src":"unidade-1.jpg"},{"alt":"Barras e suplementos no salão da Lion Force","src":"unidade-2.jpg"},{"alt":"Halteres e neon vermelho na Lion Force","src":"unidade-3.jpg"}]}
+{
+  "fotos": [
+    {
+      "src": "unidade-1.jpg",
+      "alt": "Fachada da Lion Force Academia no Jardim Das Fontes"
+    },
+    {
+      "src": "unidade-2.jpg",
+      "alt": "Fachada da frente com a calçada pintada de cinza"
+    },
+    {
+      "src": "unidade-3.jpg",
+      "alt": "Fachada de lado com a calçada pintada de cinza"
+    }
+  ]
+}
