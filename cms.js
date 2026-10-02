@@ -94,12 +94,15 @@
         if (!grid) return;
         getJSON('conteudo/galeria.json').then(function (data) {
             var fotos = data.fotos || [];
-            if (!fotos.length) return;
+            // sem foto a galeria fica escondida, para nao sobrar um vao
+            // vazio de 18px onde as fotos ficavam
+            if (!fotos.length) { grid.hidden = true; return; }
+            grid.hidden = false;
             grid.innerHTML = fotos.map(function (f) {
                 return '<img src="' + esc(f.src) + '" alt="' + esc(f.alt || 'Lion Force Academia') + '" loading="lazy">';
             }).join('');
             refresh(grid);
-        }).catch(function () {});
+        }).catch(function () { grid.hidden = true; });
     }
 
     /* ---------- EQUIPE (equipe + time da unidade) ---------- */
