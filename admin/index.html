@@ -89,6 +89,8 @@
         .login-caixa h1 { font:800 clamp(1.9rem,6vw,2.5rem) 'Barlow Condensed',sans-serif; text-transform:uppercase; text-align:center; }
         .login-caixa h1 span { color:var(--red); }
         .login-caixa p { color:var(--mut); text-align:center; margin:8px 0 22px; font-size:.86rem; }
+        .login-caixa .lembrar { display:flex; align-items:center; gap:9px; margin:-8px 0 18px; font-size:.84rem; color:var(--mut); cursor:pointer; line-height:1.35; }
+        .login-caixa .lembrar input { width:16px; height:16px; accent-color:var(--red); flex:0 0 auto; cursor:pointer; }
 
         /* agenda */
         .tarefa { display:flex; gap:11px; align-items:flex-start; border:1px solid var(--line); border-radius:12px; padding:12px; margin-bottom:8px; background:#101012; }
@@ -127,9 +129,10 @@
     <div class="login-caixa">
         <img src="../Lion force academia.png" alt="Lion Force">
         <h1>Painel <span>Lion Force</span></h1>
-        <p>Use seu usuário e senha. A sessão fecha sozinha depois de 10 minutos sem mexer em nada.</p>
+        <p>Use seu usuário e senha. A sessão fecha sozinha depois de 2 horas sem mexer em nada.</p>
         <label class="f">Usuário<input type="text" id="userInput" placeholder="admin" autocomplete="username"></label>
         <label class="f">Senha<input type="password" id="passInput" placeholder="Sua senha" autocomplete="current-password"></label>
+        <label class="lembrar"><input type="checkbox" id="keepLogin"> Manter conectado neste computador por 7 dias</label>
         <button class="btn btn--largo" id="loginBtn" type="button">Entrar</button>
         <p class="msg" id="loginMsg" role="status"></p>
     </div>
@@ -155,7 +158,6 @@
             <a href="#" data-tab="imagens"><span class="ic">🎨</span><span class="txt">Fotos do site</span></a>
             <a href="#" data-tab="unidades"><span class="ic">🏢</span><span class="txt">Unidades e fotos</span></a>
             <a href="#" data-tab="equipe"><span class="ic">👥</span><span class="txt">Equipe e pessoas</span></a>
-            <a href="#" data-tab="galeria"><span class="ic">🖼️</span><span class="txt">Galeria</span></a>
             <div class="menu-grupo">Textos</div>
             <a href="#" data-tab="historia"><span class="ic">🦁</span><span class="txt">Nossa história</span></a>
             <a href="#" data-tab="textos"><span class="ic">✏️</span><span class="txt">Textos do site</span></a>
@@ -260,14 +262,10 @@
                 <button class="btn btn--ghost" id="eqAdd" type="button">+ Adicionar pessoa</button>
             </section>
 
-            <!-- GALERIA -->
-            <section class="painel" data-pane="galeria">
-                <h2>Galeria de fotos</h2>
-                <p class="dica">Fotos grandes que aparecem na página da unidade. Envie na horizontal para
-                ficar melhor no site. Use as setas para ordenar.</p>
-                <div id="galList"></div>
-                <button class="btn btn--ghost" id="galAdd" type="button">+ Adicionar foto</button>
-            </section>
+            <!-- GALERIA: aba escondida a pedido. As fotos continuam no site e
+                 no conteudo/galeria.json; so o formulario de edicao saiu.
+                 Para voltar, basta desfazer o comentario neste bloco e
+                 reinstate a linha do menu em data-tab="galeria". -->
 
             <!-- HISTORIA -->
             <section class="painel" data-pane="historia">
@@ -328,8 +326,10 @@
                 </div>
                 <div class="bloco">
                     <div class="bloco-titulo">Sessão</div>
-                    <p class="dica">Esta sessão fecha sozinha depois de <b>10 minutos</b> sem mexer em nada.
-                    Isso protege o site mesmo se você esquecer o painel aberto.</p>
+                    <p class="dica">Esta sessão fecha sozinha depois de <b>2 horas</b> sem mexer em nada.
+                    Se você marcou <b>Manter conectado</b> no login, o acesso fica guardado neste
+                    computador por 7 dias e você não precisa digitar a senha a cada visita.
+                    Quem tiver acesso a este navegador e ao sistema entra no painel sem a senha.</p>
                     <button class="btn btn--ghost" id="logoutBtn2" type="button">Sair agora</button>
                 </div>
                 <div class="bloco">
@@ -1131,9 +1131,11 @@ function renderEq() {
     });
 }
 
-/* ---------- GALERIA ---------- */
+/* ---------- GALERIA (aba removida do menu; o codigo fica caso volte) ---------- */
 function renderGal() {
-    var box = document.getElementById('galList'); box.innerHTML = '';
+    var box = document.getElementById('galList');
+    if (!box) return;                      // sem aba nao ha onde desenhar
+    box.innerHTML = '';
     if (!(galData.fotos || []).length) {
         box.appendChild(elVazio('Nenhuma foto na galeria.'));
         return;
@@ -1398,10 +1400,11 @@ document.getElementById('eqAdd').addEventListener('click', function () {
     eqData.membros.push({ nome: '', cargo: '', foto: '', unidade: firstUnit, instagram: '', destaque: false });
     renderEq(); marcarSujo();
 });
-document.getElementById('galAdd').addEventListener('click', function () {
+/* botao de adicionar foto da galeria: so existe se a aba voltar */
+var galAddBtn = document.getElementById('galAdd');
+if (galAddBtn) galAddBtn.addEventListener('click', function () {
     galData.fotos.push({ src: '', alt: '' }); renderGal(); marcarSujo();
-});
-document.getElementById('planoAdd').addEventListener('click', function () {
+});document.getElementById('planoAdd').addEventListener('click', function () {
     planosData.planos.push({ nome: 'Novo plano', descricao: '', preco: 'R$ 99', valor: '99,99', parcelas: '/mês', tag: '', destaque: false, recursos: ['Acesso à estrutura completa'] });
     renderPlanos(); marcarSujo();
 });
@@ -1428,7 +1431,12 @@ document.getElementById('loginBtn').addEventListener('click', function () {
         }
         tentativas = 0; bloqueadoAte = 0;
         msg('loginMsg', 'Abrindo...', true);
-        unlockVault(u + ':' + pw).then(function (t) { usuarioAtual = u; entrarComToken(t); })
+        var lembrar = document.getElementById('keepLogin').checked;
+        unlockVault(u + ':' + pw).then(function (t) {
+            usuarioAtual = u;
+            if (lembrar) guardarSessao(t, u);
+            entrarComToken(t);
+        })
             .catch(function () { msg('loginMsg', 'Falha ao destravar. Tente de novo.', false); });
     });
 });
@@ -1436,14 +1444,65 @@ document.getElementById('passInput').addEventListener('keydown', function (e) {
     if (e.key === 'Enter') { e.preventDefault(); document.getElementById('loginBtn').click(); }
 });
 
-/* ---------- INATIVIDADE ---------- */
-/* O aviso de login diz "10 minutos". Se aumentar este valor, ajustar o texto
-   da tela de login e do guia junto, senao a promessa nao bate com o codigo. */
-var MINUTOS_INATIVO = 10;
+/* Volta sozinho quando existe acesso guardado e ele ainda vale. */
+(function entrarSeLembrado() {
+    var s = lerSessao();
+    if (!s) return;
+    var cb = document.getElementById('keepLogin');
+    if (cb) cb.checked = true;
+    usuarioAtual = s.usuario || '';
+    var u = document.getElementById('userInput');
+    if (u && s.usuario) u.value = s.usuario;
+    sessaoLembrada = true;
+    msg('loginMsg', 'Abrindo...', true);
+    entrarComToken(s.token);
+})();
+
+/* ---------- INATIVIDADE / SESSAO CONECTADA ----------
+   Duas coisas separadas:
+   - MINUTOS_INATIVO: quanto tempo o painel fica aberto sem mexer.
+   - "Manter conectado": guarda o acesso no navegador por 7 dias, para nao
+     pedir a senha a cada visita. E opt-in, nunca automatico.
+   O texto da tela de login diz 2 horas: se mudar MINUTOS_INATIVO, mudar junto. */
+var MINUTOS_INATIVO = 120;
+var CHAVE_SESSAO = 'lf-sessao';
+var DIAS_SESSAO = 7;
+var sessaoLembrada = false;
 var idleTimer = null, idleAviso = null;
+
+function lerSessao() {
+    try {
+        var bruto = localStorage.getItem(CHAVE_SESSAO);
+        if (!bruto) return null;
+        var s = JSON.parse(bruto);
+        if (!s || !s.token || !s.exp || Date.now() > s.exp) {
+            localStorage.removeItem(CHAVE_SESSAO);
+            return null;
+        }
+        return s;
+    } catch (e) { return null; }
+}
+
+function guardarSessao(t, u) {
+    sessaoLembrada = true;
+    try {
+        localStorage.setItem(CHAVE_SESSAO, JSON.stringify({
+            token: t, usuario: u, exp: Date.now() + DIAS_SESSAO * 24 * 60 * 60 * 1000
+        }));
+    } catch (e) { /* modo privado: segue so com a sessao aberta */ }
+}
+
+function esquecerSessao() {
+    sessaoLembrada = false;
+    try { localStorage.removeItem(CHAVE_SESSAO); } catch (e) { }
+}
+
 function encerrarSessao(motivo) {
     clearTimeout(idleTimer); clearTimeout(idleAviso);
     token = '';
+    // sair no botao apaga o acesso guardado; fechar por inatividade nao,
+    // senao o "manter conectado" nunca valeria nada
+    if (motivo) esquecerSessao();
     document.getElementById('painelTopo').classList.add('hidden');
     document.getElementById('loginTela').classList.remove('hidden');
     document.getElementById('passInput').value = '';
