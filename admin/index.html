@@ -427,6 +427,50 @@ function loadJSON(path) {
             });
         }
 
+/* Apaga um arquivo do repositorio. Usado para limpar a foto que foi trocada:
+   sem isso cada substituicao deixa a foto antiga no repo, ocupando espaco e
+   ainda publica. So remove coisa dentro de fotos/ ou fotos ja enviadas. */
+function apagarArquivo(path) {
+            return apiGet(path).then(function (j) {
+                return fetch(API + path, {
+                    method: 'DELETE',
+                    headers: Object.assign({ 'Content-Type': 'application/json' }, headers()),
+                    body: JSON.stringify({ message: 'Admin: remove ' + path, sha: j.sha, branch: BRANCH })
+                });
+            }).then(function (r) { return r.ok; });
+        }
+
+function ehFotoEnviada(path) {
+            return !!(path && /^fotos\/[^/]+\.(jpe?g|png|webp|gif)$/i.test(path));
+        }
+
+/* Apaga os arquivos de fotos/ que ninguem mais referencia. Roda depois do
+   "Publicar tudo": e o que garante que trocar a foto nao va acumulando. */
+function limparFotosOrfas() {
+            var guardadas = new Set();
+            var guard = function (v) { if (ehFotoEnviada(v)) guardadas.add(v); };
+            Object.keys(imgData.imagens || {}).forEach(function (k) { guard(imgData.imagens[k]); });
+            (unisData.unidades || []).forEach(function (u) { guard(u.fachada); });
+            (eqData.membros || []).forEach(function (m) { guard(m.foto); });
+            (galData.fotos || []).forEach(function (f) { guard(f.src); });
+            (depData.fotos || []).forEach(function (f) { guard(f.src); });
+            (depData.depoimentos || []).forEach(function (d) { guard(d.foto); });
+            if (histData && histData.historia && histData.historia.fundador) guard(histData.historia.fundador.foto);
+
+            return apiGet('fotos').then(function (lista) {
+                var nomes = (Array.isArray(lista) ? lista : []).filter(function (i) { return i.type === 'file'; })
+                    .map(function (i) { return 'fotos/' + i.name; })
+                    .filter(function (p) { return !guardadas.has(p); });
+                if (!nomes.length) return 0;
+                return nomes.reduce(function (p, caminho) {
+                    return p.then(function (n) {
+                        return apagarArquivo(caminho).then(function (ok) { return n + (ok ? 1 : 0); })
+                            .catch(function () { return n; });
+                    });
+                }, Promise.resolve(0));
+            }).catch(function () { return 0; });
+        }
+
 function saveJSON(path, obj, message) {
             var body = JSON.stringify(obj, null, 2) + '\n';
             return apiGet(path).then(function (j) {
@@ -1384,7 +1428,17 @@ document.getElementById('salvarTudo').addEventListener('click', function () {
         if (erros.length) {
             msg('tudoMsg', 'Publicado ' + feitos + ' de ' + alvos.length + '. Falhou: ' + erros.join(', ') + '.', false);
         } else {
-            msg('tudoMsg', 'Tudo publicado. O site atualiza em 1 a 2 minutos.', true);
+            msg('tudoMsg', 'Tudo publicado. Limpando fotos substituídas...', true);
+        }
+        // so depois de gravar o conteudo: assim a lista ja reflects o novo
+        return limparFotosOrfas();
+    }).then(function (nOrfas) {
+        if (erros.length) {
+            msg('tudoMsg', 'Publicado ' + feitos + ' de ' + alvos.length + '. Falhou: ' + erros.join(', ') + '.', false);
+        } else {
+            msg('tudoMsg', nOrfas
+                ? 'Tudo publicado. ' + nOrfas + ' foto(s) substituída(s) apagada(s) do repositório. O site atualiza em 1 a 2 minutos.'
+                : 'Tudo publicado. O site atualiza em 1 a 2 minutos.', true);
         }
         sujo = false; pintarStatus();
     }).finally(function () { b.disabled = false; });

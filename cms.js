@@ -199,8 +199,13 @@
     function unitCard(u, planos) {
         var tags = (u.recursos || []).join(' ');
         var hay = ((u.nome || '') + ' ' + (u.endereco || '') + ' Lion Force').toLowerCase();
+        /* Sem fachada, nao escreve src: um <img src=""> baixa a propria pagina e
+           mostra o icone de imagem quebrada. O bloco fica com o espaco vazio. */
+        var foto = u.fachada
+            ? '<img src="' + esc(u.fachada) + '" alt="Fachada ' + esc(u.nome || '') + '" loading="lazy">'
+            : '';
         return '<article class="unit-item reveal" data-name="' + esc(hay) + '" data-addr="" data-tags="' + esc(tags) + '">' +
-            '<img src="' + esc(u.fachada || '') + '" alt="Fachada ' + esc(u.nome || '') + '" loading="lazy">' +
+            foto +
             '<div class="unit-item-body"><h3>' + esc(u.nome) + '</h3>' +
             '<address>' + esc(u.endereco) + '</address>' +
             '<a class="unit-link" href="' + esc(u.pagina || '#') + '">Ver academia <i data-lucide="arrow-right" class="icon" style="width:14px;height:14px"></i></a>' +
@@ -232,7 +237,25 @@
             if (needShow) {
                 var uid = needShow.getAttribute('data-unit');
                 var u = unidades.filter(function (x) { return x.id === uid; })[0] || unidades[0];
-                needShow.querySelector('[data-u="foto"]').src = u.fachada;
+                if (u) {
+                    /* Sem fachada nao pode sobrar <img src="">: isso baixa a propria
+                       pagina e o navegador mostra o icone de imagem quebrada.
+                       Sem foto, escondemos o bloco inteiro. */
+                    var fotoBox = needShow.querySelector('[data-u="foto"]');
+                    var wrap = fotoBox ? fotoBox.closest('.unit-photo') : null;
+                    if (fotoBox) {
+                        if (u.fachada) {
+                            fotoBox.src = u.fachada;
+                            fotoBox.hidden = false;
+                            if (wrap) wrap.hidden = false;
+                        } else {
+                            fotoBox.removeAttribute('src');
+                            fotoBox.hidden = true;
+                            if (wrap) wrap.hidden = true;
+                        }
+                    }
+                }
+                if (!u) { return; }
                 var h = '';
                 (u.horarioTabela || []).forEach(function (row) {
                     h += '<div><span>' + esc(row[0]) + '</span><strong>' + esc(row[1]) + '</strong></div>';
