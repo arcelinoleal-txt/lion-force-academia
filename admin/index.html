@@ -426,43 +426,45 @@ function saveJSON(path, obj, message) {
             }).then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); });
         }
 
-/* Mensagem de upload: sempre visivel, mesmo sem um container de msg na tela.
-   Antes usava msg(id) e quebrava em silencio quando o id nao existia. */
-function uploadMsg(texto, ok) {
-            var alvo = document.getElementById('uploadMsg');
+/* Mensagem de upload: sempre visivel e sempre perto do campo que disparou.
+   Antes usava msg(id) e quebrava em silencio quando o id nao existia; depois
+   passou a criar a linha no primeiro [data-pane], que as vezes era outra aba. */
+function uploadMsg(texto, ok, perto) {
+            if (!perto) perto = document.querySelector('.foto-linha');
+            if (!perto) return;
+            var alvo = perto.parentNode ? perto.parentNode.querySelector('.upload-msg') : null;
             if (!alvo) {
-                var wrap = document.querySelector('#pane-unidades') || document.querySelector('[data-pane]');
-                if (!wrap) return;
                 alvo = document.createElement('p');
-                alvo.id = 'uploadMsg';
-                alvo.className = 'msg';
+                alvo.className = 'msg upload-msg';
                 alvo.style.marginTop = '8px';
-                wrap.appendChild(alvo);
+                if (perto.parentNode) perto.parentNode.insertBefore(alvo, perto.nextSibling);
             }
             alvo.textContent = texto;
-            alvo.className = 'msg ' + (ok ? 'ok' : 'err');
+            alvo.className = 'msg upload-msg ' + (ok ? 'ok' : 'err');
+            if (ok === false) alvo.style.color = '#ff8a8a';
+            else alvo.style.color = '';
         }
 
-function uploadImage(file, input, previewImg) {
+function uploadImage(file, input, previewImg, ancora) {
             var MB = 1024 * 1024;
             var limite = 4 * MB;
             if (file.size > limite) {
-                uploadMsg('A foto tem ' + (file.size / MB).toFixed(1) + ' MB. O limite e 4 MB. Redimensione e tente de novo.', false);
+                uploadMsg('A foto tem ' + (file.size / MB).toFixed(1) + ' MB. O limite e 4 MB. Redimensione e tente de novo.', false, ancora);
                 return;
             }
             var ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
             if (['heic', 'heif', 'avif'].indexOf(ext) >= 0) {
-                uploadMsg('Formato ' + ext.toUpperCase() + ' nao e aceito. Salve como JPG ou PNG e tente de novo.', false);
+                uploadMsg('Formato ' + ext.toUpperCase() + ' nao e aceito. Salve como JPG ou PNG e tente de novo.', false, ancora);
                 return;
             }
 
             var reader = new FileReader();
-            reader.onerror = function () { uploadMsg('Nao consegui ler o arquivo.', false); };
+            reader.onerror = function () { uploadMsg('Nao consegui ler o arquivo. Talvez o arquivo esteja corrompido.', false, ancora); };
             reader.onload = function () {
                 var base64 = String(reader.result).split(',')[1];
                 var nome = 'fotos/' + slug(file.name.replace(/\.[^.]+$/, '')) + '-' + Date.now() + '.' + ext;
                 input.value = 'Carregando...';
-                uploadMsg('Enviando ' + (file.size / 1024).toFixed(0) + ' KB...', true);
+                uploadMsg('Enviando ' + (file.size / 1024).toFixed(0) + ' KB para o GitHub...', true, ancora);
                 fetch(API + nome, {
                     method: 'PUT', headers: Object.assign({ 'Content-Type': 'application/json' }, headers()),
                     body: JSON.stringify({ message: 'Admin: envia ' + nome, content: base64, branch: BRANCH })
@@ -475,11 +477,11 @@ function uploadImage(file, input, previewImg) {
                 .then(function () {
                     input.value = nome;
                     if (previewImg) { previewImg.src = nome.startsWith('http') ? nome : '../' + nome; }
-                    uploadMsg('Foto enviada! Clique em "Publicar" para gravar no site.', true);
+                    uploadMsg('Foto enviada! Agora clique em "Publicar" para ela aparecer no site.', true, ancora);
                 })
                 .catch(function (e) {
                     input.value = '';
-                    uploadMsg('Falha no envio: ' + e.message, false);
+                    uploadMsg('Falha no envio: ' + e.message, false, ancora);
                 });
             };
             reader.readAsDataURL(file);
@@ -497,7 +499,7 @@ function photoField(value, onPick) {
             var row = document.createElement('div'); row.className = 'upload-row';
             var lbl = document.createElement('label'); lbl.className = 'btn btn--ghost btn--small'; lbl.textContent = 'Enviar foto';
             var file = document.createElement('input'); file.type = 'file'; file.accept = 'image/*';
-            file.addEventListener('change', function () { if (file.files[0]) uploadImage(file.files[0], input, img); });
+            file.addEventListener('change', function () { if (file.files[0]) uploadImage(file.files[0], input, img, row); });
             lbl.appendChild(file); row.appendChild(lbl);
             var urlBtn = document.createElement('button'); urlBtn.type = 'button'; urlBtn.className = 'btn btn--ghost btn--small'; urlBtn.textContent = 'Usar link';
             urlBtn.addEventListener('click', function () { var u = prompt('Cole o link da imagem (https://...)'); if (u) { input.value = u; sync(); onPick(u); } });
@@ -987,9 +989,7 @@ function fotoCampo(valor, aoMudar, rotulo) {
     arq.type = 'file'; arq.accept = 'image/*'; arq.style.display = 'none';
     arq.addEventListener('change', function () {
         if (!arq.files[0]) return;
-        lbl.textContent = 'Enviando...';
-        uploadImage(arq.files[0], input, previa);
-        lbl.textContent = '📤 Enviar foto do computador';
+        uploadImage(arq.files[0], input, previa, linha);
     });
     lbl.appendChild(arq);
     linha.appendChild(lbl);
