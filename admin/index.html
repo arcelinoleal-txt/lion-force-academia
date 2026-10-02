@@ -476,6 +476,10 @@ function uploadImage(file, input, previewImg, ancora) {
                 })
                 .then(function () {
                     input.value = nome;
+                    // dispara 'input' para o campo tratar como se fosse digitado:
+                    // atualiza a previa E o modelo (u.fachada). Sem isso o
+                    // caminho novo nao chegava ao JSON e a foto nao trocava.
+                    input.dispatchEvent(new Event('input', { bubbles: true }));
                     if (previewImg) { previewImg.src = nome.startsWith('http') ? nome : '../' + nome; }
                     uploadMsg('Foto enviada! Agora clique em "Publicar" para ela aparecer no site.', true, ancora);
                 })
@@ -1059,7 +1063,7 @@ function renderUnis() {
         var lf = document.createElement('label'); lf.className = 'f';
         lf.textContent = 'Foto da fachada (aparece em destaque no site)';
         d.appendChild(lf);
-        d.appendChild(fotoCampo(u.fachada, function (v) { u.fachada = v; }));
+        d.appendChild(fotoCampo(u.fachada, function (v) { u.fachada = v; marcarSujo(); }));
 
         d.appendChild(botaoExcluir('Remover esta unidade?', function () {
             if (confirm('Remover esta unidade?')) { unisData.unidades.splice(i, 1); renderUnis(); marcarSujo(); }
@@ -1107,7 +1111,7 @@ function renderEq() {
 
         var lf = document.createElement('label'); lf.className = 'f'; lf.textContent = 'Foto';
         d.appendChild(lf);
-        d.appendChild(fotoCampo(m.foto, function (v) { m.foto = v; }));
+        d.appendChild(fotoCampo(m.foto, function (v) { m.foto = v; marcarSujo(); }));
 
         d.appendChild(botaoExcluir('Remover esta pessoa?', function () {
             if (confirm('Remover esta pessoa?')) { eqData.membros.splice(i, 1); renderEq(); marcarSujo(); }
@@ -1129,7 +1133,7 @@ function renderGal() {
         var forte = document.createElement('strong'); forte.textContent = 'Foto ' + (i + 1);
         cab.appendChild(forte); cab.appendChild(botoesOrdem(i, galData.fotos, renderGal));
         d.appendChild(cab);
-        d.appendChild(fotoCampo(f.src, function (v) { f.src = v; }));
+        d.appendChild(fotoCampo(f.src, function (v) { f.src = v; marcarSujo(); }));
         d.appendChild(campoTexto(f, 'Descrição (aparece em quem não vê a imagem)', 'alt', 'Ex: Sala de musculação'));
         d.appendChild(botaoExcluir('Remover esta foto?', function () {
             if (confirm('Remover esta foto?')) { galData.fotos.splice(i, 1); renderGal(); marcarSujo(); }
@@ -1203,7 +1207,7 @@ function renderDep() {
         var lf = document.createElement('label'); lf.className = 'f';
         lf.textContent = 'Foto (opcional — sem foto aparece só o texto)';
         d.appendChild(lf);
-        d.appendChild(fotoCampo(t.foto, function (v) { t.foto = v; }));
+        d.appendChild(fotoCampo(t.foto, function (v) { t.foto = v; marcarSujo(); }));
         d.appendChild(botaoExcluir('Remover esta avaliação?', function () {
             if (confirm('Remover esta avaliação?')) { depData.depoimentos.splice(i, 1); renderDep(); marcarSujo(); }
         }));
@@ -1222,7 +1226,7 @@ function renderHist() {
     var lff = document.createElement('label'); lff.className = 'f';
     lff.textContent = 'Foto do fundador (fica à esquerda, em destaque)';
     fund.appendChild(lff);
-    fund.appendChild(fotoCampo(histData.historia.fundador.foto, function (v) { histData.historia.fundador.foto = v; }));
+    fund.appendChild(fotoCampo(histData.historia.fundador.foto, function (v) { histData.historia.fundador.foto = v; marcarSujo(); }));
     var lr = document.createElement('label'); lr.className = 'f'; lr.textContent = 'Texto sobre o fundador';
     var tr = document.createElement('textarea');
     tr.value = histData.historia.fundador.resumo || '';
