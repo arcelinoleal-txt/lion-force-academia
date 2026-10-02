@@ -37,7 +37,7 @@
         /* conteudo */
         .conteudo { padding:26px 28px 70px; max-width:1180px; }
         .painel { display:none; }
-        .painel.is-active { display:block; }
+        .painel.is-active, .painel:not(.hidden) { display:block; }
         .painel h2 { font:800 1.7rem 'Barlow Condensed',sans-serif; text-transform:uppercase; margin-bottom:6px; }
         .dica { color:var(--mut); font-size:.88rem; margin-bottom:20px; line-height:1.55; }
         .dica b { color:#fff; }
