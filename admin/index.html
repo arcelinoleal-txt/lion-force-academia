@@ -426,19 +426,61 @@ function saveJSON(path, obj, message) {
             }).then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); });
         }
 
+/* Mensagem de upload: sempre visivel, mesmo sem um container de msg na tela.
+   Antes usava msg(id) e quebrava em silencio quando o id nao existia. */
+function uploadMsg(texto, ok) {
+            var alvo = document.getElementById('uploadMsg');
+            if (!alvo) {
+                var wrap = document.querySelector('#pane-unidades') || document.querySelector('[data-pane]');
+                if (!wrap) return;
+                alvo = document.createElement('p');
+                alvo.id = 'uploadMsg';
+                alvo.className = 'msg';
+                alvo.style.marginTop = '8px';
+                wrap.appendChild(alvo);
+            }
+            alvo.textContent = texto;
+            alvo.className = 'msg ' + (ok ? 'ok' : 'err');
+        }
+
 function uploadImage(file, input, previewImg) {
+            var MB = 1024 * 1024;
+            var limite = 4 * MB;
+            if (file.size > limite) {
+                uploadMsg('A foto tem ' + (file.size / MB).toFixed(1) + ' MB. O limite e 4 MB. Redimensione e tente de novo.', false);
+                return;
+            }
+            var ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
+            if (['heic', 'heif', 'avif'].indexOf(ext) >= 0) {
+                uploadMsg('Formato ' + ext.toUpperCase() + ' nao e aceito. Salve como JPG ou PNG e tente de novo.', false);
+                return;
+            }
+
             var reader = new FileReader();
+            reader.onerror = function () { uploadMsg('Nao consegui ler o arquivo.', false); };
             reader.onload = function () {
                 var base64 = String(reader.result).split(',')[1];
-                var ext = (file.name.split('.').pop() || 'jpg').toLowerCase().slice(0, 4);
-                var name = 'fotos/' + slug(file.name.replace(/\.[^.]+$/, '')) + '-' + Date.now() + '.' + ext;
+                var nome = 'fotos/' + slug(file.name.replace(/\.[^.]+$/, '')) + '-' + Date.now() + '.' + ext;
                 input.value = 'Carregando...';
-                fetch(API + name, {
+                uploadMsg('Enviando ' + (file.size / 1024).toFixed(0) + ' KB...', true);
+                fetch(API + nome, {
                     method: 'PUT', headers: Object.assign({ 'Content-Type': 'application/json' }, headers()),
-                    body: JSON.stringify({ message: 'Admin: envia ' + name, content: base64, branch: BRANCH })
-                }).then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
-                .then(function () { input.value = name; if (previewImg) { previewImg.src = name.startsWith('http') ? name : '../' + name; } msg(input.dataset.msg || 'galMsg', 'Foto enviada!', true); })
-                .catch(function () { input.value = ''; msg(input.dataset.msg || 'galMsg', 'Falha no envio. Confira o token.', false); });
+                    body: JSON.stringify({ message: 'Admin: envia ' + nome, content: base64, branch: BRANCH })
+                }).then(function (r) {
+                    if (!r.ok) return r.json().catch(function () { return {}; }).then(function (j) {
+                        throw new Error(r.status + ' ' + (j.message || ''));
+                    });
+                    return r.json();
+                })
+                .then(function () {
+                    input.value = nome;
+                    if (previewImg) { previewImg.src = nome.startsWith('http') ? nome : '../' + nome; }
+                    uploadMsg('Foto enviada! Clique em "Publicar" para gravar no site.', true);
+                })
+                .catch(function (e) {
+                    input.value = '';
+                    uploadMsg('Falha no envio: ' + e.message, false);
+                });
             };
             reader.readAsDataURL(file);
         }
@@ -1351,6 +1393,8 @@ document.getElementById('passInput').addEventListener('keydown', function (e) {
 });
 
 /* ---------- INATIVIDADE ---------- */
+/* O aviso de login diz "10 minutos". Se aumentar este valor, ajustar o texto
+   da tela de login e do guia junto, senao a promessa nao bate com o codigo. */
 var MINUTOS_INATIVO = 10;
 var idleTimer = null, idleAviso = null;
 function encerrarSessao(motivo) {
