@@ -1,1 +1,60 @@
-{"planos":[{"destaque":false,"descricao":"Flexibilidade total para começar agora.","nome":"Mensal","parcelas":"/mês","preco":"R$ 149","recursos":["Acesso à estrutura completa","Treino personalizado no app","Sem fidelidade"],"tag":"","valor":"149,99"},{"destaque":true,"descricao":"Constância para acelerar a evolução.","nome":"Trimestral","parcelas":"/mês","preco":"3x R$ 119","recursos":["Acesso à estrutura completa","Treino personalizado no app","Pagamento em 3x"],"tag":"Mais escolhido","valor":"119,99"},{"destaque":false,"descricao":"Compromisso que constrói resultado.","nome":"Semestral","parcelas":"/mês","preco":"6x R$ 99","recursos":["Acesso à estrutura completa","Acompanhamento de evolução","Pagamento em 6x"],"tag":"","valor":"99,99"},{"destaque":false,"descricao":"O melhor valor para a sua jornada.","nome":"Anual","parcelas":"/mês","preco":"12x R$ 79","recursos":["Acesso à estrutura completa","Evolução acompanhada no app","Garrafinha Lion Force inclusa"],"tag":"","valor":"79,99"}]}
+{
+  "planos": [
+    {
+      "destaque": false,
+      "descricao": "Flexibilidade total para começar agora.",
+      "nome": "Mensal",
+      "parcelas": "/mês",
+      "preco": "R$ 149",
+      "recursos": [
+        "Acesso à estrutura completa",
+        "Treino personalizado no app",
+        "Sem fidelidade"
+      ],
+      "tag": "",
+      "valor": "149,99"
+    },
+    {
+      "destaque": true,
+      "descricao": "Constância para acelerar a evolução.",
+      "nome": "Trimestral",
+      "parcelas": "/mês",
+      "preco": "3x R$ 119",
+      "recursos": [
+        "Acesso à estrutura completa",
+        "Treino personalizado no app",
+        "Pagamento em 3x"
+      ],
+      "tag": "Mais escolhido",
+      "valor": "119,99"
+    },
+    {
+      "destaque": false,
+      "descricao": "Compromisso que constrói resultado.",
+      "nome": "Semestral",
+      "parcelas": "/mês",
+      "preco": "6x R$ 99",
+      "recursos": [
+        "Acesso à estrutura completa",
+        "Acompanhamento de evolução",
+        "Pagamento em 6x"
+      ],
+      "tag": "",
+      "valor": "99,99"
+    },
+    {
+      "destaque": false,
+      "descricao": "O melhor valor para a sua jornada.",
+      "nome": "Anual",
+      "parcelas": "/mês",
+      "preco": "12x R$ 79",
+      "recursos": [
+        "Acesso à estrutura completa",
+        "Evolução acompanhada no app",
+        "Garrafinha Lion Force inclusa"
+      ],
+      "tag": "",
+      "valor": "79,99"
+    }
+  ]
+}
