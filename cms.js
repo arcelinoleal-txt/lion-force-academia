@@ -295,6 +295,44 @@
         }).catch(function () {});
     }
 
+    /* ---------- IMAGENS FIXAS DO SITE ----------
+       Troca as fotos que estavam presas no HTML e no CSS. Cada <img> tem
+       data-img="<slot>" e o valor vem de conteudo/imagens.json. As duas
+       imagens de fundo sao variaveis CSS, porque nao sao <img>: nao ha como
+       anotar um ::before com data-img. */
+    function aplicarImagens(mapa) {
+        if (!mapa) return;
+
+        Object.keys(mapa).forEach(function (slot) {
+            var src = mapa[slot];
+            if (!src) return;
+
+            // <img data-img="slot">
+            document.querySelectorAll('img[data-img="' + slot + '"]').forEach(function (el) {
+                el.src = src;
+            });
+
+            // fundo do topo e leao do bloco final
+            if (slot === 'hero-fundo') {
+                document.documentElement.style.setProperty('--img-hero', 'url("' + src + '")');
+            }
+            if (slot === 'leao-finale') {
+                document.documentElement.style.setProperty('--img-finale', 'url("' + src + '")');
+            }
+        });
+
+        // icone da aba
+        if (mapa.favicon) {
+            document.querySelectorAll('link[rel="icon"]').forEach(function (l) { l.href = mapa.favicon; });
+        }
+    }
+
+    function renderImagens() {
+        return getJSON('conteudo/imagens.json')
+            .then(function (d) { aplicarImagens(d.imagens || {}); })
+            .catch(function () { /* sem registro: o site fica com as fotos do HTML */ });
+    }
+
     /* ---------- TEXTOS GLOBAIS (horários, contatos, números) ---------- */
     function aplicarTextos(t) {
         if (!t) return;
@@ -339,6 +377,7 @@
 
     document.addEventListener('DOMContentLoaded', function () {
         renderTextos();
+        renderImagens();
         renderPlans();
         renderQuotes();
         renderGaleria();

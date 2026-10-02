@@ -152,6 +152,7 @@
             <a href="#" data-tab="agenda"><span class="ic">📋</span><span class="txt">Minha agenda</span></a>
             <a href="#" data-tab="resumo"><span class="ic">⚡</span><span class="txt">Publicar tudo</span></a>
             <div class="menu-grupo">Imagens</div>
+            <a href="#" data-tab="imagens"><span class="ic">🎨</span><span class="txt">Fotos do site</span></a>
             <a href="#" data-tab="unidades"><span class="ic">🏢</span><span class="txt">Unidades e fotos</span></a>
             <a href="#" data-tab="equipe"><span class="ic">👥</span><span class="txt">Equipe e pessoas</span></a>
             <a href="#" data-tab="galeria"><span class="ic">🖼️</span><span class="txt">Galeria</span></a>
@@ -228,6 +229,16 @@
                         <b>Avaliações</b> — os depoimentos da página inicial.
                     </p>
                 </div>
+            </section>
+
+            <!-- FOTOS DO SITE -->
+            <section class="painel" data-pane="imagens">
+                <h2>Fotos do site</h2>
+                <p class="dica">Todas as imagens que aparecem nas páginas, para trocar ou colocar uma nova.
+                As fotos das pessoas e das unidades ficam nas outras abas — aqui é o resto do site:
+                logo, fundos, cards e fotos da estrutura.</p>
+                <p class="dica">Depois de enviar, clique em <b>Publicar tudo</b> para a troca valer no site.</p>
+                <div id="imgList"></div>
             </section>
 
             <!-- UNIDADES -->
@@ -345,7 +356,7 @@ var token = '';
 var cache = {};
 var usuarioAtual = '';
 var txtData = null, histData = null, eqData = null, galData = null,
-    planosData = null, depData = null, unisData = null;
+    planosData = null, depData = null, unisData = null, imgData = null;
 
 function headers() { return { 'Accept': 'application/vnd.github+json', 'Authorization': 'Bearer ' + token }; }
         function msg(id, text, ok) { var m = document.getElementById(id); m.textContent = text; m.className = 'msg ' + (ok ? 'ok' : 'err'); }
@@ -1321,6 +1332,34 @@ document.addEventListener('click', function (ev) {
     if (ev.target && ev.target.closest && ev.target.closest('.menu')) return;
 }, true);
 
+/* ---------- FOTOS DO SITE ----------
+   Uma linha por slot de conteudo/imagens.json. O rotulo vem do proprio
+   arquivo, entao da para renomear aqui e nao precisa mexer no codigo. */
+function renderImagens() {
+    var box = document.getElementById('imgList');
+    if (!box || !imgData) return;
+    box.innerHTML = '';
+    var rotulos = imgData.rotulos || {};
+
+    Object.keys(imgData.imagens || {}).forEach(function (slot) {
+        var d = document.createElement('div');
+        d.className = 'item';
+        var lf = document.createElement('label');
+        lf.className = 'f';
+        lf.textContent = rotulos[slot] || slot;
+        d.appendChild(lf);
+        d.appendChild(fotoCampo(imgData.imagens[slot], function (v) {
+            imgData.imagens[slot] = v;
+            marcarSujo();
+        }));
+        box.appendChild(d);
+    });
+
+    if (!Object.keys(imgData.imagens || {}).length) {
+        box.innerHTML = '<p class="dica">Nenhuma foto cadastrada em conteudo/imagens.json.</p>';
+    }
+}
+
 /* ---------- PUBLICAR TUDO ---------- */
 document.getElementById('salvarTudo').addEventListener('click', function () {
     var b = this; b.disabled = true; msg('tudoMsg', 'Publicando...', true);
@@ -1331,7 +1370,8 @@ document.getElementById('salvarTudo').addEventListener('click', function () {
         ['conteudo/galeria.json', galData, 'Admin: atualiza galeria', 'galeria'],
         ['conteudo/unidades.json', unisData, 'Admin: atualiza unidades', 'unidades'],
         ['conteudo/planos.json', planosData, 'Admin: atualiza planos', 'planos'],
-        ['conteudo/depoimentos.json', depData, 'Admin: atualiza avaliações', 'avaliações']
+        ['conteudo/depoimentos.json', depData, 'Admin: atualiza avaliações', 'avaliações'],
+        ['conteudo/imagens.json', imgData, 'Admin: atualiza fotos do site', 'fotos do site']
     ];
     var feitos = 0, erros = [];
     alvos.reduce(function (p, a) {
@@ -1590,10 +1630,14 @@ function boot() {
         loadJSON('conteudo/equipe.json'),
         loadJSON('conteudo/galeria.json'),
         loadJSON('conteudo/planos.json'),
-        loadJSON('conteudo/depoimentos.json')
+        loadJSON('conteudo/depoimentos.json'),
+        loadJSON('conteudo/imagens.json').catch(function () { return { imagens: {}, rotulos: {} }; })
     ]).then(function (res) {
         txtData = res[0]; histData = res[1]; unisData = res[2];
         eqData = res[3]; galData = res[4]; planosData = res[5]; depData = res[6];
+        imgData = res[7];
+        if (!imgData.imagens) imgData.imagens = {};
+        if (!imgData.rotulos) imgData.rotulos = {};
 
         if (!txtData.textos) txtData.textos = {};
         if (!histData.historia) histData.historia = {};
@@ -1604,7 +1648,7 @@ function boot() {
         if (!Array.isArray(depData.depoimentos)) depData.depoimentos = [];
 
         renderUnis(); renderEq(); renderGal(); renderPlanos();
-        renderDep(); renderHist(); renderTxt();
+        renderDep(); renderHist(); renderTxt(); renderImagens();
 
         desenharFiltros(); desenharAgenda();
         pintarStatus();
