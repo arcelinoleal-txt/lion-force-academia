@@ -487,8 +487,9 @@ img { max-width: 100%; height: auto; }
 }
 
 /* ---------- AVALIACOES: carrossel automatico ---------- */
-.avals { position: relative; }
-.avals-trilho { position: relative; min-height: 250px; }
+.avals { position: relative; opacity: 1; transform: none; }
+.avals-trilho { position: relative; min-height: 210px; }
+.avals-medidor { position: absolute; inset: 0; visibility: hidden; opacity: 0; pointer-events: none; }
 .avals-item {
     position: absolute; inset: 0;
     display: flex; flex-direction: column; justify-content: center;
@@ -497,6 +498,7 @@ img { max-width: 100%; height: auto; }
     transition: opacity .7s ease, transform .7s ease, visibility .7s;
 }
 .avals-item.ativa { opacity: 1; visibility: visible; transform: none; }
+.avals-medidor .avals-item { visibility: hidden !important; opacity: 0 !important; }
 .avals-topo { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
 .avals-avatar {
     width: 46px; height: 46px; border-radius: 50%;
@@ -521,8 +523,6 @@ img { max-width: 100%; height: auto; }
     transition: background .3s, width .3s;
 }
 .avals-ponto.ativo { background: var(--red); width: 22px; border-radius: 4px; }
-.avals-item.reveal { opacity: 0; }
-.avals-item.reveal.ativa { opacity: 1; }
 
 @media (prefers-reduced-motion: reduce) {
     .avals-item { transition: none; }

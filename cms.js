@@ -382,7 +382,7 @@
                     '<div class="avals-quando">' + esc(a.quando || '') + '</div></div></div>' +
                     '<p class="avals-texto">' + esc(a.texto) + '</p>' +
                     '<span class="avals-prova">5 estrelas no Google</span></article>';
-                pnts += '<button class="avals-ponto' + (i === 0 ? ' ativo' : '') + '" type="button" aria-label="Avaliação ' + (i + 1) + '"></button>';
+                pnts += '<button class="avals-ponto" type="button" data-i="' + i + '" aria-label="Avaliação ' + (i + 1) + '"></button>';
             });
             trilho.innerHTML = html;
             pontos.innerHTML = pnts;
