@@ -9,6 +9,7 @@ package-lock.json
 PAINEL-GUIA.md
 CLOUDFLARE-PASSO-A-PASSO.md
 GITHUB-PASSO-A-PASSO.md
+GOOGLE-PASSO-A-PASSO.md
 
 # Scripts de manutencao (rodam local, nunca no site)
 tools/
@@ -31,3 +32,7 @@ node_modules/
 # Material de edicao de fotos (rascunhos, Photoroom, modelos).
 # Nenhum arquivo daqui e usado pelo site.
 Edi*/
+
+# Artes prontas para publicar: sao o produto final do trabalho de imagem.
+# Fora do site enquanto o cliente nao aprovar.
+Imagens prontas/
