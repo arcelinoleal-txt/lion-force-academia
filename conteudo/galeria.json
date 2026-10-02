@@ -1,16 +1,3 @@
 {
-  "fotos": [
-    {
-      "src": "unidade-1.jpg",
-      "alt": "Fachada da Lion Force Academia no Jardim Das Fontes"
-    },
-    {
-      "src": "unidade-2.jpg",
-      "alt": "Fachada da frente com a calçada pintada de cinza"
-    },
-    {
-      "src": "unidade-3.jpg",
-      "alt": "Fachada de lado com a calçada pintada de cinza"
-    }
-  ]
+  "fotos": []
 }
