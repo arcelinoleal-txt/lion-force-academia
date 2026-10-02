@@ -359,6 +359,37 @@
             .catch(function () { /* sem registro: o site fica com as fotos do HTML */ });
     }
 
+
+    /* ---------- AVALIACOES DO GOOGLE ----------
+       Vem de conteudo/avaliacoes.json. O texto exibido e o mesmo do
+       perfil do Google, mas sem marca no schema.org: o Google proibe
+       review "self-serving" marcado, e isso pode gerar acao manual. */
+    function renderAvaliacoes() {
+        var box = document.getElementById('avals');
+        if (!box) return;
+        getJSON('conteudo/avaliacoes.json').then(function (d) {
+            var lista = d.avaliacoes || [];
+            if (!lista.length) { box.hidden = true; return; }
+            var trilho = box.querySelector('.avals-trilho');
+            var pontos = box.querySelector('.avals-pontos');
+            var html = '', pnts = '';
+            lista.forEach(function (a, i) {
+                var inicial = esc((a.nome || '?').trim().charAt(0).toUpperCase());
+                html += '<article class="avals-item' + (i === 0 ? ' ativa' : '') + '">' +
+                    '<div class="avals-topo">' +
+                    '<span class="avals-avatar" aria-hidden="true">' + inicial + '</span>' +
+                    '<div><div class="avals-nome">' + esc(a.nome) + '</div>' +
+                    '<div class="avals-quando">' + esc(a.quando || '') + '</div></div></div>' +
+                    '<p class="avals-texto">' + esc(a.texto) + '</p>' +
+                    '<span class="avals-prova">5 estrelas no Google</span></article>';
+                pnts += '<button class="avals-ponto' + (i === 0 ? ' ativo' : '') + '" type="button" aria-label="Avaliação ' + (i + 1) + '"></button>';
+            });
+            trilho.innerHTML = html;
+            pontos.innerHTML = pnts;
+            refresh(box);
+        }).catch(function () { box.hidden = true; });
+    }
+
     /* ---------- TEXTOS GLOBAIS (horários, contatos, números) ---------- */
     function aplicarTextos(t) {
         if (!t) return;
@@ -403,6 +434,7 @@
 
     document.addEventListener('DOMContentLoaded', function () {
         renderTextos();
+        renderAvaliacoes();
         renderImagens();
         renderPlans();
         renderQuotes();
