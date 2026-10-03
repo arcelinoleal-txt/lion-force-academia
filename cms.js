@@ -416,10 +416,16 @@
         var topo = 'Segunda a sexta · ' + semana + ' · Sábado · ' + sab;
 
         document.querySelectorAll('.topbar span:last-child').forEach(function (el) {
-            var txt = el.textContent.replace(/Seg a Sex.*$/i, faixa);
-            el.innerHTML = txt;
+            //pega o link ANTES: o innerHTML abaixo destruia o <a> e o icone do telefone
             var link = el.querySelector('a');
             if (link && wa) link.href = 'https://wa.me/' + wa;
+            //troca SO o texto do horario, preservando o icone
+            for (var i = 0; i < el.childNodes.length; i++) {
+                var no = el.childNodes[i];
+                if (no.nodeType === 3 && /Seg a Sex/i.test(no.nodeValue)) {
+                    no.nodeValue = no.nodeValue.replace(/Seg a Sex.*$/i, faixa);
+                }
+            }
         });
         document.querySelectorAll('.foot-base .wrap span:last-child').forEach(function (el) {
             el.textContent = faixa;
