@@ -17,8 +17,13 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800;900&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
-    <link rel="icon" type="image/png" href="Lion force academia.png">
-    <script src="https://unpkg.com/lucide@latest"></script>
+        <link rel="icon" href="/favicon.ico" sizes="any">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <meta name="msapplication-TileColor" content="#0a0a0a">
+    <script src="vendor/lucide.min.js"></script>
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
@@ -162,7 +167,7 @@
     </div>
 
     <script>
-        lucide.createIcons();
+        if (window.lucide) { if (window.lucide) { lucide.createIcons(); } }
 
         // Menu mobile
         const navToggle = document.querySelector('.nav-toggle');
