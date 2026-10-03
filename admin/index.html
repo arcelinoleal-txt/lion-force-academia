@@ -776,7 +776,7 @@ function renderPlanos() {
                 }
                 field('Nome', 'nome'); field('Descrição', 'descricao');
                 var r = document.createElement('div'); r.className = 'row';
-                [['Preço (ex: 3x R$ 119)', 'preco'], ['Centavos (ex: 119,99)', 'valor'], ['Período (ex: /mês)', 'parcelas'], ['Etiqueta (ex: Mais escolhido)', 'tag']].forEach(function (cfg) {
+                [['Preço (ex: 3x R$ 119)', 'preco'], ['Valor (ex: 119,99)', 'valor'], ['Período (ex: /mês)', 'parcelas'], ['Etiqueta (ex: Mais escolhido)', 'tag']].forEach(function (cfg) {
                     var l = document.createElement('label'); l.className = 'f'; l.textContent = cfg[0];
                     var inp = document.createElement('input'); inp.type = 'text'; inp.value = p[cfg[1]] || '';
                     inp.addEventListener('input', function () { p[cfg[1]] = inp.value; });

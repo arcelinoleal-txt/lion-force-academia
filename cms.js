@@ -27,15 +27,28 @@
     }
 
     /* ---------- PLANOS (index + planos) ---------- */
+    /* O JSON guarda preco ("3x R$ 119") e valor ("119,99") com o inteiro
+       repetido nos dois. Aqui a gente isola so os centavos: se juntar o valor
+       inteiro em cima do preco, o preço sai "R$ 149,149,99". */
+    function centavosDe(valor) {
+        var v = String(valor == null ? '' : valor).trim();
+        if (/^\d+\.\d{1,2}$/.test(v)) v = v.replace('.', ','); /* "149.99" -> "149,99" */
+        var virgula = v.indexOf(',');
+        /* sem virgula o valor e o inteiro ("50") e nao temos os centavos */
+        return virgula === -1 ? '' : v.slice(virgula + 1).trim();
+    }
+
     function planCard(p) {
         var feats = (p.recursos || []).map(function (f) {
             return '<li><i data-lucide="check" class="icon"></i>' + esc(f) + '</li>';
         }).join('');
+        var centavos = centavosDe(p.valor);
+        var priceSmall = (centavos ? ',' + centavos : '') + (p.parcelas || '');
         return '<article class="plan reveal' + (p.destaque ? ' plan--featured' : '') + '" tabindex="0">' +
             (p.tag ? '<span class="plan-tag">' + esc(p.tag) + '</span>' : '') +
             '<h3>' + esc(p.nome) + '</h3>' +
             '<p class="plan-desc">' + esc(p.descricao) + '</p>' +
-            '<div class="price">' + esc(p.preco) + '<small>,' + esc(p.valor) + esc(p.parcelas) + '</small></div>' +
+            '<div class="price">' + esc(p.preco) + '<small>' + esc(priceSmall) + '</small></div>' +
             '<ul>' + feats + '</ul>' +
             '<a class="btn' + (p.destaque ? '' : ' btn--dark') + '" href="contato.html">Escolher ' + esc(p.nome.toLowerCase()) + '</a>' +
             '</article>';
@@ -193,7 +206,12 @@
     /* ---------- UNIDADES: busca (unidade) + vitrine (jardim-*) ---------- */
     function precoPorNome(planos, nome) {
         var p = (planos || []).filter(function (x) { return (x.nome || '').toLowerCase() === nome; })[0];
-        return p ? ('R$ ' + p.preco.replace(/^(\d+x\s*)/, '') + ',' + p.valor) : '';
+        if (!p) return '';
+        /* "3x R$ 119" -> "R$ 119": a vitrine da unidade mostra so o valor mensal */
+        var base = String(p.preco == null ? '' : p.preco).replace(/^\s*\d+x\s*/, '').trim();
+        if (!/^R\$/i.test(base)) base = 'R$ ' + base;
+        var centavos = centavosDe(p.valor);
+        return base + (centavos ? ',' + centavos : '');
     }
 
     function unitCard(u, planos) {
