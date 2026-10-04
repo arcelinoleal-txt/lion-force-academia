@@ -9,11 +9,11 @@
       "destaque": true
     },
     {
-      "nome": "Nome do Personal",
-      "cargo": "Cargo · Especialidade",
-      "foto": "",
+      "nome": "Tayna",
+      "cargo": "Personal Trainer",
+      "foto": "fotos/tayna-personal.webp",
       "unidade": "jardim-das-fontes",
-      "instagram": "",
+      "instagram": "https://www.instagram.com/personal.tayna_/",
       "destaque": false
     },
     {
