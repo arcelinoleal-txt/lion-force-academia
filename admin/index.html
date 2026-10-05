@@ -125,6 +125,36 @@
             .item-topo { flex-wrap:wrap; }
         }
 
+/* ---------- RECORTE DE FOTO ----------
+   A previa usa o MESMO formato que o site usa (object-fit: cover), entao o
+   que a pessoa ve no painel e o que o visitante ve na pagina. */
+.foto-previa--livre { object-fit: contain; background: #000; }
+.foto-formato { font-size: .77rem; color: var(--mut); margin: -4px 0 0; line-height: 1.45; }
+.foto-formato b { color: var(--txt); font-weight: 700; }
+
+.rec-overlay { position: fixed; inset: 0; z-index: 400; background: rgba(0, 0, 0, .9); display: flex; align-items: center; justify-content: center; padding: 14px; }
+.rec-caixa { width: min(720px, 100%); max-height: 96vh; overflow: auto; background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 18px 18px 16px; }
+.rec-topo { display: flex; justify-content: space-between; gap: 14px; align-items: flex-start; }
+.rec-topo h3 { font: 800 1.5rem 'Barlow Condensed', sans-serif; text-transform: uppercase; margin: 0; line-height: 1; }
+.rec-slot { color: var(--red); font-weight: 700; font-size: .78rem; text-transform: uppercase; letter-spacing: .06em; margin: 7px 0 3px; }
+.rec-fica { color: var(--mut); font-size: .86rem; margin: 0; line-height: 1.45; }
+.rec-fica b { color: var(--txt); }
+.rec-fechar { background: none; border: 0; color: var(--mut); font-size: 1.5rem; line-height: 1; cursor: pointer; padding: 0 4px; flex: none; }
+.rec-fechar:hover { color: #fff; }
+.rec-estagio { position: relative; overflow: hidden; border-radius: 12px; background: #000; margin: 14px 0 10px; touch-action: none; cursor: grab; user-select: none; }
+.rec-estagio:active { cursor: grabbing; }
+.rec-estagio img { position: absolute; left: 0; top: 0; transform-origin: 0 0; pointer-events: none; -webkit-user-drag: none; max-width: none; display: none; }
+.rec-grade { position: absolute; inset: 0; pointer-events: none; background-image: repeating-linear-gradient(to right, rgba(255,255,255,.3) 0 1px, transparent 1px 33.34%), repeating-linear-gradient(to bottom, rgba(255,255,255,.3) 0 1px, transparent 1px 33.34%); }
+.rec-carregando { position: absolute; inset: 0; display: grid; place-items: center; color: var(--mut); font-size: .88rem; }
+.rec-ajuda { color: var(--mut); font-size: .8rem; margin: 0 0 12px; }
+.rec-controles { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+.rec-controles span { font-size: .76rem; text-transform: uppercase; letter-spacing: .06em; color: var(--mut); }
+.rec-controles input[type=range] { flex: 1; min-width: 140px; accent-color: var(--red); }
+.rec-botoes { display: flex; gap: 10px; }
+.rec-botoes .btn { flex: 1; }
+.rec-sem { display: block; margin: 13px auto 0; background: none; border: 0; color: var(--mut); font-size: .8rem; text-decoration: underline; cursor: pointer; }
+.rec-sem:hover { color: #fff; }
+@media (max-width: 560px) { .rec-botoes { flex-direction: column; } }
 </style>
 </head>
 <body>
@@ -244,6 +274,10 @@
                 <p class="dica">Todas as imagens que aparecem nas páginas, para trocar ou colocar uma nova.
                 As fotos das pessoas e das unidades ficam nas outras abas — aqui é o resto do site:
                 logo, fundos, cards e fotos da estrutura.</p>
+                <p class="dica">Como funciona: clique em <b>Enviar foto do computador</b>, escolha o arquivo e
+                uma tela de recorte abre com o <b>formato que o site usa</b> — arraste a foto até ficar do jeito
+                que você quer e clique em <b>Usar esta foto</b>. Para ajustar uma foto que já está publicada,
+                use <b>✂️ Recortar a foto atual</b> (não precisa ter o arquivo original).</p>
                 <p class="dica">Depois de enviar, clique em <b>Publicar tudo</b> para a troca valer no site.</p>
                 <div id="imgList"></div>
             </section>
@@ -1017,14 +1051,28 @@ document.querySelectorAll('.menu a[data-tab]').forEach(function (a) {
 });
 
 /* ---------- FOTOS: campo completo com enviar, link e apagar ---------- */
-function fotoCampo(valor, aoMudar, rotulo) {
+function fotoCampo(valor, aoMudar, chave) {
+    var fmt = formatoDaFoto(chave);
+    var rotuloSite = fmt ? (fmt.livre ? fmt.rot : fmt.rot + ' — aparece ' + fmt.w + ' × ' + fmt.h) : '';
     var wrap = document.createElement('div');
     wrap.className = 'foto-caixa';
 
     var previa = document.createElement('img');
-    previa.className = 'foto-previa';
+    previa.className = 'foto-previa' + (fmt && fmt.livre ? ' foto-previa--livre' : '');
     previa.alt = '';
     previa.style.display = 'none';
+    if (fmt && !fmt.livre) {
+        // mesma janela que o site usa (object-fit: cover): a prévia mostra
+        // EXATAMENTE o que o visitante vê na página
+        previa.style.aspectRatio = fmt.w + ' / ' + fmt.h;
+        previa.style.width = 'min(100%, calc(260px * ' + (fmt.w / fmt.h) + '))';
+        previa.style.maxHeight = 'none';
+        previa.style.objectPosition = (chave === 'equipe' || chave === 'fundador') ? 'center 20%' : 'center';
+    }
+
+    var info = document.createElement('p');
+    info.className = 'foto-formato';
+    info.textContent = rotuloSite;
 
     var aviso = document.createElement('div');
     aviso.className = 'foto-vazia';
@@ -1040,6 +1088,7 @@ function fotoCampo(valor, aoMudar, rotulo) {
         var v = input.value.trim();
         if (v) { previa.src = v.startsWith('http') ? v : '../' + v; previa.style.display = ''; aviso.style.display = 'none'; }
         else { previa.style.display = 'none'; aviso.style.display = ''; }
+        btnRec.disabled = !v;
     }
     input.addEventListener('input', function () { sync(); aoMudar(input.value.trim()); });
 
@@ -1052,11 +1101,54 @@ function fotoCampo(valor, aoMudar, rotulo) {
     var arq = document.createElement('input');
     arq.type = 'file'; arq.accept = 'image/*'; arq.style.display = 'none';
     arq.addEventListener('change', function () {
-        if (!arq.files[0]) return;
-        uploadImage(arq.files[0], input, previa, linha);
+        var f = arq.files[0];
+        arq.value = '';
+        if (!f) return;
+        if (!/^image\//.test(f.type || '')) {
+            uploadMsg('Esse arquivo não é uma imagem. Escolha um arquivo JPG, PNG ou WEBP.', false, linha);
+            return;
+        }
+        // passa pelo recorte ANTES do envio — é aqui que sai a "foto torta"
+        abrirRecorte({
+            blob: f,
+            formato: fmt,
+            rotulo: rotuloSite,
+            nomeBase: f.name.replace(/\.[^.]+$/, '')
+        }).then(function (r) {
+            if (r) enviarFoto(r, input, previa, linha);
+        });
     });
     lbl.appendChild(arq);
     linha.appendChild(lbl);
+
+    /* Recorta a foto que ja esta publicada — nao precisa ter o arquivo original
+       no computador: baixa a que esta no site e deixa ajustar. */
+    var btnRec = document.createElement('button');
+    btnRec.type = 'button';
+    btnRec.className = 'btn btn--ghost btn--mini';
+    btnRec.textContent = '✂️ Recortar a foto atual';
+    btnRec.addEventListener('click', function () {
+        var v = input.value.trim();
+        if (!v) return;
+        btnRec.disabled = true;
+        uploadMsg('Baixando a foto atual...', true, linha);
+        baixarImagem(v.startsWith('http') ? v : '../' + v).then(function (b) {
+            uploadMsg('', true, linha);
+            return abrirRecorte({
+                blob: b,
+                formato: fmt,
+                rotulo: rotuloSite,
+                nomeBase: v.split('/').pop().replace(/\.[^.]+$/, '')
+            });
+        }).then(function (r) {
+            if (r) enviarFoto(r, input, previa, linha);
+        }).catch(function () {
+            uploadMsg('Não deu pra baixar essa foto. Use "Enviar foto do computador" com o arquivo original.', false, linha);
+        }).then(function () {
+            sync();
+        });
+    });
+    linha.appendChild(btnRec);
 
     var btnLink = document.createElement('button');
     btnLink.type = 'button'; btnLink.className = 'btn btn--ghost btn--mini';
@@ -1074,6 +1166,7 @@ function fotoCampo(valor, aoMudar, rotulo) {
     linha.appendChild(btnLimpar);
 
     wrap.appendChild(previa);
+    wrap.appendChild(info);
     wrap.appendChild(aviso);
     wrap.appendChild(input);
     wrap.appendChild(linha);
@@ -1123,7 +1216,7 @@ function renderUnis() {
         var lf = document.createElement('label'); lf.className = 'f';
         lf.textContent = 'Foto da fachada (aparece em destaque no site)';
         d.appendChild(lf);
-        d.appendChild(fotoCampo(u.fachada, function (v) { u.fachada = v; marcarSujo(); }));
+        d.appendChild(fotoCampo(u.fachada, function (v) { u.fachada = v; marcarSujo(); }, 'fachada'));
 
         d.appendChild(botaoExcluir('Remover esta unidade?', function () {
             if (confirm('Remover esta unidade?')) { unisData.unidades.splice(i, 1); renderUnis(); marcarSujo(); }
@@ -1171,7 +1264,7 @@ function renderEq() {
 
         var lf = document.createElement('label'); lf.className = 'f'; lf.textContent = 'Foto';
         d.appendChild(lf);
-        d.appendChild(fotoCampo(m.foto, function (v) { m.foto = v; marcarSujo(); }));
+        d.appendChild(fotoCampo(m.foto, function (v) { m.foto = v; marcarSujo(); }, 'equipe'));
 
         d.appendChild(botaoExcluir('Remover esta pessoa?', function () {
             if (confirm('Remover esta pessoa?')) { eqData.membros.splice(i, 1); renderEq(); marcarSujo(); }
@@ -1195,7 +1288,7 @@ function renderGal() {
         var forte = document.createElement('strong'); forte.textContent = 'Foto ' + (i + 1);
         cab.appendChild(forte); cab.appendChild(botoesOrdem(i, galData.fotos, renderGal));
         d.appendChild(cab);
-        d.appendChild(fotoCampo(f.src, function (v) { f.src = v; marcarSujo(); }));
+        d.appendChild(fotoCampo(f.src, function (v) { f.src = v; marcarSujo(); }, 'galeria'));
         d.appendChild(campoTexto(f, 'Descrição (aparece em quem não vê a imagem)', 'alt', 'Ex: Sala de musculação'));
         d.appendChild(botaoExcluir('Remover esta foto?', function () {
             if (confirm('Remover esta foto?')) { galData.fotos.splice(i, 1); renderGal(); marcarSujo(); }
@@ -1269,7 +1362,7 @@ function renderDep() {
         var lf = document.createElement('label'); lf.className = 'f';
         lf.textContent = 'Foto (opcional — sem foto aparece só o texto)';
         d.appendChild(lf);
-        d.appendChild(fotoCampo(t.foto, function (v) { t.foto = v; marcarSujo(); }));
+        d.appendChild(fotoCampo(t.foto, function (v) { t.foto = v; marcarSujo(); }, 'depo-foto'));
         d.appendChild(botaoExcluir('Remover esta avaliação?', function () {
             if (confirm('Remover esta avaliação?')) { depData.depoimentos.splice(i, 1); renderDep(); marcarSujo(); }
         }));
@@ -1288,7 +1381,7 @@ function renderHist() {
     var lff = document.createElement('label'); lff.className = 'f';
     lff.textContent = 'Foto do fundador (fica à esquerda, em destaque)';
     fund.appendChild(lff);
-    fund.appendChild(fotoCampo(histData.historia.fundador.foto, function (v) { histData.historia.fundador.foto = v; marcarSujo(); }));
+    fund.appendChild(fotoCampo(histData.historia.fundador.foto, function (v) { histData.historia.fundador.foto = v; marcarSujo(); }, 'fundador'));
     var lr = document.createElement('label'); lr.className = 'f'; lr.textContent = 'Texto sobre o fundador';
     var tr = document.createElement('textarea');
     tr.value = histData.historia.fundador.resumo || '';
@@ -1402,7 +1495,7 @@ function renderImagens() {
         d.appendChild(fotoCampo(imgData.imagens[slot], function (v) {
             imgData.imagens[slot] = v;
             marcarSujo();
-        }));
+        }, slot));
         box.appendChild(d);
     });
 
@@ -1777,6 +1870,348 @@ function boot() {
 }
 
 abrirAba('agenda');
+/* ---------- RECORTE DE FOTO ----------
+   Cada foto do site aparece num formato fixo na pagina (faixa larga, retrato,
+   quadrado...). Sem ajuste, uma foto de celular (retrato) vira uma fatia do
+   meio — que e como a foto das esteiras virou "só o corpo" na home. Aqui a
+   pessoa arrasta a foto DENTRO do formato do site e envia só o que interessa,
+   do jeito que o visitante vai ver. */
+var FORMATOS = {
+    'hero-fundo': { w: 16, h: 9, rot: 'Fundo do topo, atrás do título' },
+    'leao-finale': { w: 16, h: 9, rot: 'Leão do bloco final' },
+    'app-mockup': { w: 3, h: 4, rot: 'Print do app Next Fit' },
+    'logo': { livre: true, rot: 'Logo — aparece inteira, sem corte' },
+    'favicon': { w: 1, h: 1, rot: 'Ícone da aba do navegador' },
+    'home-hero-salao': { w: 6, h: 5, rot: 'Foto grande do topo da home' },
+    'home-servico-app': { w: 4, h: 3, rot: 'Card "Treino no app" (home)' },
+    'home-servico-avaliacao': { w: 4, h: 3, rot: 'Card "Avaliação física" (home)' },
+    'home-servico-acompanhamento': { w: 4, h: 3, rot: 'Card "Acompanhamento" (home)' },
+    'home-forca': { w: 589, h: 220, rot: 'Faixa do card "Força" (home)' },
+    'home-cardio': { w: 589, h: 220, rot: 'Faixa do card "Cardio" (home)' },
+    'home-equipe-musculacao': { w: 589, h: 220, rot: 'Faixa de card (home)' },
+    'home-equipe-avaliacao': { w: 589, h: 220, rot: 'Faixa de card (home)' },
+    'estrutura-forca': { w: 589, h: 220, rot: 'Faixa do card "Força" (estrutura)' },
+    'estrutura-cardio': { w: 589, h: 220, rot: 'Faixa do card "Cardio" (estrutura)' },
+    'equipe-musculacao': { w: 589, h: 220, rot: 'Faixa da página Equipe' },
+    'equipe-avaliacao': { w: 589, h: 220, rot: 'Faixa da página Equipe' },
+    'vaga-recepcao': { w: 386, h: 220, rot: 'Card de vaga (trabalhe conosco)' },
+    'vaga-musculacao': { w: 386, h: 220, rot: 'Card de vaga (trabalhe conosco)' },
+    'vaga-avaliacao': { w: 386, h: 220, rot: 'Card de vaga (trabalhe conosco)' },
+    'vaga-comercial': { w: 386, h: 220, rot: 'Card de vaga (trabalhe conosco)' },
+    'equipe': { w: 4, h: 5, rot: 'Retrato do profissional' },
+    'fundador': { w: 4, h: 5, rot: 'Card de fundador' },
+    'fachada': { w: 3, h: 4, rot: 'Foto da unidade em destaque' },
+    'galeria': { w: 16, h: 9, rot: 'Galeria da unidade' },
+    'depo-foto': { w: 1, h: 1, rot: 'Foto de quem avaliou (ao lado do nome)' }
+};
+function formatoDaFoto(chave) { return (chave && typeof FORMATOS !== 'undefined' && FORMATOS[chave]) || null; }
+function recEsc(s) {
+    return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+function extensaoDe(blob) {
+    var t = ((blob && blob.type) || '').split('/')[1] || 'jpeg';
+    if (t === 'jpeg') return 'jpg';
+    if (t === 'svg+xml') return 'svg';
+    return t.slice(0, 4);
+}
+
+/* Testa transparencia num trecho pequeno: serve pra decidir se a saida e
+   PNG (logo com fundo transparente) ou JPEG (foto — bem mais leve). */
+function temAlfa(img, sx, sy, sw, sh) {
+    try {
+        var c = document.createElement('canvas');
+        c.width = 120; c.height = 120;
+        var g = c.getContext('2d', { willReadFrequently: true });
+        g.drawImage(img, sx, sy, sw, sh, 0, 0, 120, 120);
+        var d = g.getImageData(0, 0, 120, 120).data;
+        for (var i = 3; i < d.length; i += 4) { if (d[i] < 250) return true; }
+    } catch (e) { /* canvas protegido: assume sem alfa */ }
+    return false;
+}
+
+/* Recorta uma regiao da imagem e devolve o blob (no maximo 2000 px de largura,
+   entao foto de celular nao vira arquivo de 6 MB). */
+function recortarImagem(img, sx, sy, sw, sh) {
+    sw = Math.max(1, sw); sh = Math.max(1, sh);
+    var k = Math.min(1, 2000 / sw);
+    var ow = Math.max(1, Math.round(sw * k)), oh = Math.max(1, Math.round(sh * k));
+    var c = document.createElement('canvas');
+    c.width = ow; c.height = oh;
+    var g = c.getContext('2d');
+    g.imageSmoothingEnabled = true;
+    g.imageSmoothingQuality = 'high';
+    g.drawImage(img, sx, sy, sw, sh, 0, 0, ow, oh);
+    var alfa = temAlfa(img, sx, sy, sw, sh);
+    return new Promise(function (ok, erro) {
+        try {
+            c.toBlob(function (b) {
+                if (!b) { erro(new Error('não consegui gerar a imagem')); return; }
+                ok({ blob: b, ext: alfa ? 'png' : 'jpg' });
+            }, alfa ? 'image/png' : 'image/jpeg', 0.86);
+        } catch (e) { erro(e); }
+    });
+}
+
+function imagemDeBlob(blob) {
+    return new Promise(function (ok, erro) {
+        var u = URL.createObjectURL(blob);
+        var i = new Image();
+        i.onload = function () { i._url = u; ok(i); };
+        i.onerror = function () { URL.revokeObjectURL(u); erro(new Error('não abri essa imagem')); };
+        i.src = u;
+    });
+}
+
+function baixarImagem(url) {
+    return fetch(url, { mode: 'cors' }).then(function (r) {
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return r.blob();
+    }).then(function (b) {
+        if (!/^image\//.test(b.type || '')) throw new Error('não é imagem');
+        return b;
+    });
+}
+
+/* Janela de recorte. op = { blob, formato, rotulo, nomeBase }.
+   Devolve { blob, ext, nomeBase, cru? } ou null (cancelou). */
+function abrirRecorte(op) {
+    return new Promise(function (concluir) {
+        var fmt = op.formato || null;
+        var livre = !fmt || !!fmt.livre;
+        var razao = livre ? null : fmt.w / fmt.h;
+        var velho = document.querySelector('.rec-overlay');
+        if (velho) velho.remove();
+
+        var ov = document.createElement('div');
+        ov.className = 'rec-overlay';
+        ov.setAttribute('role', 'dialog');
+        ov.innerHTML =
+            '<div class="rec-caixa">' +
+            '<div class="rec-topo"><div>' +
+            '<h3>Ajustar a foto pro site</h3>' +
+            '<p class="rec-slot">' + recEsc(op.rotulo || '') + '</p>' +
+            '<p class="rec-fica">' + (livre
+                ? 'Espaço livre — envie no formato que preferir.'
+                : 'No site esse espaço aparece em <b>' + fmt.w + ' × ' + fmt.h + '</b> — ' + recEsc(fmt.rot) + '. Ajuste dentro do quadro.') + '</p>' +
+            '</div><button class="rec-fechar" type="button" aria-label="Fechar">✕</button></div>' +
+            '<div class="rec-estagio"><img alt=""><div class="rec-grade"></div><div class="rec-carregando">Abrindo a foto...</div></div>' +
+            '<p class="rec-ajuda">Arraste a foto pra mover o que aparece. A roda do mouse (ou o controle) aproxima.</p>' +
+            '<div class="rec-controles"><span>Zoom</span>' +
+            '<input type="range" min="0" max="100" value="0" aria-label="Zoom">' +
+            '<button class="btn btn--ghost btn--mini" type="button" data-girar>⟳ Girar</button>' +
+            '<button class="btn btn--ghost btn--mini" type="button" data-zera>Começar de novo</button></div>' +
+            '<div class="rec-botoes">' +
+            '<button class="btn btn--ghost" type="button" data-cancela>Cancelar</button>' +
+            '<button class="btn" type="button" data-ok disabled>Usar esta foto ✓</button></div>' +
+            '<button class="rec-sem" type="button">enviar sem recortar</button>' +
+            '</div>';
+        document.body.appendChild(ov);
+
+        var estagio = ov.querySelector('.rec-estagio');
+        var imgEl = ov.querySelector('.rec-estagio img');
+        var carregando = ov.querySelector('.rec-carregando');
+        var zoom = ov.querySelector('input[type=range]');
+        var btnOk = ov.querySelector('[data-ok]');
+        var base = null, esc = 1, ox = 0, oy = 0, escMin = 1;
+        var urls = [];
+        var aberto = true;
+
+        function render() {
+            imgEl.style.transform = 'translate(' + ox + 'px,' + oy + 'px) scale(' + esc + ')';
+        }
+        function travar() {
+            var W = estagio.clientWidth, H = estagio.clientHeight;
+            var lw = base.width * esc, lh = base.height * esc;
+            ox = lw >= W ? Math.min(0, Math.max(W - lw, ox)) : (W - lw) / 2;
+            oy = lh >= H ? Math.min(0, Math.max(H - lh, oy)) : (H - lh) / 2;
+        }
+        function enquadrar() {
+            var W = estagio.clientWidth, H = estagio.clientHeight;
+            escMin = Math.max(W / base.width, H / base.height);
+            esc = escMin;
+            ox = (W - base.width * esc) / 2;
+            oy = (H - base.height * esc) / 2;
+            zoom.value = 0;
+            render();
+        }
+        function zoomEm(novo, cx, cy) {
+            var W = estagio.clientWidth, H = estagio.clientHeight;
+            if (cx == null) { cx = W / 2; cy = H / 2; }
+            var px = (cx - ox) / esc, py = (cy - oy) / esc;
+            esc = Math.max(escMin, Math.min(escMin * 5, novo));
+            ox = cx - px * esc;
+            oy = cy - py * esc;
+            travar();
+            render();
+            zoom.value = Math.round(100 * Math.log(esc / escMin) / Math.log(5));
+        }
+        function dimensionar() {
+            var maxW = Math.min(660, window.innerWidth - 56);
+            var maxH = Math.max(170, Math.min(Math.round(window.innerHeight * 0.44), 440));
+            var r = razao || (base ? base.width / base.height : 4 / 3);
+            var w = maxW, h = Math.round(w / r);
+            if (h > maxH) { h = maxH; w = Math.round(h * r); }
+            estagio.style.width = w + 'px';
+            estagio.style.height = h + 'px';
+        }
+
+        /* arrastar com o mouse ou o dedo */
+        var puxando = false, x0 = 0, y0 = 0, ox0 = 0, oy0 = 0;
+        estagio.addEventListener('pointerdown', function (e) {
+            if (!base) return;
+            puxando = true; x0 = e.clientX; y0 = e.clientY; ox0 = ox; oy0 = oy;
+            try { estagio.setPointerCapture(e.pointerId); } catch (err) {}
+        });
+        estagio.addEventListener('pointermove', function (e) {
+            if (!puxando) return;
+            ox = ox0 + (e.clientX - x0);
+            oy = oy0 + (e.clientY - y0);
+            travar();
+            render();
+        });
+        ['pointerup', 'pointercancel', 'pointerleave'].forEach(function (ev) {
+            estagio.addEventListener(ev, function () { puxando = false; });
+        });
+        estagio.addEventListener('wheel', function (e) {
+            if (!base) return;
+            e.preventDefault();
+            var r = estagio.getBoundingClientRect();
+            zoomEm(esc * (e.deltaY < 0 ? 1.12 : 1 / 1.12), e.clientX - r.left, e.clientY - r.top);
+        }, { passive: false });
+        zoom.addEventListener('input', function () {
+            if (!base) return;
+            zoomEm(escMin * Math.pow(5, zoom.value / 100));
+        });
+
+        /* girar 90°: reescreve a base ja girada (mantém a conta simples) */
+        function girar() {
+            if (!base) return;
+            var c = document.createElement('canvas');
+            c.width = base.height; c.height = base.width;
+            var g = c.getContext('2d');
+            g.translate(c.width, 0);
+            g.rotate(Math.PI / 2);
+            g.drawImage(base, 0, 0);
+            c.toBlob(function (b) {
+                if (!b) return;
+                carregar(b).then(function (novo) {
+                    base = novo;
+                    dimensionar();
+                    enquadrar();
+                });
+            }, 'image/png');
+        }
+
+        function carregar(blob) {
+            return new Promise(function (ok, erro) {
+                var u = URL.createObjectURL(blob);
+                urls.push(u);
+                var i = new Image();
+                i.onload = function () { ok(i); };
+                i.onerror = function () { erro(new Error('não abri essa imagem')); };
+                i.src = u;
+            });
+        }
+
+        function aoRedimensionar() { if (aberto && base) { dimensionar(); enquadrar(); } }
+        function tecla(e) { if (e.key === 'Escape') finalizar(null); }
+        function fechar() {
+            aberto = false;
+            document.removeEventListener('keydown', tecla);
+            window.removeEventListener('resize', aoRedimensionar);
+            if (ov.parentNode) ov.parentNode.removeChild(ov);
+            urls.forEach(function (u) { URL.revokeObjectURL(u); });
+        }
+        function finalizar(res) { fechar(); concluir(res); }
+
+        document.addEventListener('keydown', tecla);
+        window.addEventListener('resize', aoRedimensionar);
+        ov.querySelector('.rec-fechar').addEventListener('click', function () { finalizar(null); });
+        ov.querySelector('[data-cancela]').addEventListener('click', function () { finalizar(null); });
+        ov.querySelector('[data-girar]').addEventListener('click', girar);
+        ov.querySelector('[data-zera]').addEventListener('click', function () { if (base) enquadrar(); });
+        ov.querySelector('.rec-sem').addEventListener('click', function () {
+            finalizar({ blob: op.blob, ext: null, nomeBase: op.nomeBase || 'foto', cru: true });
+        });
+        btnOk.addEventListener('click', function () {
+            if (!base) return;
+            btnOk.disabled = true;
+            btnOk.textContent = 'Preparando...';
+            var sx = -ox / esc, sy = -oy / esc;
+            var sw = estagio.clientWidth / esc, sh = estagio.clientHeight / esc;
+            recortarImagem(base, sx, sy, sw, sh).then(function (r) {
+                finalizar({ blob: r.blob, ext: r.ext, nomeBase: op.nomeBase || 'foto' });
+            }).catch(function () {
+                btnOk.disabled = false;
+                btnOk.textContent = 'Usar esta foto ✓';
+            });
+        });
+
+        dimensionar();
+        carregar(op.blob).then(function (img) {
+            base = img;
+            imgEl.src = img._url || img.src;
+            imgEl.style.display = 'block';
+            carregando.style.display = 'none';
+            enquadrar();
+            btnOk.disabled = false;
+        }).catch(function () {
+            carregando.textContent = 'Não consegui abrir esse arquivo de imagem.';
+        });
+    });
+}
+
+/* Envia os bytes pro GitHub e aponta o campo pra foto nova (o mesmo fluxo de
+   sempre: a troca só vale depois de "Publicar tudo"). */
+function enviarBytes(blob, ext, nomeBase, input, previewImg, ancora) {
+    var reader = new FileReader();
+    reader.onerror = function () { uploadMsg('Não consegui ler o arquivo. Talvez esteja corrompido.', false, ancora); };
+    reader.onload = function () {
+        var base64 = String(reader.result).split(',')[1];
+        var nome = 'fotos/' + slug(nomeBase || 'foto') + '-' + Date.now() + '.' + ext;
+        input.value = 'Carregando...';
+        uploadMsg('Enviando ' + Math.round(blob.size / 1024) + ' KB para o GitHub...', true, ancora);
+        fetch(API + nome, {
+            method: 'PUT', headers: Object.assign({ 'Content-Type': 'application/json' }, headers()),
+            body: JSON.stringify({ message: 'Admin: envia ' + nome, content: base64, branch: BRANCH })
+        }).then(function (r) {
+            if (!r.ok) return r.json().catch(function () { return {}; }).then(function (j) {
+                throw new Error(r.status + ' ' + (j.message || ''));
+            });
+            return r.json();
+        })
+        .then(function () {
+            input.value = nome;
+            // dispara 'input' pro campo atualizar a prévia E o modelo (JSON)
+            input.dispatchEvent(new Event('input', { bubbles: true }));
+            if (previewImg) { previewImg.src = nome.startsWith('http') ? nome : '../' + nome; }
+            uploadMsg('Foto enviada! Agora clique em "Publicar tudo" para ela aparecer no site.', true, ancora);
+        })
+        .catch(function (e) {
+            input.value = '';
+            uploadMsg('Falha no envio: ' + e.message, false, ancora);
+        });
+    };
+    reader.readAsDataURL(blob);
+}
+
+/* Resultado do recorte -> upload. Foto enorme sai reduzida em vez de rejeitada. */
+function enviarFoto(res, input, previewImg, ancora) {
+    var MB = 1024 * 1024;
+    if (res.cru && res.blob.size > 4 * MB) {
+        uploadMsg('A foto tem ' + (res.blob.size / MB).toFixed(1) + ' MB — reduzindo pro tamanho certo...', true, ancora);
+        imagemDeBlob(res.blob).then(function (img) {
+            return recortarImagem(img, 0, 0, img.width, img.height);
+        }).then(function (r) {
+            enviarBytes(r.blob, r.ext, res.nomeBase, input, previewImg, ancora);
+        }).catch(function () {
+            uploadMsg('Essa foto é grande demais e não deu pra reduzir. Tente outra imagem menor.', false, ancora);
+        });
+        return;
+    }
+    enviarBytes(res.blob, res.ext || extensaoDe(res.blob), res.nomeBase, input, previewImg, ancora);
+}
 </script>
 </body>
 </html>
