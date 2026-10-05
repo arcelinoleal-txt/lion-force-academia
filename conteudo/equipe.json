@@ -1,6 +1,14 @@
 {
   "membros": [
     {
+      "nome": "TIAGO SANTOS ",
+      "cargo": "Personal Trainer · Treinos Personalizados · Consultoria Online · Avaliação Física · Especialidade",
+      "foto": "fotos/whatsapp-image-2026-10-04-at-21-57-01-1-1791162221911.jpeg",
+      "unidade": "jardim-das-fontes",
+      "instagram": "https://www.instagram.com/sillvapel?stkn=MW43MHlpNXUzcnBnMw==",
+      "destaque": true
+    },
+    {
       "nome": "Taty Santos",
       "cargo": "Personal Trainer · Treinos Personalizados · Consultoria Online · Avaliação Física",
       "foto": "fotos/taty-santos-personal.jpg",
@@ -14,14 +22,6 @@
       "foto": "fotos/tayna-personal.webp",
       "unidade": "jardim-das-fontes",
       "instagram": "https://www.instagram.com/personal.tayna_/",
-      "destaque": false
-    },
-    {
-      "nome": "Nome do Personal",
-      "cargo": "Cargo · Especialidade",
-      "foto": "",
-      "unidade": "jardim-das-fontes",
-      "instagram": "",
       "destaque": false
     },
     {
